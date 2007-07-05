@@ -1,0 +1,15 @@
+<beans>
+
+	<import resource="/validat/config/validat.xml" />
+	<bean id="validat" class="validat.validat" >
+		<constructor-arg name="factory">
+			<ref bean="csFactory" />
+		</constructor-arg>
+		<constructor-arg name="pathToConfigXML">
+			<value>validat.xml</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="validatePrefix" class="validat.validationRules.validatePrefix"	singleton="true" />
+	
+</beans>

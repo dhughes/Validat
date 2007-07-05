@@ -1,0 +1,11 @@
+<beans>
+
+	<bean id="validat" class="validat.validat" >
+		<property name="factory">
+			<ref bean="" />
+		</property>
+	</bean>
+
+	<bean id="validateRequired" class="validat.validationRules.validateRequired" singleton="true" />
+	
+</bean>

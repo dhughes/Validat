@@ -1,0 +1,45 @@
+
+<beans>
+	
+	<!-- these are common base objects that are included as part of the validat library -->
+	<bean id="csFactory" 			class="validat.common.csFactory" />
+	<bean id="errorCollection"		class="validat.common.errorCollection" />
+
+	<!-- these are the base validators objects that are included by default as part of validat -->
+	<bean id="validateRequired" 	class="validat.validationRules.validateRequired"		singleton="true" />
+	<!--
+	<bean id="validateAlpha" 		class="validat.validationRules.validateAlpha"			singleton="true" />
+	<bean id="validateAlphaNumeric"	class="validat.validationRules.validateAlphaNumeric"	singleton="true" />
+	<bean id="validateBirthDate"	class="validat.validationRules.validateBirthDate"		singleton="true" />
+	<bean id="validateCreditCard"	class="validat.validationRules.validateCreditCard"		singleton="true" />
+	<bean id="validateDate"			class="validat.validationRules.validateDate"			singleton="true" />
+	<bean id="validateDifferent"	class="validat.validationRules.validateDifferent"		singleton="true" />
+	<bean id="validateEmail"		class="validat.validationRules.validateEmail"			singleton="true" />
+	<bean id="validateFormat"		class="validat.validationRules.validateFormat"			singleton="true" />
+	<bean id="validateInteger"		class="validat.validationRules.validateInteger"			singleton="true" />
+	-->
+	<bean id="validateLength"		class="validat.validationRules.validateLength"			singleton="true" />
+	<!--
+	<bean id="validateLengthGT"		class="validat.validationRules.validateLengthGT"		singleton="true" />
+	<bean id="validateLengthLT"		class="validat.validationRules.validateLengthLT"		singleton="true" />
+	<bean id="validateNamePrefix"	class="validat.validationRules.validateNamePrefix"		singleton="true" />
+	<bean id="validateNameSufffix"	class="validat.validationRules.validateNameSufffix"		singleton="true" />
+	<bean id="validateNotEmpty"		class="validat.validationRules.validateNotEmpty"		singleton="true" />
+	<bean id="validateNotNull"		class="validat.validationRules.validateNotNull"			singleton="true" />
+	<bean id="validateNumeric"		class="validat.validationRules.validateNumeric"			singleton="true" />
+	<bean id="validatePassword"		class="validat.validationRules.validatePassword"		singleton="true" />
+	<bean id="validatePhoneNumber"	class="validat.validationRules.validatePhoneNumber"		singleton="true" />
+	<bean id="validateRange"		class="validat.validationRules.validateRange"			singleton="true" />
+	<bean id="validateSame"			class="validat.validationRules.validateSame"			singleton="true" />
+	<bean id="validateSSN"			class="validat.validationRules.validateSSN"				singleton="true" />
+	<bean id="validateState"		class="validat.validationRules.validateState"			singleton="true" />
+	<bean id="validateZipCode"		class="validat.validationRules.validateZipCode"			singleton="true" />
+	-->
+
+	<!-- these are the base transformer objects that are included by default as part of validat -->
+	<bean id="transformStruct"		class="validat.dataTransformers.transformStruct"		singleton="true" />
+	<!--
+	<bean id="transformBean"		class="validat.dataTransformers.transformBean"			singleton="true" />
+	-->
+
+</beans>

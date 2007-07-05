@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    validat.xml
+	
+    Description:
+        This is the configuration xml that is passed to the validat object upon instantiation and includes
+		definitions for all of the validation rules and data sets that the cfValidation object will handle.  This
+		configuration file may also be extended through the include tag, in which case the configuration included
+		in this file will be loaded first, then the configuration information in each include file will be loaded
+		(top to bottom priority) with any duplicate rules or data sets overriding a previous configuration.
+-->
+
+<validat>
+
+	<!-- Additional configuration information can be included from other files
+		any validation rules or data sets that have name conflicts will overwrite the previous value -->
+	<include template="validat2.xml" />
+
+	<!-- validation rule definitions -->
+	<validation-rules>
+		
+		<!-- Each validation rule is specified with a unique name and its associated validator object bean name.
+			a validation rule may also contain additional detail arguments to be passed into the validate function 
+			along with the data value to be validated. -->
+
+		<validation-rule name="alpha" validator="validateAlpha" />
+		<validation-rule name="alphaNumeric" validator="validateAlphaNumeric" />
+		<validation-rule name="birthdate" validator="validateBirthDate" >
+			<arg name="min" default="0" />
+			<arg name="max" default="120" />
+		</validation-rule>
+		<validation-rule name="creditCard" validator="validateCreditCard" />
+		<validation-rule name="length" validator="validateLength">
+			<arg name="min" default="0" />
+			<arg name="max" default="100" />
+		</validation-rule>
+		<validation-rule name="required" validator="validateRequired" />
+		<validation-rule name="ssn" validator="validateSSN" />
+		
+	</validation-rules>
+	
+	<!-- data set definitions -->
+	<data-sets>
+	
+		<!-- A dataset groups a set of data elements together and specifies the transformer object name that is utilized upon the
+			received data collection to turn it into a key / value structure that the validate method can utilize -->
+
+		<data-set name="user" transformer="transformStruct">
+		
+			<!-- Data element simply specify a name which corresponds to a key name in the structure returned by the transformer.
+				for client-side form validation, this name should correspond with the name attribute on the form tag.
+				
+				Each data element contains one or more assertions which specify the validation rule to test the data element value 
+				against, along with an error message to be returned upon validation failure.  An assertion may specify an optional
+				attribute continueOnFail (defaults to false) which instructs the validator to continue validating the data element
+				even though the current assertion has failed.  
+				
+				Assertions may be dependent upon other data elements and their assertions, such as one data element is only required
+				if another data element has a value or has a certain value.  By adding a depends attribute equal to the data element
+				name upon which that assertion depends, a relationship like this can be built.  In addtion, a value attribute can
+				be added to the assertion along with the depends attribute if the dependency is based upon a specific value for the
+				specified data element.
+				
+				An assertion may also contain additional detail arguments which will be passed into the validate function of the 
+				validator along with the data value to be validated. -->
+
+			<data-element name="prefix">
+				<assert rule="prefix" message="errors.validation.user.prefix.invalid" />
+			</data-element>
+			<data-element name="firstName">
+				<assert rule="required" message="errors.validation.user.firstName.required" continueOnFail="true" />
+				<assert rule="length" message="errors.validation.user.firstName.invalidLength" continueOnFail="true" >
+					<!-- optionally, additional arguments can be provided to the validator function -->
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+				</assert>
+			</data-element>
+			<data-element name="middleName">
+				<assert rule="length" message="errors.validation.user.middleName.invalidLength" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+				</assert>
+			</data-element>
+			<data-element name="lastName">
+				<assert rule="required" message="errors.validation.user.lastName.required" />
+				<assert rule="length" message="errors.validation.user.lastName.invalidLength" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+				</assert>
+			</data-element>
+			<data-element name="suffix">
+				<!-- <assert rule="suffix" message="errors.validation.user.suffix.invalid" /> -->
+			</data-element>
+			<data-element name="birthDate">
+				<assert rule="required" message="errors.validation.user.birthdDate.required" />
+				<!-- <assert rule="birthdate" message="errors.validation.user.birthDate.invalid" /> -->
+			</data-element>
+			<data-element name="ssn">
+				<assert rule="required" message="errors.validation.user.ssn.required" />
+				<!-- <assert rule="ssn" message="errors.validation.user.ssn.invalid" /> -->
+			</data-element>
+
+		</data-set>
+
+	</data-sets>
+	
+</validat>
