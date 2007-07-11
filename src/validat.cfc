@@ -31,7 +31,7 @@ Release: 0.1.0
 	<!--- constructor --->
 
 	<cffunction name="init" access="public" returntype="validat"
-		hint="The default constructor for the validator object, returning the initialized validator object instance">
+		hint="The default constructor for the validation engine, returning the initialized validator object instance">
 		
 		<cfargument name="factory" displayname="factory" type="any" required="true"
 			hint="I am an instance of an object factory, from which the necessary validator and transformer objects will be requested." />
@@ -41,7 +41,7 @@ Release: 0.1.0
 		<!--- create container for protected instance data --->
 		<cfset variables.instance = structNew() />
 		
-		<!--- insert the validation rule and data set collections into the instance data structure --->
+		<!--- insert the validation rule, data set, and dependency collections into the instance data structure --->
 		<cfset variables.instance.validationRules = structNew() />
 		<cfset variables.instance.dataSets = structNew() />
 		
@@ -52,6 +52,8 @@ Release: 0.1.0
 		<cfif isDefined('arguments.pathToConfigXML') AND len(trim(arguments.pathToConfigXML)) >
 			<cfset parseConfigXML(arguments.pathToConfigXML) />
 		</cfif>
+		
+		<cfdump var="#variables.instance#" /><cfabort>
 
 		<!--- return the initialized validator --->
 		<cfreturn this />	
@@ -66,92 +68,14 @@ Release: 0.1.0
 		description:	Validates the provided data collection according to the specified data set and its associated data elements
 						and assertions before returning a collection of errors.
 	--->
-	<cffunction name="validate" access="public" output="false" returntype="validat.common.errorCollection"
+	<cffunction name="validate" access="public" output="true" returntype="validat.common.errorCollection"
 		hint="Validate the provided data collection according to the specified data set and its associated data elements and assertions">
 
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set by which to validate the data collection" />
 		<cfargument name="dataCollection" type="any" required="true" hint="The data collection to be validated" />
-		
-		<!---
-			- go to the factory and get an error collection object
-			- look up the data set and get the name of the transformer object
-			- go to the factory and get an instance of the transformer object
-			- attempt to extract data from the data collection using the transformer object
-			- loop through the key values in the data structure from the transformer
-			- look up each key value in the element collection for the specified data set 
-			- if the key value was found, attempt to validate the data value based upon the assertions for the data element
-			- if the assertion fails, insert the error message for the failed assertion and abort checking for that data element,
-				unless the continueOnFail flag for that assertion is true and if so, continue checking additional assertions
-			- return the error collection
-		--->
 
 		<!--- setup temporary variables --->
 		<cfset var errorCollection = variables.instance.factory.getObject('errorCollection') />
-		<cfset var transformer = "" />
-		<cfset var dataStruct = "" />
-		<cfset var dataKey = "" />
-		<cfset var assertPtr = 0 />
-		<cfset var assertion = "" />
-		<cfset var validator = "" />
-		<cfset var argCollection = "" />
-		
-		<!--- attempt to locate the transformer for the data set --->
-		<cfif NOT structKeyExists( variables.instance.dataSets, arguments.dataSetName ) >
-			<cfthrow type="validat.invalidDataSet" message="validat: The specified data set name ('#arguments.dataSetName#') does not exist." />
-		</cfif>
-		
-		<!--- retrieve an instance of the data transformer from the factory --->
-		<cfset transformer = variables.instance.factory.getObject( variables.instance.dataSets[arguments.dataSetName].transformer ) />
-		
-		<!--- attempt to extract data from the data collection using the data transformer --->
-		<cfset dataStruct = transformer.getData( arguments.dataCollection ) />
-		
-		<!--- loop through the key values in the data structure --->
-		<cfloop collection="#dataStruct#" item="dataKey">
-		
-			<!--- does the key value exist in the data elements collection for the specified data set --->
-			<cfif structKeyExists( variables.instance.dataSets[arguments.dataSetName].dataElements, dataKey ) >
-
-				<!--- loop through the assertions for the data element --->
-				<cfloop from="1" to="#arrayLen( variables.instance.dataSets[arguments.dataSetName].dataElements[dataKey].assertions )#" index="assertPtr" >
-
-					<!--- get the current assertion (rule) name --->
-					<cfset assertion = variables.instance.dataSets[arguments.dataSetName].dataElements[dataKey].assertions[assertPtr].rule />
-				
-					<!--- locate the corresponding validation rule --->
-					<cfif NOT structKeyExists( variables.instance.validationRules, assertion ) >
-						<cfthrow type="validat.invalidAssertion" message="validat: The rule name specified for the assertion ('#assertion#') does not exist." />
-					</cfif> <!--- end: the assertion does not match a validation rule --->
-					
-					<!--- get the validator object for the corresponding validation rule --->
-					<cfset validator = variables.instance.factory.getObject( variables.instance.validationRules[assertion].validator ) />
-					
-					<!--- build an arguments collection to pass to the validator --->
-					<cfset argCollection = structNew() />
-					<cfset argCollection.dataValue = dataStruct[dataKey] />
-					<cfif structKeyExists( variables.instance.validationRules[assertion], 'args') >
-						<cfset structAppend( argCollection, variables.instance.validationRules[assertion].args ) />
-					</cfif>
-					
-					<!--- validate the data value --->
-					<cfif NOT validator.validate( argumentCollection=argCollection ) >
-
-						<!--- add an error to the error collection --->
-						<cfset errorCollection.addError( dataKey, dataStruct[dataKey], variables.instance.dataSets[arguments.dataSetName].dataElements[dataKey].assertions[assertPtr].message ) />
-
-						<!--- check the assertion continue attribute --->
-						<cfif NOT variables.instance.dataSets[arguments.dataSetName].dataElements[dataKey].assertions[assertPtr].continueOnFail >
-							<!--- stop validation checks on the current data value --->
-							<cfbreak />
-						</cfif> <!--- end: if assertion continue attribute is false --->
-					
-					</cfif> <!--- end: if the assertion validation fails --->
-
-				</cfloop> <!--- end: loop over the data element assertions --->
-
-			</cfif> <!--- end: if key exists in data element collection --->
-		
-		</cfloop> <!--- end: loop over data structure keys --->
 
 		<!--- return the error collection --->
 		<cfreturn errorCollection />
@@ -317,7 +241,7 @@ Release: 0.1.0
 		hint="Programmatically adds a data set to the data set collection, overwritting any existing data sets with the same name">
 
 		<cfargument name="dsName" type="string" required="true" hint="The name of the data set" />
-		<cfargument name="transformer" type="string" required="true" hint="The bean name of the transformer object" />
+		<cfargument name="transformer" type="string" required="false" default="" hint="The bean name of the transformer object" />
 		<cfargument name="overwrite" type="boolean"  required="false" default="false" hint="Overwrite an existing data set?" />
 		
 		<!--- setup temporary variables --->
@@ -645,7 +569,12 @@ Release: 0.1.0
 		<!--- existing assertion was not found, add assertion to the end of the array / list --->
 		<cfelse>
 			<cfset arrayAppend( variables.instance.dataSets[arguments.dsName].dataElements[arguments.deName].assertions, structCopy( assertStr ) ) />
-			<cfset listAppend( variables.instance.dataSets[arguments.dsName].dataElements[arguments.deName].assertionList, lcase( arguments.ruleName ) ) />
+			
+			<cfif listLen( variables.instance.dataSets[arguments.dsName].dataElements[arguments.deName].assertionList ) EQ 0 >
+				<cfset variables.instance.dataSets[arguments.dsName].dataElements[arguments.deName].assertionList = lcase( arguments.ruleName ) />
+			<cfelse>
+				<cfset variables.instance.dataSets[arguments.dsName].dataElements[arguments.deName].assertionList = listAppend( variables.instance.dataSets[arguments.dsName].dataElements[arguments.deName].assertionList, lcase( arguments.ruleName ) ) />
+			</cfif>
 		
 		</cfif> <!--- end: if existing assertion was found --->
 		
