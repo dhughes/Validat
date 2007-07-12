@@ -1,27 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 
 <!--
     validat.xml
 	
     Description:
         This is the configuration xml that is passed to the validat object upon instantiation and includes
-		definitions for all of the validation rules and data sets that the validation engine will handle.  This
-		configuration file may also be extended through the include tag, in which case the configuration included
-		in this file will be loaded first, then the configuration information in each include file will be loaded
-		(top to bottom priority) with any duplicate rules or data sets overriding a previous configuration.
+        definitions for all of the validation rules and data sets that the validation engine will handle.  This
+        configuration file may also be extended through the include tag, in which case the configuration included
+        in this file will be loaded first, then the configuration information in each include file will be loaded
+        (top to bottom priority) with any duplicate rules or data sets overriding a previous configuration.
 -->
 
 <validat>
 
-	<!-- Additional configuration information can be included from other files
-		any validation rules or data sets that have name conflicts will overwrite the previous value -->
+	<!-- Additional configuration information can be included from other files and validation rules or data sets 
+		that have name conflicts will overwrite the previous value -->
 	<include template="extendedRules.xml" />
 
 	<!-- validation rule definitions -->
 	<validation-rules>
 		
 		<!-- Each validation rule is specified with a unique name and its associated validator object bean name.
-			a validation rule may also contain additional detail arguments to be passed into the validate function 
+			A validation rule may also contain additional detail arguments to be passed into the validate function 
 			along with the data value to be validated. -->
 
 		<validation-rule name="alpha" validator="validateAlpha" />
@@ -36,7 +36,6 @@
 			<arg name="min" default="0" />
 			<arg name="max" default="100" />
 		</validation-rule>
-		<validation-rule name="required" validator="validateRequired" />
 		<validation-rule name="ssn" validator="validateSSN" />
 		
 	</validation-rules>
@@ -44,150 +43,206 @@
 	<!-- data set definitions -->
 	<data-sets>
 	
-		<!-- A dataset groups a set of assertions and data elements together and specifies the transformer object name that is 
-			utilized upon the received data collection to turn it into a key / value structure that the validate method can 
-			utilize.  The transformer attribute is optional, and if omitted, the validation engine will assume the data collection 
-			is a structure of key / value pairs and will thrown an error otherwise. -->
+		<!-- A dataset groups a set of assertions and data elements together and specifies the transformer object 
+			(which adhears to the transformer interface) name that is utilized to retreive data from the data 
+			collection. Data values returned by a transformer may be simple data value or more complex data values,
+			such as a structure, or object. -->
 
-		<data-set name="userTest" transformer="transformStruct">
-		
-			<!-- A data element represents a key name in the structure returned by the transformer.  The data-element tag's name
-				attribute should match this key name.  For client-side form validation, this name should correspond with the name 
-				attribute on the form tag. The required attribute for the data element and an optional message attribute indiciate 
-				if the element is optional.  If the data element is optional and the data element value is empty, any assertions 
-				for that data element will not be processed.  The message attribute indicates the message to be returned if the 
-				data element is required and no value is present, thus, it is not necessary when the required attribute is set to
-				false.
+		<data-set name="user" transformer="transformStruct">
+
+			<!-- A data element represents a specific data value that can be requested by name from the transformer
+				object for this data set.  The data-element's name attribute will be passed to the transformer 
+				object to retrieve the data value to be validated.  The required attribute for the data element 
+				indiciates whether the data value is required (true / false) or optional.
 				
-				Data elements may depend upon other data elements by use of the optional depends and value attributes.  For example,
-				if a data element is required, but has a dependency upon another data element, that secondary data element must have
-				a value provided in order for the required validation check to be made.  Additionally, if a value is specified along
-				with the dependency, the data element to which the dependency points must have a value equal to the value attribute
-				in order for the required validation check to be made. ( Example: a data-element "state" is only required if the 
-				value specified for the data-element "country" is equal to "U.S.". )
+				- If the required attribute is TRUE, then all assertions within the data element will be evaluated.
+				- If the required attribute is FALSE, then the assertions within the data element will be evaluated
+					only if the data value is not an empty string.  If the data value is an empty string, none of
+					the assertions will be evaluated.
+				- If the required attribute is OPTIONAL, then none of the assertions within the data element will
+					be evaluated.
 				
-				Each data element may contain either one data-set sub-element or one or more assertions sub-elements.  
+				If the required attribute is true, then an additional message attribute for the data element should
+				be provided and will contain the error message to be returned if the data value is an empty string.
 				
-				A data-set sub-element indiciates that the data element is a complex data collection in itself and will cause the
-				validation engine to recursively call itself, passing the nested data collection to be validated.  The data-set 
-				sub-element specifies the name of another existing data-set defintion which will validate the nested data collection 
-				and append any errors to the parent validation process's error collection.
+				A data element may contain one or more assertions or a single data set.
 				
-				The assertion sub-element specifies the validation rule to test the data element value against, along with an error 
-				message to be returned upon validation failure.  An assertion may specify an optional attribute continueOnFail 
-				(defaults to false) which instructs the validator to continue validating other assertions for the data element even 
-				though the current assertion has failed.
+				An assertion corresponds to a specific, previously defined, validation rule.  When defined within a 
+				data element, the assert element then contains a collection of optional argument and message elments.
+				The argument elements, of which there may be none, will be passed to the validator associated with
+				the validation rule along with the value of the parent data element.  The validator will then return
+				true if the validation succeeds, or it will return a message name which should correspond to a 
+				message element within the assert element.  The validation engine will store the corresponding
+				message value in the error collection that is returned.
 				
-				Like data elements, assertions may also be dependent upon other data elements and their assertions, such as one data 
-				element is only type checked if another data element has a value or has a certain value.  By adding a depends 
-				attribute equal to the data element name upon which that assertion depends, a relationship like this can be built.
-				In addtion, a value attribute can be added to the assertion along with the depends attribute if the dependency is 
-				based upon a specific value for the specified data element.  A dependency relationship at the assertion level will
-				not only depend upon the secondary data-element having a value specified, or a specific value specified, but also
-				that that secondary data-element has passed all of its assertions.
+				An assert element may also have an optional continueOnFail attribute, which if not provided, defaults
+				to false.  This attribute instructs the validation engine to continue, or not, processing additional
+				assertions if the current assertion has failed.
 				
-				Lastly, an assertion may also contain additional detail arguments which will be passed into the validate function of the 
-				validator along with the data value to be validated. -->
+				When defined within a data element, the data set element signifies that the data element value is
+				a complex value (structure, object, etc.) and not a simple string value.  The validation engine will
+				then recursively call the validate method again, passing this complex data value along with the
+				specified data set name.  Upon validation, it will concatenate the resulting error collection with
+				the error collection for the current validation process.
+				-->
 
 			<data-element name="prefix" required="false" >
-				<assert rule="prefix" message="errors.validation.user.prefix.invalid" />
+				<assert rule="prefix" >
+					<!-- the message name must correspond to the value returned upon validation failure from the
+						validator object -->
+					<message name="invalid" value="errors.validation.user.prefix.invalid" />
+				</assert>
 			</data-element>
 			<data-element name="firstName" required="true" message="errors.validation.user.firstName.required" >
-				<assert rule="length" message="errors.validation.user.firstName.invalidLength" continueOnFail="true" >
+				<assert rule="length" >
 					<!-- optionally, additional arguments can be provided to the validator function -->
 					<arg name="min" value="1" />
 					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.firstName.invalidLength" />
 				</assert>
 			</data-element>
 			<data-element name="middleName" required="false" >
-				<assert rule="length" message="errors.validation.user.middleName.invalidLength" >
+				<assert rule="length" >
 					<arg name="min" value="1" />
 					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.middleName.invalidLength" />
 				</assert>
 			</data-element>
 			<data-element name="lastName" required="true" message="errors.validation.user.lastName.required" >
-				<assert rule="length" message="errors.validation.user.lastName.invalidLength" >
+				<assert rule="length" >
 					<arg name="min" value="1" />
 					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.middleName.invalidLength" />
 				</assert>
 			</data-element>
 			<data-element name="suffix" required="false" >
-				<!-- <assert rule="suffix" message="errors.validation.user.suffix.invalid" /> -->
+				<assert rule="suffix" >
+					<message name="invalid" value="errors.validation.user.suffix.invalid" />
+				</assert>
 			</data-element>
 			<data-element name="birthDate" required="true" message="errors.validation.user.birthdDate.required" >
-				<!-- <assert rule="birthdate" message="errors.validation.user.birthDate.invalid" /> -->
+				<assert rule="birthdate" >
+					<message name="invalid" value="errors.validation.user.birthdate.invalid" />
+				</assert>
 			</data-element>
 			<data-element name="ssn" required="true" message="errors.validation.user.ssn.required" >
-				<!-- <assert rule="ssn" message="errors.validation.user.ssn.invalid" /> -->
+				<assert rule="ssn" >
+					<message name="invalid" value="errors.validation.user.ssn.invalid" />
+				</assert>
 			</data-element>
 
 		</data-set>
-		
-		<!-- Data structures that are returned from a transformer can also represent more complex 
-			data including nested structures that could then have multiple data sets and assicated 
-			assertions applied. --->
 			
-		<data-set name="personObj" transformer="transformPersonObj">
+		<data-set name="person" transformer="transformPerson">
+		
+			<!-- In addition to data elements, a data set may also contain "global" assertions that apply to more
+				than one data element.  Similar to data element assertions, global assertions still correspond to
+				a specific, previously defined, validation rule.  In addition to containing any relevant argument
+				and message elements, a global assert also contains one or more data-element elements.  The name
+				attribute of the data-element corresponds to the argument name on the validator to which the specified
+				data value will be passed. -->
+
 			<assert rule="duplicatePerson" >
-				<message name="failByEmail" value="errors.validation.personObj.duplicate.email" />
-				<message name="failByName" value="errors.validation.personObj.duplicate.name" />
+				<data-element name="firstName" value="firstName" />
+				<data-element name="lastName" value="lastName" />
+				<data-element name="emailAddress" value="emailAddress" />
+
+				<message name="failByEmail" value="errors.validation.person.duplicate.email" />
+				<message name="failByName" value="errors.validation.person.duplicate.name" />
 			</assert>
-			<data-element name="firstName" required="true" message="errors.validation.personObj.firstName.required" >
-				<assert rule="length" message="errors.validation.personObj.firstName.invalidLength" continueOnFail="true" >
+
+			<data-element name="firstName" required="true" message="errors.validation.user.firstName.required" >
+				<assert rule="length" >
 					<arg name="min" value="1" />
 					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.firstName.invalidLength" />
 				</assert>
 			</data-element>
+
 			<data-element name="middleName" required="false" >
-				<assert rule="length" message="errors.validation.personObj.middleName.invalidLength" >
+				<assert rule="length" >
 					<arg name="min" value="1" />
 					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.middleName.invalidLength" />
 				</assert>
 			</data-element>
-			<data-element name="lastName" required="true" message="errors.validation.personObj.lastName.required" >
-				<assert rule="length" message="errors.validation.personObj.lastName.invalidLength" >
+
+			<data-element name="lastName" required="true" message="errors.validation.user.lastName.required" >
+				<assert rule="length" >
 					<arg name="min" value="1" />
 					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.middleName.invalidLength" />
 				</assert>
 			</data-element>
-			<data-element name="billingAddress" required="true" message="errors.validation.personObj.billingAddress.required" >
-				<data-set name="addressObj" />
+
+			<data-element name="billingAddress" required="true" message="errors.validation.person.billingAddress.required" >
+				<data-set name="address" />
 			</data-element>
-			<data-element name="mailingAddress" required="true" message="errors.validation.personObj.mailingAddress.required" >
-				<data-set name="addressObj" />
+
+			<data-element name="mailingAddress" required="true" message="errors.validation.person.mailingAddress.required" >
+				<data-set name="address" />
 			</data-element>
+
+			<data-element name="emailAddress" required="true" message="errors.validation.person.emailAddress.required" >
+				<assert rule="emailAddress" continueOnFail="true" >
+					<message name="invalid" value="errors.validation.person.emailAddress.invalid" />
+				</assert>
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.person.emailAddress.invalidLength" />
+				</assert>
+			</data-element>
+			
 		</data-set>
 		
-		<data-set name="addressObj">
-			<data-element name="street1" required="true" message="errors.validation.addressObj.street1.required" >
-				<assert rule="length" message="errors.validation.addressObj.street1.invalidLength" continueOnFail="true" >
+		<data-set name="address" transformer="trasnformAddress" >
+			
+			<assert rule="state" >
+				<data name="state" value="state" />
+				<data name="country" value="country" />
+				<message name="required" value="errors.validation.address.state.required" />
+				<message name="invalid" value="errors.validation.address.state.invalid" />
+			</assert>
+
+			<data-element name="street1" required="true" message="errors.validation.address.street1.required" >
+				<assert rule="length" >
 					<arg name="min" value="1" />
 					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.address.street1.invalidLength" />
 				</assert>
 			</data-element>
+
 			<data-element name="street2" required="false" >
-				<assert rule="length" message="errors.validation.addressObj.street1.invalidLength" continueOnFail="true" >
+				<assert rule="length" >
 					<arg name="min" value="1" />
 					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.address.street2.invalidLength" />
 				</assert>
 			</data-element>
-			<data-element name="city" required="true" message="errors.validation.addressObj.city.required" >
-				<assert rule="length" message="errors.validation.addressObj.city.invalidLength" continueOnFail="true" >
+
+			<data-element name="city" required="true" message="errors.validation.address.city.required" >
+				<assert rule="length" >
 					<arg name="min" value="1" />
 					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.address.city.invalidLength" />
 				</assert>
 			</data-element>
-			<data-element name="state" required="true" message="errors.validation.addressObj.state.required" depends="country" value="US" >
-				<assert rule="state" message="errors.validation.addressObj.state.invalid" />
+
+			<data-element name="postalCode" required="true" message="errors.validation.address.postalCode.required" >
+				<assert rule="postalCode" >
+					<message name="invalid" value="errors.validation.address.postalCode.invalid" />
+				</assert>
 			</data-element>
-			<data-element name="postalCode" required="true" message="errors.validation.addressObj.postalCode.required" >
-				<assert rule="postalCode" message="errors.validation.addressObj.postalCode.invalid" />
+
+			<data-element name="country" required="true" message="errors.validation.address.country.required" >
+				<assert rule="country" >
+					<message name="invalid" value="errors.validation.address.country.invalid" />
+				</assert>
 			</data-element>
-			<data-element name="country" required="true" message="errors.validation.addressObj.country.required" >
-				<assert rule="country" message="errors.validation.addressObj.country.invalid" />
-			</data-element>
+			
 		</data-set> 
 
 	</data-sets>
 	
-</validat>
+</validat>		
