@@ -81,25 +81,6 @@ Release: 0.1.0
 		<cfreturn errorCollection />
 	</cffunction> <!--- end: validate() --->
 
-	<!--- 
-		function: 		generateClientScript
-	
-		description:	Returns client side validation script based upon the specified data set.
-	--->
-	<cffunction name="generateClientScript" access="public" output="false" returntype="string"
-		hint="Return client side validation script based upon the specified data set">
-
-		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set by which to validate the data collection" />
-		
-		<!---
-			- loop through the data elements for the specified data set
-			- concatenate the results of the generateClientScript method for each data element
-		--->
-		
-		<!--- return the generated client script --->
-		<cfreturn "" />
-	</cffunction> <!--- end: generateClientScript() --->
-
 	<!--- ------------------------------------------------------------ --->
 	<!--- programmatic rule manipulation methods --->
 
