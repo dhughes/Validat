@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+    extendedRules.xml
+	
+    Description:
+        This is an extension of another Validat configuration xml file.  This file should be layed out with
+		the exact same structure as the base configuration xml file.  Any elements in this file will automatically
+		override and elements with the same name in the base configuration file.
+-->
+
 <validat>
 
-	<validation-rules>
+	<validationRules>
 
-		<validation-rule name="prefix" validator="validatePrefix" />
-		<validation-rule name="suffix" validator="validateSuffix" />
+		<rule name="prefix" validator="validatePrefix" />
+		<rule name="suffix" validator="validateSuffix" />
 		
-	</validation-rules>
+	</validationRules>
 	
 </validat>
