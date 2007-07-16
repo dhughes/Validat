@@ -46,15 +46,15 @@ Release: 0.1.0
 	<!--- public functions --->
 
 	<!--- 
-		function: addError
+		function: 		addError
 	
 		description:	Adds a single error to the error collection.
 	--->
 	<cffunction name="addError" access="public" output="false" returntype="errorCollection"
 		hint="Adds a single error to the error collection.">
 		
-		<cfargument name="dataElement" type="string" required="true" hint="the name of the data element for which the error occurred" />
-		<cfargument name="dataValue" type="string" required="true" hint="the value of the data element for which the error occurred" />
+		<cfargument name="dataElement" type="string" required="false" default="" hint="the name of the data element for which the error occurred" />
+		<cfargument name="dataValue" type="string" required="false" default="" hint="the value of the data element for which the error occurred" />
 		<cfargument name="message" type="string" required="true" hint="the error message for the error to be added to the error collection" />
 
 		<!--- create a new error structure with the provided data --->
@@ -71,7 +71,33 @@ Release: 0.1.0
 	</cffunction> <!--- end: addError() --->
 
 	<!--- 
-		function: clearErrors
+		function: 		append
+	
+		description:	Appends the errors from one error collection to the current error collection.
+	--->
+	<cffunction name="append" access="public" output="false" returntype="errorCollection"
+		hint="Appends the errors from one error collection to the current error collection.">
+		
+		<cfargument name="errorCollection" type="errorCollection" required="true" hint="The error collection from which to append errors to the current error collection" />
+
+		<cfset var errorPtr = 0 />
+
+		<!--- get the errors from the error collection --->
+		<cfset var errors = arguments.errorCollection.getErrors() />
+		
+		<!--- add each error to the current error collection --->
+		<cfloop from="1" to="#arrayLen( errors )#" index="errorPtr">
+		
+			<cfset addError( errors[errorPtr].dataElement, errors[errorPtr].dataValue, errors[errorPtr].message ) />
+		
+		</cfloop> <!--- end: for each error in the current error collection --->
+		
+		<!--- return a pointer to this object to allow for chaining --->
+		<cfreturn this />
+	</cffunction> <!--- end: addError() --->
+
+	<!--- 
+		function: 		clearErrors
 	
 		description:	Removes any errors stored in the error collection.
 	--->
@@ -86,7 +112,7 @@ Release: 0.1.0
 	</cffunction> <!--- end: clearErrors() --->
 
 	<!--- 
-		function: getErrors
+		function: 		getErrors
 	
 		description:	Retrieves an array of error structures for all errors in the error collection.
 	--->
@@ -97,7 +123,7 @@ Release: 0.1.0
 	</cffunction> <!--- end: getErrors() --->
 
 	<!--- 
-		function: getErrorsByDataElement
+		function: 		getErrorsByDataElement
 	
 		description:	Retrieves an array of error structures for errors with the specified data elmeent name in the error collection.
 	--->
