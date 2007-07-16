@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+    validat.xml
+	
+    Description:
+        This is the configuration xml that is passed to the validat object upon instantiation and includes
+        definitions for all of the validation rules and data sets that the validation engine will handle.  This
+        configuration file may also be extended through the include tag, in which case the configuration included
+        in this file will be loaded first, then the configuration information in each include file will be loaded
+        (top to bottom priority) with any duplicate rules or data sets overriding a previous configuration.
+-->
+
+<validat>
+
+	<include template="/test/testData/validat-complete-extend.xml" />
+
+	<!-- validation rule definitions -->
+	<validationRules>
+
+		<rule name="alpha" validator="validateAlpha" />
+		<rule name="alphaNumeric" validator="validateAlphaNumeric" />
+		<rule name="birthdate" validator="validateBirthDate" >
+			<arg name="min" default="0" />
+			<arg name="max" default="120" />
+		</rule>
+		<rule name="creditCard" validator="validateCreditCard" />
+		<rule name="duplicatePerson" validator="validateDuplicatePerson" />
+		<rule name="length" validator="validateLength">
+			<arg name="min" default="0" />
+			<arg name="max" default="100" />
+		</rule>
+		<rule name="ssn" validator="validateSSN" />
+		
+	</validationRules>
+	
+	<!-- data set definitions -->
+	<dataSets>
+	
+		<dataSet name="user" transformer="customTransformer">
+
+			<dataElement name="prefix" required="false" >
+				<assert rule="prefix" >
+					<message name="invalid" value="errors.validation.user.prefix.invalid" />
+				</assert>
+			</dataElement>
+			<dataElement name="firstName" required="true" message="errors.validation.user.firstName.required" >
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.firstName.invalidLength" />
+				</assert>
+			</dataElement>
+			<dataElement name="middleName" required="false" >
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.middleName.invalidLength" />
+				</assert>
+			</dataElement>
+			<dataElement name="lastName" required="true" message="errors.validation.user.lastName.required" >
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.lastName.invalidLength" />
+				</assert>
+			</dataElement>
+			<dataElement name="suffix" required="false" >
+				<assert rule="suffix" >
+					<message name="invalid" value="errors.validation.user.suffix.invalid" />
+				</assert>
+			</dataElement>
+			<dataElement name="birthdate" required="true" message="errors.validation.user.birthdate.required" >
+				<assert rule="birthdate" >
+					<message name="invalid" value="errors.validation.user.birthdate.invalid" />
+				</assert>
+			</dataElement>
+			<dataElement name="ssn" required="true" message="errors.validation.user.ssn.required" >
+				<assert rule="ssn" >
+					<message name="invalid" value="errors.validation.user.ssn.invalid" />
+				</assert>
+			</dataElement>
+
+		</dataSet>
+			
+		<dataSet name="person">
+
+			<assert rule="duplicatePerson" >
+				<arg name="firstName" value="firstName" />
+				<arg name="lastName" value="lastName" />
+				<arg name="emailAddress" value="emailAddress" />
+				<message name="failByEmail" value="errors.validation.person.duplicate.email" />
+				<message name="failByName" value="errors.validation.person.duplicate.name" />
+			</assert>
+
+			<dataElement name="firstName" required="true" message="errors.validation.person.firstName.required" >
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.person.firstName.invalidLength" />
+				</assert>
+			</dataElement>
+
+			<dataElement name="middleName" required="false" >
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.person.middleName.invalidLength" />
+				</assert>
+			</dataElement>
+
+			<dataElement name="lastName" required="true" message="errors.validation.person.lastName.required" >
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.person.lastName.invalidLength" />
+				</assert>
+			</dataElement>
+			
+			<dataElement name="billingAddress" dataSet="address" required="true" message="errors.validation.person.billingAddress.required" />
+
+			<dataElement name="mailingAddress" dataSet="address" required="true" message="errors.validation.person.mailingAddress.required" />
+
+			<dataElement name="emailAddress" required="true" message="errors.validation.person.emailAddress.required" >
+				<assert rule="emailAddress" continueOnFail="true" >
+					<message name="invalid" value="errors.validation.person.emailAddress.invalid" />
+				</assert>
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.person.emailAddress.invalidLength" />
+				</assert>
+			</dataElement>
+			
+		</dataSet>
+
+	</dataSets>
+	
+</validat>		

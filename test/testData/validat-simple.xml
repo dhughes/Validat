@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+    validat.xml
+	
+    Description:
+        This is the configuration xml that is passed to the validat object upon instantiation and includes
+        definitions for all of the validation rules and data sets that the validation engine will handle.  This
+        configuration file may also be extended through the include tag, in which case the configuration included
+        in this file will be loaded first, then the configuration information in each include file will be loaded
+        (top to bottom priority) with any duplicate rules or data sets overriding a previous configuration.
+-->
+
+<validat>
+
+	<!-- validation rule definitions -->
+	<validationRules>
+
+		<rule name="alpha" validator="validateAlpha" />
+		<rule name="alphaNumeric" validator="validateAlphaNumeric" />
+		<rule name="length" validator="validateLength">
+			<arg name="min" default="0" />
+			<arg name="max" default="100" />
+		</rule>
+		
+	</validationRules>
+	
+	<!-- data set definitions -->
+	<dataSets>
+
+		<dataSet name="user">
+
+			<dataElement name="firstName" required="true" message="errors.validation.user.firstName.required" >
+				<assert rule="length" >
+					<!-- optionally, additional arguments can be provided to the validator function -->
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.firstName.invalidLength" />
+				</assert>
+			</dataElement>
+			<dataElement name="middleName" required="false" >
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.middleName.invalidLength" />
+				</assert>
+			</dataElement>
+			<dataElement name="lastName" required="true" message="errors.validation.user.lastName.required" >
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="errors.validation.user.lastName.invalidLength" />
+				</assert>
+			</dataElement>
+
+		</dataSet>
+
+	</dataSets>
+	
+</validat>		
