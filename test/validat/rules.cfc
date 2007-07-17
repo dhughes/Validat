@@ -68,6 +68,8 @@ Release: 0.1.0
 		<Cfset base.validationRules = structNew() />
 
 		<cfset base.validationRules.alpha = structNew() />
+		<cfset base.validationRules.alpha.args = structNew() />
+		<cfset base.validationRules.alpha.messages = structNew() />
 		<cfset base.validationRules.alpha.name = "alpha" />
 		<cfset base.validationRules.alpha.validator = "validateAlpha" />
 
@@ -137,6 +139,8 @@ Release: 0.1.0
 		<Cfset base.validationRules = structNew() />
 
 		<cfset base.validationRules.alpha = structNew() />
+		<cfset base.validationRules.alpha.args = structNew() />
+		<cfset base.validationRules.alpha.messages = structNew() />
 		<cfset base.validationRules.alpha.name = "alpha" />
 		<cfset base.validationRules.alpha.validator = "validateAlpha" />
 
@@ -216,15 +220,20 @@ Release: 0.1.0
 
 		<!--- setup the base / expeted test result to compare against --->
 		<cfset base.alpha = structNew() />
+		<cfset base.alpha.args = structNew() />
+		<cfset base.alpha.messages = structNew() />
 		<cfset base.alpha.name = "alpha" />
 		<cfset base.alpha.validator = "validateAlpha" />
 		
 		<cfset base.alphaNumeric = structNew() />
+		<cfset base.alphaNumeric.args = structNew() />
+		<cfset base.alphaNumeric.messages = structNew() />
 		<cfset base.alphaNumeric.name = "alphaNumeric" />
 		<cfset base.alphaNumeric.validator = "validateAlphaNumeric" />
 		
 		<cfset base.length = structNew() />
 		<cfset base.length.args = structNew() />
+		<cfset base.length.messages = structNew() />
 		<cfset base.length.name = "length" />
 		<cfset base.length.validator = "validateLength" />
 		
@@ -255,6 +264,7 @@ Release: 0.1.0
 
 		<!--- setup the base / expeted test result to compare against --->
 		<cfset base.args = structNew() />
+		<cfset base.messages = structNew() />
 		<cfset base.name = "length" />
 		<cfset base.validator = "validateLength" />
 		

@@ -351,15 +351,20 @@
 <cfset base.validationRules = structNew() />
 
 <cfset base.validationRules.alpha = structNew() />
+<cfset base.validationRules.alpha.args = structNew() />
+<cfset base.validationRules.alpha.messages = structNew() />
 <cfset base.validationRules.alpha.name = "alpha" />
 <cfset base.validationRules.alpha.validator = "validateAlpha" />
 
 <cfset base.validationRules.alphaNumeric = structNew() />
+<cfset base.validationRules.alphaNumeric.args = structNew() />
+<cfset base.validationRules.alphaNumeric.messages = structNew() />
 <cfset base.validationRules.alphaNumeric.name = "alphaNumeric" />
 <cfset base.validationRules.alphaNumeric.validator = "validateAlphaNumeric" />
 
 <cfset base.validationRules.birthdate = structNew() />
 <cfset base.validationRules.birthdate.args = structNew() />
+<cfset base.validationRules.birthdate.messages = structNew() />
 <cfset base.validationRules.birthdate.name = "birthdate" />
 <cfset base.validationRules.birthdate.validator = "validateBirthDate" />
 
@@ -367,15 +372,20 @@
 <cfset base.validationRules.birthdate.args.min = 0 />
 
 <cfset base.validationRules.creditCard = structNew() />
+<cfset base.validationRules.creditCard.args = structNew() />
+<cfset base.validationRules.creditCard.messages = structNew() />
 <cfset base.validationRules.creditCard.name = "creditCard" />
 <cfset base.validationRules.creditCard.validator = "validateCreditCard" />
 
 <cfset base.validationRules.duplicatePerson = structNew() />
+<cfset base.validationRules.duplicatePerson.args = structNew() />
+<cfset base.validationRules.duplicatePerson.messages = structNew() />
 <cfset base.validationRules.duplicatePerson.name = "duplicatePerson" />
 <cfset base.validationRules.duplicatePerson.validator = "validateDuplicatePerson" />
 
 <cfset base.validationRules.length = structNew() />
 <cfset base.validationRules.length.args = structNew() />
+<cfset base.validationRules.length.messages = structNew() />
 <cfset base.validationRules.length.name = "length" />
 <cfset base.validationRules.length.validator = "validateLength" />
 
@@ -383,13 +393,19 @@
 <cfset base.validationRules.length.args.min = 0 />
 
 <cfset base.validationRules.prefix = structNew() />
+<cfset base.validationRules.prefix.args = structNew() />
+<cfset base.validationRules.prefix.messages = structNew() />
 <cfset base.validationRules.prefix.name = "prefix" />
 <cfset base.validationRules.prefix.validator = "validatePrefix" />
 
 <cfset base.validationRules.ssn = structNew() />
+<cfset base.validationRules.ssn.args = structNew() />
+<cfset base.validationRules.ssn.messages = structNew() />
 <cfset base.validationRules.ssn.name = "ssn" />
 <cfset base.validationRules.ssn.validator = "validateSSN" />
 
 <cfset base.validationRules.suffix = structNew() />
+<cfset base.validationRules.suffix.args = structNew() />
+<cfset base.validationRules.suffix.messages = structNew() />
 <cfset base.validationRules.suffix.name = "suffix" />
 <cfset base.validationRules.suffix.validator = "validateSuffix" />

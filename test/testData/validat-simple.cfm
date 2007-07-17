@@ -71,15 +71,20 @@
 <cfset base.validationRules = structNew() />
 
 <cfset base.validationRules.alpha = structNew() />
+<cfset base.validationRules.alpha.args = structNew() />
+<cfset base.validationRules.alpha.messages = structNew() />
 <cfset base.validationRules.alpha.name = "alpha" />
 <cfset base.validationRules.alpha.validator = "validateAlpha" />
 
 <cfset base.validationRules.alphaNumeric = structNew() />
+<cfset base.validationRules.alphaNumeric.args = structNew() />
+<cfset base.validationRules.alphaNumeric.messages = structNew() />
 <cfset base.validationRules.alphaNumeric.name = "alphaNumeric" />
 <cfset base.validationRules.alphaNumeric.validator = "validateAlphaNumeric" />
 
 <cfset base.validationRules.length = structNew() />
 <cfset base.validationRules.length.args = structNew() />
+<cfset base.validationRules.length.messages = structNew() />
 <cfset base.validationRules.length.name = "length" />
 <cfset base.validationRules.length.validator = "validateLength" />
 

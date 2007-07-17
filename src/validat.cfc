@@ -198,7 +198,7 @@ Release: 0.1.0
 						<cfset args = structNew() />
 					
 						<!--- insert any default arguments for the validation rule into the argument collection --->
-						<cfif structKeyExists ( getRule(assertion), 'args' ) >
+						<cfif structKeyExists ( getRule( assertion ), 'args' ) >
 							<cfset structAppend( args, getRule(assertion).args ) />
 						</cfif>
 					
@@ -213,11 +213,23 @@ Release: 0.1.0
 						<!--- if the assertion validation fails --->
 						<cfif result NEQ true >
 					
-							<!--- attempt to locate the specified message --->
+							<!--- attempt to locate the specified message in the assertion defintion --->
 							<cfif structKeyExists( getAssert( arguments.dataSetName, dataElement.name, assertion ).messages, result ) >
 		
 								<!--- add an error to the error collection --->
 								<cfset errorCollection.addError( dataElement.name, dataStr[dataElement.name], getAssert( arguments.dataSetName, dataElement.name, assertion ).messages[result] ) />
+		
+								<!--- check the assertion continue attribute --->
+								<cfif NOT getAssert( arguments.dataSetName, dataElement.name, assertion ).continueOnFail >
+									<!--- stop validation checks on the current data value --->
+									<cfbreak />
+								</cfif> <!--- end: if assertion continue attribute is false --->
+					
+							<!--- attempt to locate the specified message in the default validation rule defintion --->
+							<cfelseif structKeyExists( getRule( assertion ).messages, result ) >
+		
+								<!--- add an error to the error collection --->
+								<cfset errorCollection.addError( dataElement.name, dataStr[dataElement.name], getRule( assertion ).messages[result] ) />
 		
 								<!--- check the assertion continue attribute --->
 								<cfif NOT getAssert( arguments.dataSetName, dataElement.name, assertion ).continueOnFail >
@@ -282,10 +294,22 @@ Release: 0.1.0
 					<cfif structKeyExists( getAssert( dataSetName = arguments.dataSetName, rule = assertion ).messages, result ) >
 
 						<!--- add an error to the error collection --->
-						<cfset errorCollection.addError( dataKey, dataStr[dataKey], getAssert( dataSetName = arguments.dataSetName, rule = assertion ).messages[result] ) />
+						<cfset errorCollection.addError( message = getAssert( dataSetName = arguments.dataSetName, rule = assertion ).messages[result] ) />
 
 						<!--- check the assertion continue attribute --->
 						<cfif NOT getAssert( dataSetName = arguments.dataSetName, rule = assertion ).continueOnFail >
+							<!--- stop validation checks on the current data value --->
+							<cfbreak />
+						</cfif> <!--- end: if assertion continue attribute is false --->
+					
+					<!--- attempt to locate the specified message in the default validation rule defintion --->
+					<cfelseif structKeyExists( getRule( assertion ).messages, result ) >
+
+						<!--- add an error to the error collection --->
+						<cfset errorCollection.addError( message = getRule( assertion ).messages[result] ) />
+
+						<!--- check the assertion continue attribute --->
+						<cfif NOT getAssert( arguments.dataSetName, dataElement.name, assertion ).continueOnFail >
 							<!--- stop validation checks on the current data value --->
 							<cfbreak />
 						</cfif> <!--- end: if assertion continue attribute is false --->
@@ -325,6 +349,7 @@ Release: 0.1.0
 		<cfargument name="ruleName" type="string" required="true" hint="The name of the validation rule" />
 		<cfargument name="validator" type="string" required="true" hint="The bean name of the validator object" />
 		<cfargument name="ruleArgs" type="struct" required="false" default="#structNew()#" hint="A collection of default arguments to be passed to the validator object along with the data value" />
+		<cfargument name="ruleMsgs" type="struct" required="false" default="#structNew()#" hint="A collection of default messages to be returned in the event of a validation error from the validator object" />
 
 		<!--- setup temporary variables --->
 		<cfset ruleStr = structNew() />
@@ -332,8 +357,13 @@ Release: 0.1.0
 		<!--- setup the rule based upon the received arguments --->
 		<cfset ruleStr.name = arguments.ruleName/>
 		<cfset ruleStr.validator = arguments.validator />
+		<cfset ruleStr.args = structNew() />
 		<cfif NOT structIsEmpty( arguments.ruleArgs ) >
-			<cfset ruleStr.args = arguments.ruleArgs />
+			<cfset ruleStr.args = structCopy( arguments.ruleArgs ) />
+		</cfif>
+		<cfset ruleStr.messages = structNew() />
+		<cfif NOT structIsEmpty( arguments.ruleMsgs ) >
+			<cfset ruleStr.messages = structCopy( arguments.ruleMsgs ) />
 		</cfif>
 
 		<!--- insert the new validation rule definiton into the validation rules collection --->
@@ -358,27 +388,44 @@ Release: 0.1.0
 		<cfset var oXML = xmlParse(arguments.ruleXML) />
 		<cfset var argPtr = 0 />
 		<cfset var argCollection = structNew() />
-
+		<cfset var msgCollection = structNew() />
+		
 		<!--- check if the ruleXML is in fact a valid validation rule xml snippet --->
 		<cfif NOT ( lcase( oXML.xmlRoot.xmlName ) EQ 'rule' AND structKeyExists( oXML.xmlRoot.xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlAttributes, "validator") ) >
 			<cfthrow type="validat.invalidRule" message="validat: The xml snippet passed to the addRuleXML() method does not represent a valid validation rule." />
 		</cfif>
 
-		<!--- check for any arguments to this validation rule --->
-		<cfif arrayLen( oXML.xmlRoot.xmlChildren )>
-			<!--- for every child node of the validation rule --->
-			<cfloop from="1" to="#arrayLen( oXML.xmlRoot.xmlChildren )#" index="argPtr">
+		<!--- for every child node of the validation rule --->
+		<cfloop from="1" to="#arrayLen( oXML.xmlRoot.xmlChildren )#" index="argPtr">
+			<!--- if the child node is an argument --->
+			<cfif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'arg' >
+			
 				<!--- if the child node is a valid argument --->
-				<cfif NOT ( lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'arg' AND structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "value") ) >
+				<cfif NOT ( structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "value") ) >
 					<cfthrow type="validat.invalidRule" message="validat: The xml snippet passed to the addRuleXML() method contains an invalid argument." detail="Invalid Argument: #toString(oXML.xmlRoot.xmlChildren[argPtr])#" />
 				</cfif>
 				<!--- insert the argument into the argument collection --->
-				<cfset structInsert( argCollection, ucase( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name ), oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
-			</cfloop>
-		</cfif>
+				<cfset structInsert( argCollection, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
+
+			<!--- else, if the child node is a message --->
+			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'message' >
+			
+				<!--- if the child node is a valid argument --->
+				<cfif NOT ( structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "value") ) >
+					<cfthrow type="validat.invalidRule" message="validat: The xml snippet passed to the addRuleXML() method contains an invalid message." detail="Invalid Argument: #toString(oXML.xmlRoot.xmlChildren[argPtr])#" />
+				</cfif>
+				<!--- insert the argument into the argument collection --->
+				<cfset structInsert( msgCollection, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
+
+			<!--- else, throw an error - invalid node --->
+			<cfelse>
+				<cfthrow type="validat.invalidXML" message="validat: The xml snippet passed to the addRuleXML() contains an invalid entry.  '#oXML.xmlRoot.xmlChildren[argPtr].xmlName#' is not valid within a validation rule definition." />
+	
+			</cfif> <!--- end: if the child node is an argument --->
+		</cfloop> <!--- end: for every child node of the validation rule --->
 
 		<!--- pass the validation rule parameters to the addRule function for addition to the validation rule collection --->
-		<cfset addRule( oXML.xmlRoot.xmlAttributes.name, oXML.xmlRoot.xmlAttributes.validator, argCollection ) />
+		<cfset addRule( oXML.xmlRoot.xmlAttributes.name, oXML.xmlRoot.xmlAttributes.validator, argCollection, msgCollection ) />
 
 		<!--- return a pointer to this object to allow for chaining --->
 		<cfreturn this />
