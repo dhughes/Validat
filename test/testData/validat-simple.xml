@@ -19,8 +19,8 @@
 		<rule name="alpha" validator="validateAlpha" />
 		<rule name="alphaNumeric" validator="validateAlphaNumeric" />
 		<rule name="length" validator="validateLength">
-			<arg name="min" default="0" />
-			<arg name="max" default="100" />
+			<arg name="min" value="0" />
+			<arg name="max" value="100" />
 		</rule>
 		
 	</validationRules>

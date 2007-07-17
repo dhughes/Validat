@@ -21,14 +21,14 @@
 		<rule name="alpha" validator="validateAlpha" />
 		<rule name="alphaNumeric" validator="validateAlphaNumeric" />
 		<rule name="birthdate" validator="validateBirthDate" >
-			<arg name="min" default="0" />
-			<arg name="max" default="120" />
+			<arg name="min" value="0" />
+			<arg name="max" value="120" />
 		</rule>
 		<rule name="creditCard" validator="validateCreditCard" />
 		<rule name="duplicatePerson" validator="validateDuplicatePerson" />
 		<rule name="length" validator="validateLength">
-			<arg name="min" default="0" />
-			<arg name="max" default="100" />
+			<arg name="min" value="0" />
+			<arg name="max" value="100" />
 		</rule>
 		<rule name="ssn" validator="validateSSN" />
 		
@@ -86,9 +86,6 @@
 		<dataSet name="person">
 
 			<assert rule="duplicatePerson" >
-				<arg name="firstName" value="firstName" />
-				<arg name="lastName" value="lastName" />
-				<arg name="emailAddress" value="emailAddress" />
 				<message name="failByEmail" value="errors.validation.person.duplicate.email" />
 				<message name="failByName" value="errors.validation.person.duplicate.name" />
 			</assert>

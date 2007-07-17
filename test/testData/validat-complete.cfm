@@ -136,14 +136,9 @@
 <cfset base.dataSets.person.transformer = "" />
 
 <cfset base.dataSets.person.assertions[1] = structNew() />
-<cfset base.dataSets.person.assertions[1].args = structNew() />
 <cfset base.dataSets.person.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.person.assertions[1].messages = structNew() />
 <cfset base.dataSets.person.assertions[1].rule = "duplicatePerson" />
-
-<cfset base.dataSets.person.assertions[1].args.firstName = "firstName" />
-<cfset base.dataSets.person.assertions[1].args.lastName = "lastName" />
-<cfset base.dataSets.person.assertions[1].args.emailAddress = "emailAddress" />
 
 <cfset base.dataSets.person.assertions[1].messages.failByEmail = "errors.validation.person.duplicate.email" />
 <cfset base.dataSets.person.assertions[1].messages.failByName = "errors.validation.person.duplicate.name" />
@@ -257,13 +252,9 @@
 <cfset base.dataSets.address.transformer = "" />
 
 <cfset base.dataSets.address.assertions[1] = structNew() />
-<cfset base.dataSets.address.assertions[1].args = structNew() />
 <cfset base.dataSets.address.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.address.assertions[1].messages = structNew() />
 <cfset base.dataSets.address.assertions[1].rule = "state" />
-
-<cfset base.dataSets.address.assertions[1].args.country = "country" />
-<cfset base.dataSets.address.assertions[1].args.state = "state" />
 
 <cfset base.dataSets.address.assertions[1].messages.invalid = "errors.validation.address.state.invalid" />
 <cfset base.dataSets.address.assertions[1].messages.required = "errors.validation.address.state.required" />

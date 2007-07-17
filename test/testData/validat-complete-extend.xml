@@ -23,8 +23,6 @@
 		<dataSet name="address" >
 			
 			<assert rule="state" >
-				<arg name="state" value="state" />
-				<arg name="country" value="country" />
 				<message name="required" value="errors.validation.address.state.required" />
 				<message name="invalid" value="errors.validation.address.state.invalid" />
 			</assert>
