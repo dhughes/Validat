@@ -47,9 +47,8 @@ Release: 0.1.0
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateLength" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateLengthGT" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateLengthLT" ) ) />
-		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateNamePrefix" ) ) />
-		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateNameSuffix" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateSame" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateValueInList" ) ) />
 		
 		<cfreturn testSuite/>
 	</cffunction> <!--- end: suite() --->
