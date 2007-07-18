@@ -23,7 +23,7 @@ Release: 0.1.0
 --->
 
 <cfcomponent
-	displayname="validateLength"
+	displayname="validateLengthGT"
 	output="false"
 	hint="String length validation rule"
 	extends="validator">
@@ -31,7 +31,7 @@ Release: 0.1.0
 	<!--- ------------------------------------------------------------ --->
 	<!--- constructor --->
 
-	<cffunction name="init" access="public" returntype="validateLength"
+	<cffunction name="init" access="public" returntype="validateLengthGT"
 		hint="The default constructor for the validator rule, returning the initialized validator rule instance">
 
 		<!--- call the base constructor --->
@@ -47,34 +47,28 @@ Release: 0.1.0
 	<!--- 
 		function: 		validate
 	
-		description:	Check to see if the length of the data value is between the min and max values.
+		description:	Check to see if the length of the data value is greater than the min argument.
 		
 		arguments:		min ( the minimum value to check if the data value is greater than )
-						max ( the maximum value to check if the data value is less than )
 	--->
 	<cffunction name="validate" access="public" output="false" returntype="string"
-		hint="Check to see if the length of the data value is between the min and max values.">
+		hint="Check to see if the length of the data value is greater than the min argument.">
 
 		<cfargument name="data" type="any" required="true" hint="The data to be validated" />
 		<cfargument name="args" type="struct" required="false" default="#structNew()#" hint="The addtional arguments necessary to validate the data" />
 		
 		<!--- check to see if the data value represents a simple string value --->
 		<cfif NOT isSimpleValue( arguments.data ) >
-			<cfthrow type="validat.invalidData" message="validat: The validation rule 'validateLength' only accepts simple data types." />
+			<cfthrow type="validat.invalidData" message="validat: The validation rule 'validateLengthGT' only accepts simple data types." />
 		</cfif>
 		
 		<!--- check to see if min was provided in the arguments collection --->
 		<cfif NOT structKeyExists( arguments.args, 'min' ) >
-			<cfthrow type="validat.missingArgs" message="validat: The validation rule 'validateLength' requires an argument named 'min' that specifies the minimum value that will be accepted as valid." />
-		</cfif>
-		
-		<!--- check to see if max was provided in the arguments collection --->
-		<cfif NOT structKeyExists( arguments.args, 'max' ) >
-			<cfthrow type="validat.missingArgs" message="validat: The validation rule 'validateLength' requires an argument named 'max' that specifies the maximum value that will be accepted as valid." />
+			<cfthrow type="validat.missingArgs" message="validat: The validation rule 'validateLengthGT' requires an argument named 'min' that specifies the minimum value that will be accepted as valid." />
 		</cfif>
 
-		<!--- check to see if the length of the data value is between the min and max values. --->
-		<cfif ( len( trim( arguments.data ) ) GTE arguments.args.min ) AND ( len( trim( arguments.data ) ) LTE arguments.args.max ) >
+		<!--- check to see if the length of the data value is greater than the min values. --->
+		<cfif len( trim( arguments.data ) ) GTE arguments.args.min >
 			<cfreturn true />
 		</cfif>
 

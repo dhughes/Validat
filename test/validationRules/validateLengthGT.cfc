@@ -23,10 +23,10 @@ Release: 0.1.0
 --->
 
 <cfcomponent 
-	displayname="Validation Rules Test Suite - Length Validator"
+	displayname="Validation Rules Test Suite - Length Greater Than Validator"
 	output="false"
 	extends="org.cfcunit.framework.TestCase"
-	hint="Unit test suite for the Validat Validation Rules - Length Validator tests.">
+	hint="Unit test suite for the Validat Validation Rules - Length Greater Than Validator tests.">
 
 	<!--- ------------------------------------------------------------ --->
 	<!--- unit test setup --->
@@ -39,7 +39,7 @@ Release: 0.1.0
 	<cffunction name="setup" access="private" returntype="void"
 		hint="I will setup the unit test before each test function is run." >
 
-		<cfset variables.validateLength = createObject( "component", "validat.validationRules.validateLength" ) />
+		<cfset variables.validateLengthGT = createObject( "component", "validat.validationRules.validateLengthGT" ) />
 
 		<cfreturn />
 	</cffunction> <!--- end: setup() --->
@@ -60,46 +60,18 @@ Release: 0.1.0
 		<cfset var result = structNew() />
 
 		<!--- call the init method --->
-		<cfset variables.validateLength.init() />
+		<cfset variables.validateLengthGT.init() />
 		
 		<!--- setup the arguments collection --->
 		<cfset args.min = 10 />
-		<cfset args.max = 100 />
 		
 		<!--- call the validate method, passing in a valid data string --->
-		<cfset result = variables.validateLength.validate( 'This is a test string that is 49 characters long.', args ) />
+		<cfset result = variables.validateLengthGT.validate( 'This is a test string that is 49 characters long.', args ) />
 		
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
 	</cffunction> <!--- end: testValidate_Valid() --->
-
-	<!--- 
-		function: 		testValidate_Invalid_TooLong
-
-		description:	I will test the validate function, passing in an invalid data string.
-	--->
-	<cffunction name="testValidate_Invalid_TooLong" access="public" returntype="void"
-		hint="I will test the validate function, passing in an invalid data string." >
-	
-		<!--- setup temporary variables --->
-		<cfset var args = structNew() />
-		<cfset var result = structNew() />
-
-		<!--- call the init method --->
-		<cfset variables.validateLength.init() />
-		
-		<!--- setup the arguments collection --->
-		<cfset args.min = 10 />
-		<cfset args.max = 20 />
-		
-		<!--- call the validate method, passing in an invalid data string --->
-		<cfset result = variables.validateLength.validate( 'This is a test string that is 49 characters long.', args ) />
-		
-		<!--- run the assertion --->
-		<cfset assertEqualsString( 'invalid', result ) />
-
-	</cffunction> <!--- end: testValidate_Invalid_TooLong() --->
 
 	<!--- 
 		function: 		testValidate_Invalid_TooShort
@@ -114,19 +86,18 @@ Release: 0.1.0
 		<cfset var result = structNew() />
 
 		<!--- call the init method --->
-		<cfset variables.validateLength.init() />
+		<cfset variables.validateLengthGT.init() />
 		
 		<!--- setup the arguments collection --->
-		<cfset args.min = 75 />
-		<cfset args.max = 100 />
+		<cfset args.min = 100 />
 		
 		<!--- call the validate method, passing in an invalid data string --->
-		<cfset result = variables.validateLength.validate( 'This is a test string that is 49 characters long.', args ) />
+		<cfset result = variables.validateLengthGT.validate( 'This is a test string that is 49 characters long.', args ) />
 		
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_TooLong() --->
+	</cffunction> <!--- end: testValidate_Invalid_TooShort() --->
 
 	<!--- 
 		function: 		testValidate_MissingArg
@@ -140,12 +111,12 @@ Release: 0.1.0
 		<cfset var result = structNew() />
 
 		<!--- call the init method --->
-		<cfset variables.validateLength.init() />
+		<cfset variables.validateLengthGT.init() />
 		
 		<cftry> <!--- catch the expected error --->
 			
 			<!--- call the validate method, passing in a valid data string, but no arguments collection --->
-			<cfset result = variables.validateLength.validate( 'This is valid data' ) />
+			<cfset result = variables.validateLengthGT.validate( 'This is valid data' ) />
 			
 			<!--- if an error is not thrown, show this error in the unit test --->
 			<cfset fail( "validat.missingArgs was not thrown" ) />
@@ -169,12 +140,12 @@ Release: 0.1.0
 		<cfset var result = structNew() />
 
 		<!--- call the init method --->
-		<cfset variables.validateLength.init() />
+		<cfset variables.validateLengthGT.init() />
 		
 		<cftry> <!--- catch the expected error --->
 			
 			<!--- call the validate method, passing in a complex data structure --->
-			<cfset result = variables.validateLength.validate( structNew() ) />
+			<cfset result = variables.validateLengthGT.validate( structNew() ) />
 			
 			<!--- if an error is not thrown, show this error in the unit test --->
 			<cfset fail( "validat.invalidData was not thrown" ) />
