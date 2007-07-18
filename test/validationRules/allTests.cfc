@@ -43,6 +43,7 @@ Release: 0.1.0
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateDifferent" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateEmail" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateFormat" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateInteger" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateLength" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateNamePrefix" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateNameSuffix" ) ) />
