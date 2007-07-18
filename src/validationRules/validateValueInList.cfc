@@ -64,7 +64,7 @@ Release: 0.1.0
 		
 		<!--- check to see if the data value represents a simple string value --->
 		<cfif NOT isSimpleValue( arguments.data ) >
-			<cfthrow type="validat.invalidData" message="validat: The validation rule 'validatePrefix' only accepts simple data types." />
+			<cfthrow type="validat.invalidData" message="validat: The validation rule 'validateValueInList' only accepts simple data types." />
 		</cfif>
 		
 		<!--- check to see if a list was provided in the arguments collection --->
