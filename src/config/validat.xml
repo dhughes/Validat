@@ -19,7 +19,6 @@
 	<bean id="validateLengthGT"		class="validat.validationRules.validateLengthGT"		singleton="true" />
 	<bean id="validateLengthLT"		class="validat.validationRules.validateLengthLT"		singleton="true" />
 	<bean id="validateNotEmpty"		class="validat.validationRules.validateNotEmpty"		singleton="true" />
-	<bean id="validateNotNull"		class="validat.validationRules.validateNotNull"			singleton="true" />
 	<bean id="validateNumeric"		class="validat.validationRules.validateNumeric"			singleton="true" />
 	<bean id="validatePassword"		class="validat.validationRules.validatePassword"		singleton="true" />
 	<bean id="validatePhoneNumber"	class="validat.validationRules.validatePhoneNumber"		singleton="true" />
