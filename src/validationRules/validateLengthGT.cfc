@@ -57,19 +57,47 @@ Release: 0.1.0
 		<cfargument name="data" type="any" required="true" hint="The data to be validated" />
 		<cfargument name="args" type="struct" required="false" default="#structNew()#" hint="The addtional arguments necessary to validate the data" />
 		
-		<!--- check to see if the data value represents a simple string value --->
-		<cfif NOT isSimpleValue( arguments.data ) >
-			<cfthrow type="validat.invalidData" message="validat: The validation rule 'validateLengthGT' only accepts simple data types." />
-		</cfif>
-		
 		<!--- check to see if min was provided in the arguments collection --->
 		<cfif NOT structKeyExists( arguments.args, 'min' ) >
 			<cfthrow type="validat.missingArgs" message="validat: The validation rule 'validateLengthGT' requires an argument named 'min' that specifies the minimum value that will be accepted as valid." />
 		</cfif>
+		
+		<!--- if the data value is a simple string --->
+		<cfif isSimpleValue( arguments.data ) >
 
-		<!--- check to see if the length of the data value is greater than the min values. --->
-		<cfif len( trim( arguments.data ) ) GTE arguments.args.min >
-			<cfreturn true />
+			<!--- check to see if the length of the data value is greater than the min value --->
+			<cfif len( trim( arguments.data ) ) GTE arguments.args.min >
+				<cfreturn true />
+			</cfif>
+		
+		<!--- if the data value is a collection / structure --->
+		<cfelseif isStruct( arguments.data ) >
+
+			<!--- check to see if the length of the structure key list is greater than the min value --->
+			<cfif listLen( structKeyList( arguments.data ) ) GTE arguments.args.min >
+				<cfreturn true />
+			</cfif>
+		
+		<!--- if the data value is an array --->
+		<cfelseif isArray( arguments.data ) >
+
+			<!--- check to see if the length of the array is greater than the min value --->
+			<cfif arrayLen( arguments.data ) GTE arguments.args.min >
+				<cfreturn true />
+			</cfif>
+		
+		<!--- if the data value is a query recordset --->
+		<cfelseif isQuery( arguments.data ) >
+
+			<!--- check to see if the length of the recordset is greater than the min value --->
+			<cfif arguments.data.recordCount GTE arguments.args.min >
+				<cfreturn true />
+			</cfif>
+		
+		<!--- invalid date format --->
+		<cfelse>
+			<cfthrow type="validat.invalidData" message="validat: The validation rule 'validateLengthGT' cannot handle the provided data type." />
+		
 		</cfif>
 
 		<cfreturn "invalid" />

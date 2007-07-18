@@ -48,11 +48,11 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testValidate_Valid
+		function: 		testValidate_Valid_String
 
 		description:	I will test the validate function, passing in a valid data string.
 	--->
-	<cffunction name="testValidate_Valid" access="public" returntype="void"
+	<cffunction name="testValidate_Valid_String" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid data string." >
 	
 		<!--- setup temporary variables --->
@@ -72,14 +72,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid() --->
+	</cffunction> <!--- end: testValidate_Valid_String() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_TooLong
+		function: 		testValidate_Invalid_String_TooLong
 
 		description:	I will test the validate function, passing in an invalid data string.
 	--->
-	<cffunction name="testValidate_Invalid_TooLong" access="public" returntype="void"
+	<cffunction name="testValidate_Invalid_String_TooLong" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid data string." >
 	
 		<!--- setup temporary variables --->
@@ -99,14 +99,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_TooLong() --->
+	</cffunction> <!--- end: testValidate_String_Invalid_TooLong() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_TooShort
+		function: 		testValidate_Invalid_String_TooShort
 
 		description:	I will test the validate function, passing in an invalid data string.
 	--->
-	<cffunction name="testValidate_Invalid_TooShort" access="public" returntype="void"
+	<cffunction name="testValidate_Invalid_String_TooShort" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid data string." >
 	
 		<!--- setup temporary variables --->
@@ -126,7 +126,292 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_TooLong() --->
+	</cffunction> <!--- end: testValidate_Invalid_String_TooShort() --->
+
+	<!--- 
+		function: 		testValidate_Valid_Struct
+
+		description:	I will test the validate function, passing in a valid data struct.
+	--->
+	<cffunction name="testValidate_Valid_Struct" access="public" returntype="void"
+		hint="I will test the validate function, passing in a valid data struct." >
+	
+		<!--- setup temporary variables --->
+		<cfset var args = structNew() />
+		<cfset var data = structNew() />
+		<cfset var result = structNew() />
+
+		<!--- call the init method --->
+		<cfset variables.validateLength.init() />
+		
+		<!--- setup the arguments collection --->
+		<cfset args.min = 1 />
+		<cfset args.max = 10 />
+		
+		<!--- setup the data collection --->
+		<cfset data.test = "test" />
+		
+		<!--- call the validate method, passing in a valid data struct --->
+		<cfset result = variables.validateLength.validate( data, args ) />
+		
+		<!--- run the assertion --->
+		<cfset assertEqualsString( 'true', result ) />
+
+	</cffunction> <!--- end: testValidate_Valid_Struct() --->
+
+	<!--- 
+		function: 		testValidate_Invalid_Struct_TooLong
+
+		description:	I will test the validate function, passing in an invalid data struct.
+	--->
+	<cffunction name="testValidate_Invalid_Struct_TooLong" access="public" returntype="void"
+		hint="I will test the validate function, passing in an invalid data struct." >
+	
+		<!--- setup temporary variables --->
+		<cfset var args = structNew() />
+		<cfset var data = structNew() />
+		<cfset var result = structNew() />
+
+		<!--- call the init method --->
+		<cfset variables.validateLength.init() />
+		
+		<!--- setup the arguments collection --->
+		<cfset args.min = 0 />
+		<cfset args.max = 1 />
+			
+		<!--- setup the data collection --->
+		<cfset data.test = "test" />
+		<cfset data.test2 = "test2" />
+	
+		<!--- call the validate method, passing in an invalid data struct --->
+		<cfset result = variables.validateLength.validate( data, args ) />
+		
+		<!--- run the assertion --->
+		<cfset assertEqualsString( 'invalid', result ) />
+
+	</cffunction> <!--- end: testValidate_Struct_Invalid_TooLong() --->
+
+	<!--- 
+		function: 		testValidate_Invalid_Struct_TooShort
+
+		description:	I will test the validate function, passing in an invalid data struct.
+	--->
+	<cffunction name="testValidate_Invalid_Struct_TooShort" access="public" returntype="void"
+		hint="I will test the validate function, passing in an invalid data struct." >
+	
+		<!--- setup temporary variables --->
+		<cfset var args = structNew() />
+		<cfset var data = structNew() />
+		<cfset var result = structNew() />
+
+		<!--- call the init method --->
+		<cfset variables.validateLength.init() />
+		
+		<!--- setup the arguments collection --->
+		<cfset args.min = 5 />
+		<cfset args.max = 10 />
+			
+		<!--- setup the data collection --->
+		<cfset data.test = "test" />
+		
+		<!--- call the validate method, passing in an invalid data struct --->
+		<cfset result = variables.validateLength.validate( data, args ) />
+		
+		<!--- run the assertion --->
+		<cfset assertEqualsString( 'invalid', result ) />
+
+	</cffunction> <!--- end: testValidate_Invalid_Struct_TooShort() --->
+
+	<!--- 
+		function: 		testValidate_Valid_Array
+
+		description:	I will test the validate function, passing in a valid data array.
+	--->
+	<cffunction name="testValidate_Valid_Array" access="public" returntype="void"
+		hint="I will test the validate function, passing in a valid data array." >
+	
+		<!--- setup temporary variables --->
+		<cfset var args = structNew() />
+		<cfset var data = arrayNew(1) />
+		<cfset var result = structNew() />
+
+		<!--- call the init method --->
+		<cfset variables.validateLength.init() />
+		
+		<!--- setup the arguments collection --->
+		<cfset args.min = 1 />
+		<cfset args.max = 10 />
+		
+		<!--- setup the data collection --->
+		<cfset data[1] = "test" />
+		
+		<!--- call the validate method, passing in a valid data array --->
+		<cfset result = variables.validateLength.validate( data, args ) />
+		
+		<!--- run the assertion --->
+		<cfset assertEqualsString( 'true', result ) />
+
+	</cffunction> <!--- end: testValidate_Valid_Array() --->
+
+	<!--- 
+		function: 		testValidate_Invalid_Array_TooLong
+
+		description:	I will test the validate function, passing in an invalid data array.
+	--->
+	<cffunction name="testValidate_Invalid_Array_TooLong" access="public" returntype="void"
+		hint="I will test the validate function, passing in an invalid data array." >
+	
+		<!--- setup temporary variables --->
+		<cfset var args = structNew() />
+		<cfset var data = arrayNew(1) />
+		<cfset var result = structNew() />
+
+		<!--- call the init method --->
+		<cfset variables.validateLength.init() />
+		
+		<!--- setup the arguments collection --->
+		<cfset args.min = 0 />
+		<cfset args.max = 1 />
+			
+		<!--- setup the data collection --->
+		<cfset data[1] = "test" />
+		<cfset data[2] = "test2" />
+	
+		<!--- call the validate method, passing in an invalid data array --->
+		<cfset result = variables.validateLength.validate( data, args ) />
+		
+		<!--- run the assertion --->
+		<cfset assertEqualsString( 'invalid', result ) />
+
+	</cffunction> <!--- end: testValidate_Array_Invalid_TooLong() --->
+
+	<!--- 
+		function: 		testValidate_Invalid_Array_TooShort
+
+		description:	I will test the validate function, passing in an invalid data array.
+	--->
+	<cffunction name="testValidate_Invalid_Array_TooShort" access="public" returntype="void"
+		hint="I will test the validate function, passing in an invalid data array." >
+	
+		<!--- setup temporary variables --->
+		<cfset var args = structNew() />
+		<cfset var data = arrayNew(1) />
+		<cfset var result = structNew() />
+
+		<!--- call the init method --->
+		<cfset variables.validateLength.init() />
+		
+		<!--- setup the arguments collection --->
+		<cfset args.min = 5 />
+		<cfset args.max = 10 />
+			
+		<!--- setup the data collection --->
+		<cfset data[1] = "test" />
+		
+		<!--- call the validate method, passing in an invalid data array --->
+		<cfset result = variables.validateLength.validate( data, args ) />
+		
+		<!--- run the assertion --->
+		<cfset assertEqualsString( 'invalid', result ) />
+
+	</cffunction> <!--- end: testValidate_Invalid_Array_TooShort() --->
+
+	<!--- 
+		function: 		testValidate_Valid_Query
+
+		description:	I will test the validate function, passing in a valid data query.
+	--->
+	<cffunction name="testValidate_Valid_Query" access="public" returntype="void"
+		hint="I will test the validate function, passing in a valid data query." >
+	
+		<!--- setup temporary variables --->
+		<cfset var args = structNew() />
+		<cfset var data = queryNew('test') />
+		<cfset var result = structNew() />
+
+		<!--- call the init method --->
+		<cfset variables.validateLength.init() />
+		
+		<!--- setup the arguments collection --->
+		<cfset args.min = 1 />
+		<cfset args.max = 10 />
+		
+		<!--- setup the data collection --->
+		<cfset queryAddRow( data ) />
+		<cfset querySetCell( data, 'test', 'test' ) />
+		
+		<!--- call the validate method, passing in a valid data query --->
+		<cfset result = variables.validateLength.validate( data, args ) />
+		
+		<!--- run the assertion --->
+		<cfset assertEqualsString( 'true', result ) />
+
+	</cffunction> <!--- end: testValidate_Valid_Query() --->
+
+	<!--- 
+		function: 		testValidate_Invalid_Query_TooLong
+
+		description:	I will test the validate function, passing in an invalid data query.
+	--->
+	<cffunction name="testValidate_Invalid_Query_TooLong" access="public" returntype="void"
+		hint="I will test the validate function, passing in an invalid data query." >
+	
+		<!--- setup temporary variables --->
+		<cfset var args = structNew() />
+		<cfset var data = queryNew('test') />
+		<cfset var result = structNew() />
+
+		<!--- call the init method --->
+		<cfset variables.validateLength.init() />
+		
+		<!--- setup the arguments collection --->
+		<cfset args.min = 0 />
+		<cfset args.max = 1 />
+			
+		<!--- setup the data collection --->
+		<cfset queryAddRow( data, 2 ) />
+		<cfset querySetCell( data, 'test', 'test', 1 ) />
+		<cfset querySetCell( data, 'test', 'test2', 2 ) />
+	
+		<!--- call the validate method, passing in an invalid data query --->
+		<cfset result = variables.validateLength.validate( data, args ) />
+		
+		<!--- run the assertion --->
+		<cfset assertEqualsString( 'invalid', result ) />
+
+	</cffunction> <!--- end: testValidate_Query_Invalid_TooLong() --->
+
+	<!--- 
+		function: 		testValidate_Invalid_Query_TooShort
+
+		description:	I will test the validate function, passing in an invalid data query.
+	--->
+	<cffunction name="testValidate_Invalid_Query_TooShort" access="public" returntype="void"
+		hint="I will test the validate function, passing in an invalid data query." >
+	
+		<!--- setup temporary variables --->
+		<cfset var args = structNew() />
+		<cfset var data = queryNew('test') />
+		<cfset var result = structNew() />
+
+		<!--- call the init method --->
+		<cfset variables.validateLength.init() />
+		
+		<!--- setup the arguments collection --->
+		<cfset args.min = 5 />
+		<cfset args.max = 10 />
+			
+		<!--- setup the data collection --->
+		<cfset queryAddRow( data ) />
+		<cfset querySetCell( data, 'test', 'test' ) />
+		
+		<!--- call the validate method, passing in an invalid data query --->
+		<cfset result = variables.validateLength.validate( data, args ) />
+		
+		<!--- run the assertion --->
+		<cfset assertEqualsString( 'invalid', result ) />
+
+	</cffunction> <!--- end: testValidate_Invalid_Query_TooShort() --->
 
 	<!--- 
 		function: 		testValidate_MissingArg
@@ -158,23 +443,29 @@ Release: 0.1.0
 	</cffunction> <!--- end: testValidate_MissingArg() --->
 
 	<!--- 
-		function: 		testValidate_ComplexData
+		function: 		testValidate_InvalidType
 
-		description:	I will test the validate function, passing in a complex data structure which should result in an error.
+		description:	I will test the validate function, passing in an invalid data type which should result in an error.
 	--->
-	<cffunction name="testValidate_ComplexData" access="public" returntype="void"
-		hint="I will test the validate function, passing in a complex data structure which should result in an error." >
-		
+	<cffunction name="testValidate_InvalidType" access="public" returntype="void"
+		hint="I will test the validate function, passing in an invalid data type which should result in an error." >
+	
 		<!--- setup temporary variables --->
+		<cfset var args = structNew() />
+		<cfset var data = xmlNew() />
 		<cfset var result = structNew() />
 
 		<!--- call the init method --->
 		<cfset variables.validateLength.init() />
 		
+		<!--- setup the arguments collection --->
+		<cfset args.min = 75 />
+		<cfset args.max = 100 />
+		
 		<cftry> <!--- catch the expected error --->
 			
-			<!--- call the validate method, passing in a complex data structure --->
-			<cfset result = variables.validateLength.validate( structNew() ) />
+			<!--- call the validate method, passing in an invalid data type --->
+			<cfset result = variables.validateLength.validate( data, args ) />
 			
 			<!--- if an error is not thrown, show this error in the unit test --->
 			<cfset fail( "validat.invalidData was not thrown" ) />
@@ -184,6 +475,6 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_ComplexData() --->
+	</cffunction> <!--- end: testValidate_InvalidType() --->
 
 </cfcomponent>

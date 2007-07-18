@@ -57,19 +57,47 @@ Release: 0.1.0
 		<cfargument name="data" type="any" required="true" hint="The data to be validated" />
 		<cfargument name="args" type="struct" required="false" default="#structNew()#" hint="The addtional arguments necessary to validate the data" />
 		
-		<!--- check to see if the data value represents a simple string value --->
-		<cfif NOT isSimpleValue( arguments.data ) >
-			<cfthrow type="validat.invalidData" message="validat: The validation rule 'validateLengthLT' only accepts simple data types." />
-		</cfif>
-		
 		<!--- check to see if min was provided in the arguments collection --->
 		<cfif NOT structKeyExists( arguments.args, 'max' ) >
 			<cfthrow type="validat.missingArgs" message="validat: The validation rule 'validateLengthLT' requires an argument named 'max' that specifies the minimum value that will be accepted as valid." />
 		</cfif>
+		
+		<!--- if the data value is a simple string --->
+		<cfif isSimpleValue( arguments.data ) >
 
-		<!--- check to see if the length of the data value is less than the max value. --->
-		<cfif len( trim( arguments.data ) ) LTE arguments.args.max >
-			<cfreturn true />
+			<!--- check to see if the length of the data value is less than the max value --->
+			<cfif len( trim( arguments.data ) ) LTE arguments.args.max >
+				<cfreturn true />
+			</cfif>
+		
+		<!--- if the data value is a collection / structure --->
+		<cfelseif isStruct( arguments.data ) >
+
+			<!--- check to see if the length of the structure key list is less than the max value --->
+			<cfif listLen( structKeyList( arguments.data ) ) LTE arguments.args.max >
+				<cfreturn true />
+			</cfif>
+		
+		<!--- if the data value is an array --->
+		<cfelseif isArray( arguments.data ) >
+
+			<!--- check to see if the length of the array is less than the max value --->
+			<cfif arrayLen( arguments.data ) LTE arguments.args.max >
+				<cfreturn true />
+			</cfif>
+		
+		<!--- if the data value is a query recordset --->
+		<cfelseif isQuery( arguments.data ) >
+
+			<!--- check to see if the length of the recordset is less than the max value --->
+			<cfif arguments.data.recordCount LTE arguments.args.max >
+				<cfreturn true />
+			</cfif>
+		
+		<!--- invalid date format --->
+		<cfelse>
+			<cfthrow type="validat.invalidData" message="validat: The validation rule 'validateLengthLT' cannot handle the provided data type." />
+		
 		</cfif>
 
 		<cfreturn "invalid" />
