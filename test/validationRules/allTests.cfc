@@ -23,10 +23,10 @@ Release: 0.1.0
 --->
 
 <cfcomponent 
-	displayname="Validat Library - All Tests"
+	displayname="Validat Library - Validation Rules - All Tests"
 	output="false"
 	extends="org.cfcunit.Object"
-	hint="Unit test suite for the Validat Library.">
+	hint="Unit test suite for the Validat Validation Rules.">
 
 	<!--- ------------------------------------------------------------ --->
 	<!--- test suite --->
@@ -34,10 +34,15 @@ Release: 0.1.0
 	<cffunction name="suite" access="public" output="false" returntype="org.cfcunit.framework.Test"
 		hint="I will setup a suite of unit tests to all be run at the same time" >
 		
-		<cfset var testSuite = newObject( "org.cfcunit.framework.TestSuite" ).init( "Validat Library Tests" ) />
+		<cfset var testSuite = newObject( "org.cfcunit.framework.TestSuite" ).init( "Validat Tests" )>
 		
-		<cfset testSuite.addTest( newObject( "test.validat.allTests" ).suite() ) />
-		<cfset testSuite.addTest( newObject( "test.validationRules.allTests" ).suite() ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateAlpha" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateAlphaNumeric" ) ) />
+		<!--- <cfset testSuite.addTestSuite( newObject( "test.validationRules.validateBirthDate" ) ) /> --->
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateCreditCard" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateLength" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateNamePrefix" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateNameSuffix" ) ) />
 		
 		<cfreturn testSuite/>
 	</cffunction> <!--- end: suite() --->

@@ -23,19 +23,22 @@ Release: 0.1.0
 --->
 
 <cfcomponent
-	displayname="validateAlpha"
+	displayname="validateNamePrefix"
 	output="false"
-	hint="Alphabetic string validation rule."
+	hint="Prefix string validation rule"
 	extends="validator">
 	
 	<!--- ------------------------------------------------------------ --->
 	<!--- constructor --->
 
-	<cffunction name="init" access="public" returntype="validateAlpha"
+	<cffunction name="init" access="public" returntype="validateNamePrefix"
 		hint="The default constructor for the validator rule, returning the initialized validator rule instance">
 
 		<!--- call the base constructor --->
 		<cfset super.init() />
+		
+		<!--- setup the list of accepted prefixes ... these might come from a database or config file as well --->
+		<cfset variables.instance.prefixes = "Mr.,Mrs.,Ms.,Dr." />
 			
 		<!--- return the initialized validatoin rule --->
 		<cfreturn this />	
@@ -47,24 +50,24 @@ Release: 0.1.0
 	<!--- 
 		function: 		validate
 	
-		description:	Check to see if the data value contains only alpha characters ( A-Z, a-z ).
+		description:	Check to see if data value is a valid prefix name.
 	--->
 	<cffunction name="validate" access="public" output="false" returntype="string"
-		hint="Check to see if the data value contains only alpha characters ( A-Z, a-z ).">
+		hint="Check to see if data value is a valid prefix name.">
 
 		<cfargument name="data" type="any" required="true" hint="The data to be validated" />
 		<cfargument name="args" type="struct" required="false" default="#structNew()#" hint="The addtional arguments necessary to validate the data" />
 		
 		<!--- check to see if the data value represents a simple string value --->
 		<cfif NOT isSimpleValue( arguments.data ) >
-			<cfthrow type="validat.invalidData" message="validat: The validation rule 'validateAlpha' only accepts simple data types." />
+			<cfthrow type="validat.invalidData" message="validat: The validation rule 'validatePrefix' only accepts simple data types." />
 		</cfif>
 		
-		<!--- check to see if the data value contains only alpha characters ( A-Z, a-z ). --->
-		<cfif NOT reFind('[^A-Za-z]', arguments.data) >
+		<!--- check to see if data value is a valid prefix name. --->
+		<cfif listFindNoCase( variables.instance.prefixes, arguments.data ) >
 			<cfreturn true />
 		</cfif>
-
+		
 		<cfreturn "invalid" />
 	</cffunction> <!--- end: validate() --->
 

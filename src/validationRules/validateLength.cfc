@@ -23,9 +23,9 @@ Release: 0.1.0
 --->
 
 <cfcomponent
-	displayname="validateLength"
+	displayname="validateAlpha"
 	output="false"
-	hint="Data element string length validation rule."
+	hint="String length validation rule"
 	extends="validator">
 	
 	<!--- ------------------------------------------------------------ --->
@@ -45,47 +45,27 @@ Release: 0.1.0
 	<!--- public methods --->
 
 	<!--- 
-		function: validate
+		function: 		validate
 	
 		description:	Check to see if the length of the data value is between the min and max values.
 	--->
-	<cffunction name="validate" access="public" output="false" returntype="boolean"
+	<cffunction name="validate" access="public" output="false" returntype="string"
 		hint="Check to see if the length of the data value is between the min and max values.">
 
-		<cfargument name="dataValue" type="string" required="true" hint="The data value to be validated" />
-		<cfargument name="max" type="numeric" required="true" hint="The maximum length allowed to be considered valid" />
-		<cfargument name="min" type="numeric" required="true" hint="The minimum length allowed to be considered valid" />
+		<cfargument name="data" type="any" required="true" hint="The data to be validated" />
+		<cfargument name="args" type="struct" required="false" default="#structNew()#" hint="The addtional arguments necessary to validate the data" />
 		
-		<!--- check to see if the length of the data value is between the min and max values. --->
-		<cfreturn ( len(trim(arguments.dataValue)) GTE arguments.min ) AND ( len(trim(arguments.dataValue)) LTE arguments.max ) />
-	</cffunction> <!--- end: validate() --->
-
-	<!--- 
-		function: generateClientScript
-	
-		description:	Returns client side validation script for the given data element based upon the validate parameter.  This method
-						can be overridden to provide client side validation script in other forms.
-	--->
-	<cffunction name="generateClientScript" access="public" output="false" returntype="string"
-		hint="Returns client side validation script for the given data element based upon the validate parameter.">
-
-		<cfargument name="deName" type="string" required="true" hint="The name of the data element for which to generate validation script" />
-		<cfargument name="validate" type="string" required="true" hint="Indicates what type of validation script to generate [none, onBlur, onSubmit]" />
-
-		<!--- setup a container for the generated script --->
-		<cfset var csScript = "" />
-		
-		<!--- if the validate parameter is not none --->
-		<cfif lcase(arguments.validate) NEQ 'none'>
-		
+		<!--- check to see if the data value represents a simple string value --->
+		<cfif NOT isSimpleValue( arguments.data ) >
+			<cfthrow type="validat.invalidData" message="validat: The validation rule 'validateLength' only accepts simple data types." />
 		</cfif>
-		
-		<!--- return the generated client script --->
-		<cfreturn csScript />
-	</cffunction> <!--- end: generateClientScript() --->
 
-	<!--- ------------------------------------------------------------ --->
-	<!--- private methods --->
+		<!--- check to see if the length of the data value is between the min and max values. --->
+		<cfif ( len( trim( arguments.data ) ) GTE arguments.args.min ) AND ( len( trim( arguments.data ) ) LTE arguments.args.max ) >
+			<cfreturn true />
+		</cfif>
 
+		<cfreturn "invalid" />
+	</cffunction> <!--- end: validate() --->
 
 </cfcomponent>

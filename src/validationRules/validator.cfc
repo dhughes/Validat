@@ -25,7 +25,7 @@ Release: 0.1.0
 <cfcomponent
 	displayname="validator"
 	output="false"
-	hint="Provides a foundation for validation rules to extend upon.">
+	hint="Provides an 'interface' for validation rules to extend upon.">
 
 	<!--- ------------------------------------------------------------ --->
 	<!--- constructor --->
@@ -44,22 +44,18 @@ Release: 0.1.0
 	<!--- public methods --->
 
 	<!--- 
-		function: validate
+		function: 		validate
 	
-		description:	Validates the provided data value.  This method should be overridden to include customized validation routines.
+		description:	Validates the provided data.  This method should be overridden to include customized validation routines.
 	--->
-	<cffunction name="validate" access="public" output="false" returntype="boolean"
-		hint="Validates the provided data value.  This method should be overridden to include customized validation routines.">
+	<cffunction name="validate" access="public" output="false" returntype="string"
+		hint="Validates the provided data.  This method should be overridden to include customized validation routines.">
 
-		<cfargument name="data" type="struct" required="true" hint="The data structure containing the data to be validated" />
-		<cfargument name="args" type="struct" required="true" hint="The addtional arguments necessary to validate the data" />
+		<cfargument name="data" type="any" required="true" hint="The data to be validated" />
+		<cfargument name="args" type="struct" required="false" default="#structNew()#" hint="The addtional arguments necessary to validate the data" />
 		
 		<!--- return --->
 		<cfreturn true />
 	</cffunction> <!--- end: validate() --->
-
-	<!--- ------------------------------------------------------------ --->
-	<!--- private methods --->
-
 
 </cfcomponent>
