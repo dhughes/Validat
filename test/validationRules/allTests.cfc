@@ -52,6 +52,7 @@ Release: 0.1.0
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validatePhoneNumber" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateRange" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateSame" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateSSN" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateValueInList" ) ) />
 		
 		<cfreturn testSuite/>
