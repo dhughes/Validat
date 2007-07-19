@@ -44,18 +44,18 @@ Release: 0.1.0
 	<!--- public methods --->
 
 	<!--- 
-		function: getObject
+		function: getBean"
 	
 		description:	Utilizes the bean factory to create a new instance of the requested object (bean).
 	--->
-	<cffunction name="getObject" access="public" output="false" returntype="any" 
+	<cffunction name="getBean" access="public" output="false" returntype="any" 
 		hint="Utilizes the bean factory to create a new instance of the requested object (bean).">
 		
 		<cfargument name="beanName" type="string" required="true" hint="The name of the object (bean) to request from the bean factory" />
 
 		<!--- request and return the object from the bean factory --->
 		<cfreturn getBeanFactory().getBean(arguments.beanName) />
-	</cffunction> <!--- end: getObject() --->
+	</cffunction> <!--- end: getBean"() --->
 
 	<!--- 
 		function: setBeanFactory
