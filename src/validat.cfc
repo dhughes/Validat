@@ -124,11 +124,13 @@ Release: 0.1.0
 							
 							<!--- insert an error into the error collection for this data element --->
 							<cfset errorCollection.addError( dataElement.name, "", dataElement.message ) />
-						
-						</cfif>
-						
-						<!--- set the validation flag to true to check all assertions for this data element --->
-						<cfset validate = true />
+
+						<cfelse> <!--- else: data value is not a simple string or it contains a value --->
+							
+							<!--- set the validation flag to true to check all assertions for this data element --->
+							<cfset validate = true />
+												
+						</cfif> <!--- end: if the data value is a simple value and an empty string --->
 					
 					<!--- the data value is not present --->
 					<cfelse>
@@ -152,11 +154,13 @@ Release: 0.1.0
 							
 							<!--- set the validation flag to false to skip checking all assertions for this data element --->
 							<cfset validate = false />
-						
-						</cfif>
-						
-						<!--- set the validation flag to true to check all assertions for this data element --->
-						<cfset validate = true />
+
+						<cfelse> <!--- else: data value is not a simple string or it contains a value --->
+							
+							<!--- set the validation flag to true to check all assertions for this data element --->
+							<cfset validate = true />
+												
+						</cfif> <!--- end: if the data value is a simple value and an empty string --->
 					
 					<!--- the data value is not present --->
 					<cfelse>
