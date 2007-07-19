@@ -127,25 +127,29 @@ Release: 0.1.0
 	
 		description:	Retrieves an array of error structures for errors with the specified data elmeent name in the error collection.
 	--->
-	<cffunction name="getErrorsByDataElement" access="public" output="false" returntype="array"
-		hint="Retrieves an array of error structures for errors with the specified data elmeent name in the error collection.">
+	<cffunction name="getErrorsByDataElement" access="public" output="false" returntype="struct"
+		hint="Retrieves the data element information (name and value) as well as an array of error structures for errors with the specified data elmeent name in the error collection.">
 		
 		<cfargument name="dataElement" type="string" required="true" hint="the name of the data element for which errors are to be retrieved" />
 		
-		<!--- setup a temporary array pointer --->
+		<!--- setup a return struct, and array pointer --->
+		<cfset var returnStruct = structNew() />
 		<cfset var aryPtr = 0 />
 		
-		<!--- create a temporary array --->
-		<Cfset var tempArray = arrayNew(1) />
+		<!--- setup the return structure --->
+		<cfset returnStruct.dataElment = arguments.dataElement />
+		<cfset returnStruct.dataValue = "" />
+		<cfset returnStruct.messages = arrayNew(1) />
 		
 		<!--- search the errors array for errors with the specified data element name --->
 		<cfloop from="1" to="#arrayLen(variables.instance.errors)#" index="aryPtr">
 			<cfif variables.instance.errors[aryPtr].dataElement EQ arguments.dataElement >
-				<cfset arrayAppend(tempArray, structCopy(variables.instance.errors[aryPtr])) />
+				<cfset returnStruct.dataValue = variables.instance.errors[aryPtr].dataValue />
+				<cfset arrayAppend(returnStruct.messages, variables.instance.errors[aryPtr].message)) />
 			</cfif>
 		</cfloop>
 		
-		<cfreturn duplicate(tempArray) />
+		<cfreturn returnStruct />
 	</cffunction> <!--- end: getErrorsByDataElement() --->
 
 </cfcomponent>

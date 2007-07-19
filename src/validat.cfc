@@ -943,7 +943,7 @@ Release: 0.1.0
 			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'message' >
 				<!--- verify it is a valid message --->
 				<cfif NOT ( structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "value") ) >
-					<cfthrow type="validat.invalidAssert" message="validat: The xml snippet passed to the addAssertXML() method contains an invalid message." detail="Invalid Argument: #toString(oXML.xmlRoot.xmlChildren[argPtr])#" />
+					<cfthrow type="validat.invalidMessage" message="validat: The xml snippet passed to the addAssertXML() method contains an invalid message." detail="Invalid Message: #toString(oXML.xmlRoot.xmlChildren[argPtr])#" />
 				</cfif>
 				<!--- insert the argument into the messages collection --->
 				<cfset structInsert( assertParameters.messages, ucase( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name ), oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
