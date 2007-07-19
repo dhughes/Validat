@@ -544,6 +544,35 @@ Release: 0.1.0
 	</cffunction> <!--- end: testValidate_Invalid_Custom() --->
 
 	<!--- 
+		function: 		testValidate_MissingArg
+
+		description:	I will test the validate function, passing in a valid data string, but no arguments collection.
+	--->
+	<cffunction name="testValidate_MissingArg" access="public" returntype="void"
+		hint="I will test the validate function, passing in a valid data string, but no arguments collection." >
+		
+		<!--- setup temporary variables --->
+		<cfset var result = structNew() />
+
+		<!--- call the init method --->
+		<cfset variables.validateFormat.init() />
+		
+		<cftry> <!--- catch the expected error --->
+			
+			<!--- call the validate method, passing in a valid data string, but no arguments collection --->
+			<cfset result = variables.validateFormat.validate( '30000000000004' ) />
+			
+			<!--- if an error is not thrown, show this error in the unit test --->
+			<cfset fail( "validat.missingArgs was not thrown" ) />
+			
+			<!--- catch the expected error --->
+			<cfcatch type="validat.missingArgs" ></cfcatch>
+
+		</cftry> <!--- end: catch the expected error --->
+
+	</cffunction> <!--- end: testValidate_MissingArg() --->
+
+	<!--- 
 		function: 		testValidate_ComplexData
 
 		description:	I will test the validate function, passing in a complex data structure which should result in an error.
