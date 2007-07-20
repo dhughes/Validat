@@ -531,7 +531,8 @@ Release: 0.1.0
 		<cfset dataSetStr.transformer = arguments.transformer />
 		<cfset dataSetStr.dataElements = structNew() />
 		<cfset dataSetStr.assertions = arrayNew(1) />
-		<cfset dataSetStr.assertionList = "" />
+		<cfset dataSetStr.assertionIdList = "" />
+		<cfset dataSetStr.assertionRuleList = "" />
 
 		<!--- if a data set does not exist with the given data set name OR overwrite is true --->
 		<cfif NOT dataSetExists( arguments.dataSetName ) OR arguments.overwrite >
@@ -704,7 +705,8 @@ Release: 0.1.0
 			<cfset dataElementStr.name = arguments.dataElementName />
 			<cfset dataElementStr.required = arguments.required />
 			<cfset dataElementStr.message = arguments.message />
-			<cfset dataElementStr.assertionList = "" />
+			<cfset dataElementStr.assertionIdList = "" />
+			<cfset dataElementStr.assertionRuleList = "" />
 			<cfset dataElementStr.assertions = arrayNew(1) />
 			<cfset dataElementStr.connectTo = arguments.dataSetConnectionName />
 
@@ -864,12 +866,13 @@ Release: 0.1.0
 	<!--- 
 		function: 		addAssert
 
-		description:	Programmatically adds a new assertion to the data set or data set, data element combination specified.  If an 
-						assertion already exists with the specified rule in the given context, that assertion will be overwritten.  If
-						the specified data set or data set, data element combination does not exist, an error will be thrown.
+		description:	Programmatically adds a new assertion to the data set or data set, data element combination specified.  If a 
+						data element assertion is being added and an assertion already exists with the specified rule, that assertion 
+						will be overwritten.  Data set assertions will not be overwritten and must be removed manually if so desired.
+						If the specified data set or data set, data element combination does not exist, an error will be thrown.
 	--->
 	<cffunction name="addAssert" access="public" output="false" returntype="validat"
-		hint="Programmatically adds a data element assertion to the specified data set or data set, data element combination, overwritting any existing assertions with the same rule">
+		hint="Programmatically adds a data element assertion to the specified data set or data set, data element combination">
 
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set to associate the assertion with" />
 		<cfargument name="dataElementName" type="string" required="false" hint="The name of the data element to associate the assertion with" />
@@ -896,12 +899,13 @@ Release: 0.1.0
 		function: 		addAssertXML
 
 		description:	Programmatically adds a new data element assertion to the data set or data set, data element combination 
-						specified, based upon an xml snippet. If an assertion already exists with the specified rule in the given
-						context, that assertion will be overwritten.  If the specified data set or data set, data element 
-						combination does not exist, an error will be thrown.
+						specified, based upon an xml snippet.  If a data element assertion is being added and an assertion already 
+						exists with the specified rule, that assertion will be overwritten.  Data set assertions will not be 
+						overwritten and must be removed manually if so desired.  If the specified data set or data set, data 
+						element combination does not exist, an error will be thrown.
 	--->
 	<cffunction name="addAssertXML" access="public" output="false" returntype="validat"
-		hint="Programmatically adds a new data element definiton, along with any related assertions to the specified data set based upon an xml snippet, overwritting any existing data elements with the same name">
+		hint="Programmatically adds a new data element definiton, along with any related assertions to the specified data set based upon an xml snippet">
 
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set to associate the assertion with" />
 		<cfargument name="dataElementName" type="string" required="false" hint="The name of the data element to associate the assertion with" />
@@ -1002,17 +1006,20 @@ Release: 0.1.0
 		function: 		getAssert
 
 		description:	Retrieves the data element assertion associated with the data set or data set, data element combination, 
-						and rule name specified.  If the specified data set, or data set, data element combination, and rule name
-						does not exist, an error will be thrown.
+						and assertion identifier (rule name or assert id) specified.  The assertion identifier will be compared
+						against the assert id first and if no match occurs, will be compared against the rule name.  If the
+						assert id matches multiple assertions, an error will be thrown.  If the specified data set, or data set,
+						data element combination, and assertion identifier does not exist, an error will be thrown.
 	--->
 	<cffunction name="getAssert" access="public" output="false" returntype="struct"
 		hint="Retrieves the data element assertion for the data set, data element, and rule combination specified">
 
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set to retrieve the assertions for" />
 		<cfargument name="dataElementName" type="string" required="false" hint="The name of the data element to retrieve the assertion for" />
-		<cfargument name="rule" type="string" required="true" hint="The rule name of the assertion to retrieve" />
+		<cfargument name="assertId" type="string" required="true" hint="The assertion identifier (rule name or assert id) of the assertion to retrieve" />
 
 		<!--- setup temporary variables --->
+		<cfset var assertRules = 0 />
 		<cfset var assertPos = 0 />
 
 		<!--- check if the specified data set exists --->
@@ -1029,23 +1036,31 @@ Release: 0.1.0
 			</cfif>
 
 			<!--- check if the specified rule / assertion exists --->
-			<cfif NOT listFindNoCase( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionList, arguments.rule ) >
-				<cfthrow type="validat.invalidAssertion" message="validat: The assertion with the rule name specified ('#arguments.rule#') does not exist." />
+			<cfif NOT listFindNoCase( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList, arguments.assertId ) >
+				<cfthrow type="validat.invalidAssertion" message="validat: The assertion with the rule name specified ('#arguments.assertId#') does not exist." />
 			</cfif>
 	
 			<!--- return a copy of the assertion definition for the specified assertion, data element, data set combination --->
-			<cfset assertPos = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionList, arguments.rule ) />
+			<cfset assertPos = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList, arguments.assertId ) />
 			<cfreturn variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertions[assertPos] />
 
 		<cfelse>
 	
 			<!--- check if the specified rule / assertion exists --->
-			<cfif NOT structKeyExists( variables.instance.dataSets[arguments.dataSetName].assertions, arguments.rule ) >
-				<cfthrow type="validat.invalidAssertion" message="validat: The assertion with the rule name specified ('#arguments.rule#') does not exist." />
+			<cfset assertPos = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].assertionIdList, arguments.assertId ) >
+			<cfif assertPos EQ 0 >
+				<!--- assert identifier does not match an assert id, check if and how many assertion rule names it matches --->
+				<cfset assertRules = listValueCountNoCase( variables.instance.dataSets[arguments.dataSetName].assertionRuleList, arguments.assertId ) />
+				<cfif assertRules EQ 0 >
+					<cfthrow type="validat.invalidAssertion" message="validat: The assertion with the rule identifier specified ('#arguments.assertId#') does not exist." />
+				<cfelseif assertRules GT 1 >
+					<cfthrow type="validat.ambigiousAssertion" message="validat: The specified rule identifier ('#arguments.assertId#') matches more than one assertion." />
+				<cfelse>
+					<cfset assertPos = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].assertionRuleList, arguments.assertId ) />
+				</cfif>
 			</cfif>
 	
 			<!--- return a copy of the assertion definition for the specified assertion, data element, data set combination --->
-			<cfset assertPos = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].assertionList, arguments.rule ) />
 			<cfreturn variables.instance.dataSets[arguments.dataSetName].assertions[assertPos] />
 
 		</cfif> <!--- end: if a data element was specified --->
@@ -1055,17 +1070,20 @@ Release: 0.1.0
 		function: 		remAssert
 
 		description:	Removes the data element assertion associated with the data set or data set, data element combination,
-						and rule name specified.  If the specified data set, or data set, data element combination, and rule name
-						does not exist, an error will be thrown.
+						and assertion identifier (rule name or assert id) specified.  The assertion identifier will be compared
+						against the assert id first and if no match occurs, will be compared against the rule name.  If the
+						assert id matches multiple assertions, an error will be thrown.  If the specified data set, or data set,
+						data element combination, and assertion identifier does not exist, an error will be thrown.
 	--->
 	<cffunction name="remAssert" access="public" output="false" returntype="validat"
 		hint="Removes the data element assertion associated with the data set, data element, and rule combination specified">
 
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set to retrieve the assertions for" />
 		<cfargument name="dataElementName" type="string" required="false" hint="The name of the data element to retrieve the assertion for" />
-		<cfargument name="rule" type="string" required="true" hint="The rule name of the assertion to retrieve" />
+		<cfargument name="assertId" type="string" required="true" hint="The assertion identifier (rule name or assert id) of the assertion to retrieve" />
 
 		<!--- setup temporary variables --->
+		<cfset var assertRules = 0 />
 		<cfset var assertPos = 0 />
 
 		<!--- check if the specified data set exists --->
@@ -1082,26 +1100,36 @@ Release: 0.1.0
 			</cfif>
 
 			<!--- check if the specified rule / assertion exists --->
-			<cfif NOT structKeyExists( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertions, arguments.rule ) >
-				<cfthrow type="validat.invalidAssertion" message="validat: The assertion with the rule name specified ('#arguments.rule#') does not exist." />
+			<cfif NOT listFindNoCase( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList, arguments.assertId ) >
+				<cfthrow type="validat.invalidAssertion" message="validat: The assertion with the rule name specified ('#arguments.assertId#') does not exist." />
 			</cfif>
 	
 			<!--- remove the assertion definition for the specified assertion, data element, data set combination --->
-			<cfset assertPos = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionList, arguments.rule ) />
+			<cfset assertPos = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList, arguments.assertId ) />
 			<cfset arrayDeleteAt(variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertions, assertPos ) />
-			<cfset listDeleteAt(variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionList, assertPos ) />
+			<cfset listDeleteAt(variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIdList, assertPos ) />
+			<cfset listDeleteAt(variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList, assertPos ) />
 
 		<cfelse>
 	
 			<!--- check if the specified rule / assertion exists --->
-			<cfif NOT structKeyExists( variables.instance.dataSets[arguments.dataSetName].assertions, arguments.rule ) >
-				<cfthrow type="validat.invalidAssertion" message="validat: The assertion with the rule name specified ('#arguments.rule#') does not exist." />
+			<cfset assertPos = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].assertionIdList, arguments.assertId ) >
+			<cfif assertPos EQ 0 >
+				<!--- assert identifier does not match an assert id, check if and how many assertion rule names it matches --->
+				<cfset assertRules = listValueCountNoCase( variables.instance.dataSets[arguments.dataSetName].assertionRuleList, arguments.assertId ) />
+				<cfif assertRules EQ 0 >
+					<cfthrow type="validat.invalidAssertion" message="validat: The assertion with the rule identifier specified ('#arguments.assertId#') does not exist." />
+				<cfelseif assertRules GT 1 >
+					<cfthrow type="validat.ambigiousAssertion" message="validat: The specified rule identifier ('#arguments.assertId#') matches more than one assertion." />
+				<cfelse>
+					<cfset assertPos = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].assertionRuleList, arguments.assertId ) />
+				</cfif>
 			</cfif>
 	
 			<!--- remove the assertion definition for the specified assertion, data set combination --->
-			<cfset assertPos = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].assertionList, arguments.rule ) />
 			<cfset arrayDeleteAt(variables.instance.dataSets[arguments.dataSetName].assertions, assertPos ) />
-			<cfset listDeleteAt(variables.instance.dataSets[arguments.dataSetName].assertionList, assertPos ) />
+			<cfset listDeleteAt(variables.instance.dataSets[arguments.dataSetName].assertionIdList, assertPos ) />
+			<cfset listDeleteAt(variables.instance.dataSets[arguments.dataSetName].assertionRuleList, assertPos ) />
 
 		</cfif> <!--- end: if a data element was specified --->
 
@@ -1145,6 +1173,7 @@ Release: 0.1.0
 
 		<!--- setup the assertion based upon the received arguments --->
 		<cfset assertStr.rule = arguments.ruleName />
+		<cfset assertStr.ruleId = createUUID() />
 		<cfset assertStr.continueOnFail = arguments.continueOnFail />
 		<cfif NOT structIsEmpty( arguments.args ) >
 			<cfset assertStr.args = arguments.args />
@@ -1154,20 +1183,23 @@ Release: 0.1.0
 		</cfif>
 
 		<!--- attempt to locate existing assertion with this rule name --->
-		<cfset assertPtr = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionList, arguments.ruleName ) />
+		<cfset assertPtr = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList, arguments.ruleName ) />
 
 		<!--- if an existing assertion was found, overwrite it --->
 		<cfif assertPtr GT 0 >
+			<cfset assertStr.ruleId = variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertions[assertPtr].ruleId />
 			<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertions[assertPtr] = structCopy( assertStr ) />
 
 		<!--- existing assertion was not found, add assertion to the end of the array / list --->
 		<cfelse>
 			<cfset arrayAppend( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertions, structCopy( assertStr ) ) />
 	
-			<cfif listLen( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionList ) EQ 0 >
-				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionList = arguments.ruleName />
+			<cfif listLen( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList ) EQ 0 >
+				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList = arguments.ruleName />
+				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIdList = assertStr.ruleId />
 			<cfelse>
-				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionList = listAppend( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionList, arguments.ruleName ) />
+				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList = listAppend( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList, arguments.ruleName ) />
+				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIdList = listAppend( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIDList, assertStr.ruleId ) />
 			</cfif>
 
 		</cfif> <!--- end: if existing assertion was found --->
@@ -1179,12 +1211,11 @@ Release: 0.1.0
 	<!--- 
 		function: 		addDSAssert
 
-		description:	Programmatically adds a new data set assertion to the data set specified.  If an assertion already 
-						exists with the specified rule in the data set, that assertion will be overwritten.  If the 
+		description:	Programmatically adds a new data set assertion to the data set specified. If the 
 						specified data set does not exist, an error will be thrown.
 	--->
 	<cffunction name="addDSAssert" access="private" output="false" returntype="void"
-		hint="Programmatically adds a data element assertion to the specified data set or data set, data element combination, overwritting any existing assertions with the same rule">
+		hint="Programmatically adds a data element assertion to the specified data set or data set, data element combination">
 
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set to associate the assertion with" />
 		<cfargument name="ruleName" type="string" required="true" hint="The name of the rule to which this assertion corresponds" />
@@ -1203,6 +1234,7 @@ Release: 0.1.0
 
 		<!--- setup the assertion based upon the received arguments --->
 		<cfset assertStr.rule = arguments.ruleName />
+		<cfset assertStr.ruleId = createUUID() />
 		<cfset assertStr.continueOnFail = arguments.continueOnFail />
 		<cfif NOT structIsEmpty( arguments.args ) >
 			<cfset assertStr.args = arguments.args />
@@ -1211,24 +1243,16 @@ Release: 0.1.0
 			<cfset assertStr.messages = arguments.messages />
 		</cfif>
 
-		<!--- attempt to locate existing assertion with this rule name --->
-		<cfset assertPtr = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].assertionList, arguments.ruleName ) />
+		<!--- add assertion to the end of the array / list --->
+		<cfset arrayAppend( variables.instance.dataSets[arguments.dataSetName].assertions, structCopy( assertStr ) ) />
 
-		<!--- if an existing assertion was found, overwrite it --->
-		<cfif assertPtr GT 0 >
-			<cfset variables.instance.dataSets[arguments.dataSetName].assertions[assertPtr] = structCopy( assertStr ) />
-
-		<!--- existing assertion was not found, add assertion to the end of the array / list --->
+		<cfif listLen( variables.instance.dataSets[arguments.dataSetName].assertionRuleList ) EQ 0 >
+			<cfset variables.instance.dataSets[arguments.dataSetName].assertionRuleList = arguments.ruleName />
+			<cfset variables.instance.dataSets[arguments.dataSetName].assertionIdList = assertStr.ruleId />
 		<cfelse>
-			<cfset arrayAppend( variables.instance.dataSets[arguments.dataSetName].assertions, structCopy( assertStr ) ) />
-	
-			<cfif listLen( variables.instance.dataSets[arguments.dataSetName].assertionList ) EQ 0 >
-				<cfset variables.instance.dataSets[arguments.dataSetName].assertionList = arguments.ruleName />
-			<cfelse>
-				<cfset variables.instance.dataSets[arguments.dataSetName].assertionList = listAppend( variables.instance.dataSets[arguments.dataSetName].assertionList, arguments.ruleName ) />
-			</cfif>
-
-		</cfif> <!--- end: if existing assertion was found --->
+			<cfset variables.instance.dataSets[arguments.dataSetName].assertionRuleList = listAppend( variables.instance.dataSets[arguments.dataSetName].assertionRuleList, arguments.ruleName ) />
+			<cfset variables.instance.dataSets[arguments.dataSetName].assertionIdList = listAppend( variables.instance.dataSets[arguments.dataSetName].assertionIdList, assertStr.ruleId ) />
+		</cfif>
 
 		<!--- return --->
 		<cfreturn />

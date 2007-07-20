@@ -11,7 +11,8 @@
 <cfset base.dataSets.user.transformer = "" />
 
 <cfset base.dataSets.user.dataElements.firstName = structNew() />
-<cfset base.dataSets.user.dataElements.firstName.assertionList = "length" />
+<cfset base.dataSets.user.dataElements.firstName.assertionIdList = "" />
+<cfset base.dataSets.user.dataElements.firstName.assertionRuleList = "length" />
 <cfset base.dataSets.user.dataElements.firstName.assertions = arrayNew(1) />
 <cfset base.dataSets.user.dataElements.firstName.connectTo = "" />
 <cfset base.dataSets.user.dataElements.firstName.message = "errors.validation.user.firstName.required" />
@@ -30,7 +31,8 @@
 <cfset base.dataSets.user.dataElements.firstName.assertions[1].messages.invalid = "errors.validation.user.firstName.invalidLength" />
 
 <cfset base.dataSets.user.dataElements.middleName = structNew() />
-<cfset base.dataSets.user.dataElements.middleName.assertionList = "length" />
+<cfset base.dataSets.user.dataElements.middleName.assertionIdList = "" />
+<cfset base.dataSets.user.dataElements.middleName.assertionRuleList = "length" />
 <cfset base.dataSets.user.dataElements.middleName.assertions = arrayNew(1) />
 <cfset base.dataSets.user.dataElements.middleName.connectTo = "" />
 <cfset base.dataSets.user.dataElements.middleName.message = "" />
@@ -49,7 +51,8 @@
 <cfset base.dataSets.user.dataElements.middleName.assertions[1].messages.invalid = "errors.validation.user.middleName.invalidLength" />
 
 <cfset base.dataSets.user.dataElements.lastName = structNew() />
-<cfset base.dataSets.user.dataElements.lastName.assertionList = "length" />
+<cfset base.dataSets.user.dataElements.lastName.assertionIdList = "" />
+<cfset base.dataSets.user.dataElements.lastName.assertionRuleList = "length" />
 <cfset base.dataSets.user.dataElements.lastName.assertions = arrayNew(1) />
 <cfset base.dataSets.user.dataElements.lastName.connectTo = "" />
 <cfset base.dataSets.user.dataElements.lastName.message = "errors.validation.user.lastName.required" />

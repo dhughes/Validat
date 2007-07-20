@@ -145,7 +145,7 @@ Release: 0.1.0
 		<cfloop from="1" to="#arrayLen(variables.instance.errors)#" index="aryPtr">
 			<cfif variables.instance.errors[aryPtr].dataElement EQ arguments.dataElement >
 				<cfset returnStruct.dataValue = variables.instance.errors[aryPtr].dataValue />
-				<cfset arrayAppend(returnStruct.messages, variables.instance.errors[aryPtr].message)) />
+				<cfset arrayAppend( returnStruct.messages, variables.instance.errors[aryPtr].message ) />
 			</cfif>
 		</cfloop>
 		
