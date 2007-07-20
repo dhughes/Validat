@@ -114,42 +114,45 @@ Release: 0.1.0
 	<!--- 
 		function: 		getErrors
 	
-		description:	Retrieves an array of error structures for all errors in the error collection.
+		description:	Retrieves all of the errors in the error collection, returning a structure keyed by 
+						data element name, with each key containing an array of error messages.  If a data
+						element name is specified, only errors for that data element will be returned.
 	--->
-	<cffunction name="getErrors" access="public" output="false" returntype="array"
-		hint="Retrieves an array of error structures for all errors in the error collection.">
+	<cffunction name="getErrors" access="public" output="false" returntype="struct"
+		hint="Retrieves all of the errors in the error collection, returning a structure keyed by data element name, with each key containing an array of error messages.">
 		
-		<cfreturn duplicate(variables.instance.errors) />
-	</cffunction> <!--- end: getErrors() --->
+		<cfargument name="dataElement" type="string" required="false" hint="the name of the data element for which errors are to be retrieved" />
 
-	<!--- 
-		function: 		getErrorsByDataElement
-	
-		description:	Retrieves an array of error structures for errors with the specified data elmeent name in the error collection.
-	--->
-	<cffunction name="getErrorsByDataElement" access="public" output="false" returntype="struct"
-		hint="Retrieves the data element information (name and value) as well as an array of error structures for errors with the specified data elmeent name in the error collection.">
-		
-		<cfargument name="dataElement" type="string" required="true" hint="the name of the data element for which errors are to be retrieved" />
-		
 		<!--- setup a return struct, and array pointer --->
-		<cfset var returnStruct = structNew() />
-		<cfset var aryPtr = 0 />
+		<cfset var errorPtr = 0 />
+		<cfset var resultStr = structNew() />
+
+		<cfset resultStr._errorCount = 0 />
 		
-		<!--- setup the return structure --->
-		<cfset returnStruct.dataElment = arguments.dataElement />
-		<cfset returnStruct.dataValue = "" />
-		<cfset returnStruct.messages = arrayNew(1) />
+		<!--- insert each error into the result structure --->
+		<cfloop from="1" to="#arrayLen( variables.instance.errors )#" index="errorPtr">
 		
-		<!--- search the errors array for errors with the specified data element name --->
-		<cfloop from="1" to="#arrayLen(variables.instance.errors)#" index="aryPtr">
-			<cfif variables.instance.errors[aryPtr].dataElement EQ arguments.dataElement >
-				<cfset returnStruct.dataValue = variables.instance.errors[aryPtr].dataValue />
-				<cfset arrayAppend( returnStruct.messages, variables.instance.errors[aryPtr].message ) />
+			<!--- if a specific data element was not specified, or if the specified data element matches the current error data element --->
+			<cfif NOT isDefined('arguments.dataElement') OR ( arguments.dataElement EQ variables.instance.errors[errorPtr].dataElement ) >
+	
+				<!--- if no errors for the given data element exist --->
+				<cfif NOT structKeyExists( resultStr, variables.instance.errors[errorPtr].dataElement ) >
+					<cfset resultStr[variables.instance.errors[errorPtr].dataElement] = structNew() />
+					<cfset resultStr[variables.instance.errors[errorPtr].dataElement].value = variables.instance.errors[errorPtr].dataValue />
+					<cfset resultStr[variables.instance.errors[errorPtr].dataElement].errors = arrayNew(1) />
+				</cfif>
+				
+				<!--- insert the error message --->
+				<cfset arrayAppend( resultStr[variables.instance.errors[errorPtr].dataElement].errors, variables.instance.errors[errorPtr].message ) />
+				
+				<!--- increment the error count --->
+				<cfset resultStr._errorCount = resultStr._errorCount + 1 />
+
 			</cfif>
+			
 		</cfloop>
 		
-		<cfreturn returnStruct />
-	</cffunction> <!--- end: getErrorsByDataElement() --->
+		<cfreturn resultStr />
+	</cffunction> <!--- end: getErrors() --->
 
 </cfcomponent>
