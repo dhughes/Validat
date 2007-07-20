@@ -59,9 +59,9 @@ Release: 0.1.0
 
 		<!--- create a new error structure with the provided data --->
 		<cfset var errorStruct = structNew() />
-		<cfset errorStruct.dataElement = arguments.dataElement />
-		<cfset errorStruct.dataValue = arguments.dataValue />
-		<cfset errorStruct.message = arguments.message />
+		<cfset errorStruct["dataElement"] = arguments.dataElement />
+		<cfset errorStruct["dataValue"] = arguments.dataValue />
+		<cfset errorStruct["message"] = arguments.message />
 		
 		<!--- add the error structure to the array --->
 		<cfset arrayAppend(variables.instance.errors, errorStruct) />		
@@ -127,7 +127,7 @@ Release: 0.1.0
 		<cfset var errorPtr = 0 />
 		<cfset var resultStr = structNew() />
 
-		<cfset resultStr._errorCount = 0 />
+		<cfset resultStr["_errorCount"] = 0 />
 		
 		<!--- insert each error into the result structure --->
 		<cfloop from="1" to="#arrayLen( variables.instance.errors )#" index="errorPtr">
@@ -137,9 +137,9 @@ Release: 0.1.0
 	
 				<!--- if no errors for the given data element exist --->
 				<cfif NOT structKeyExists( resultStr, variables.instance.errors[errorPtr].dataElement ) >
-					<cfset resultStr[variables.instance.errors[errorPtr].dataElement] = structNew() />
-					<cfset resultStr[variables.instance.errors[errorPtr].dataElement].value = variables.instance.errors[errorPtr].dataValue />
-					<cfset resultStr[variables.instance.errors[errorPtr].dataElement].errors = arrayNew(1) />
+					<cfset resultStr["#variables.instance.errors[errorPtr].dataElement#"] = structNew() />
+					<cfset resultStr["#variables.instance.errors[errorPtr].dataElement#"]["value"] = variables.instance.errors[errorPtr].dataValue />
+					<cfset resultStr["#variables.instance.errors[errorPtr].dataElement#"]["errors"] = arrayNew(1) />
 				</cfif>
 				
 				<!--- insert the error message --->
