@@ -40,6 +40,7 @@ Release: 0.1.0
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateAlphaNumeric" ) ) />
 		<!--- <cfset testSuite.addTestSuite( newObject( "test.validationRules.validateBirthDate" ) ) /> --->
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateCreditCard" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateDate" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateDifferent" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateEmail" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateFormat" ) ) />
