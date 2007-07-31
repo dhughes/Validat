@@ -930,8 +930,8 @@ Release: 0.1.0
 		<cfargument name="dataElementName" type="string" required="true" hint="The name of the data element to associate the assertion with" />
 		<cfargument name="ruleName" type="string" required="true" hint="The name of the rule to which this assertion corresponds" />
 		<cfargument name="continueOnFail" type="boolean" required="false" default="false" hint="Should validation continue if this assertion fails" />
-		<cfargument name="args" type="struct" required="false" hint="A collection of arguments to be passed to the validator object along with the data value" />
-		<cfargument name="dependencies" type="struct" required="false" hint="A collection of data values upon which validation of the data element depends upon" />
+		<cfargument name="args" type="struct" required="false" default="#structNew()#" hint="A collection of arguments to be passed to the validator object along with the data value" />
+		<cfargument name="dependencies" type="struct" required="false" default="#structNew()#" hint="A collection of data values upon which validation of the data element depends upon" />
 		<cfargument name="messages" type="struct" required="true" hint="A collection of error messages to be returned if the assertion fails" />
 
 		<!--- setup temporary variables --->
@@ -1000,8 +1000,8 @@ Release: 0.1.0
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set to associate the assertion with" />
 		<cfargument name="ruleName" type="string" required="true" hint="The name of the rule to which this assertion corresponds" />
 		<cfargument name="continueOnFail" type="boolean" required="false" default="false" hint="Should validation continue if this assertion fails" />
-		<cfargument name="args" type="struct" required="false" hint="A collection of arguments to be passed to the validator object along with the data value" />
-		<cfargument name="dependencies" type="struct" required="false" hint="A collection of data values upon which validation of the data element depends upon" />
+		<cfargument name="args" type="struct" required="false" default="#structNew()#" hint="A collection of arguments to be passed to the validator object along with the data value" />
+		<cfargument name="dependencies" type="struct" required="false" default="#structNew()#" hint="A collection of data values upon which validation of the data element depends upon" />
 		<cfargument name="messages" type="struct" required="true" hint="A collection of error messages to be returned if the assertion fails" />
 
 		<!--- setup temporary variables --->
