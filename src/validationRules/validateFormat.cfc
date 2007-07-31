@@ -56,6 +56,7 @@ Release: 0.1.0
 
 		<cfargument name="data" type="any" required="true" hint="The data to be validated" />
 		<cfargument name="args" type="struct" required="false" default="#structNew()#" hint="The addtional arguments necessary to validate the data" />
+		<cfargument name="dependencies" type="struct" required="false" default="#structNew()#" hint="The additional dependencies necessary to validate the data" />
 		
 		<!--- setup a list of predefined masks --->
 		<!---   phone: 10-digit number in the format '(xxx) xxx-xxxx' --->

@@ -79,18 +79,11 @@ Release: 0.1.0
 
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set by which to validate the data collection" />
 		<cfargument name="dataCollection" type="any" required="true" hint="The data collection to be validated" />
+		<cfargument name="skipAsserts" type="string" required="false" default="" hint="An optional list of assertion identifiers for which to skip any validation for" />
 
 		<!--- setup temporary variables --->
-		<cfset var errorCollection = variables.instance.factory.getBean('errorCollection').init() />
+		<cfset var errorCollection = "" />
 		<cfset var dataStr = structNew() />
-		<cfset var dataElements = "" />
-		<cfset var dataElement = "" />
-		<cfset var validate = false />
-		<cfset var assertions = "" />
-		<cfset var assertion = "" />
-		<cfset var assertPtr = 0 />
-		<cfset var args = structNew() />
-		<cfset var result = "" />
 
 		<!--- if a data set definition exists with the specified name --->
 		<cfif dataSetExists( arguments.dataSetName ) >
@@ -98,235 +91,11 @@ Release: 0.1.0
 			<!--- extract the data structure from the data collection to validate --->
 			<cfset dataStr = getDataStr( arguments.dataSetName, arguments.dataCollection ) />
 	
-			<!--- ------------------------------ --->
 			<!--- attempt to process any data element level assertions --->
-		
-			<!--- get all of the data elements for the data set --->
-			<cfset dataElements = getAllDataElements( arguments.dataSetName ) /> 
-		
-			<!--- loop through the data elements --->
-			<cfloop collection="#dataElements#" item="dataElement" >
-			
-				<!--- get the data element --->
-				<cfset dataElement = getDataElement( arguments.dataSetName, dataElement ) />
-				
-				<!--- if the data element is required --->
-				<cfif dataElement.required EQ "true" >
-					
-					<!--- is the data value present --->
-					<cfif structKeyExists( dataStr, dataElement.name ) >
-					
-						<!--- if the data value is a simple value and an empty string --->
-						<cfif isSimpleValue( dataStr[dataElement.name] ) AND len( trim ( dataStr[dataElement.name] ) ) EQ 0 >
-						
-							<!--- set the validation flag to false to skip checking all assertions for this data element --->
-							<cfset validate = false />
-							
-							<!--- insert an error into the error collection for this data element --->
-							<cfset errorCollection.addError( dataElement.name, "", dataElement.message ) />
+			<cfset errorCollection = validateDataElements( arguments.dataSetName, dataStr, arguments.skipAsserts ) />
 
-						<cfelse> <!--- else: data value is not a simple string or it contains a value --->
-							
-							<!--- set the validation flag to true to check all assertions for this data element --->
-							<cfset validate = true />
-												
-						</cfif> <!--- end: if the data value is a simple value and an empty string --->
-					
-					<!--- the data value is not present --->
-					<cfelse>
-						
-						<!--- set the validation flag to false to skip checking all assertions for this data element --->
-						<cfset validate = false />
-						
-						<!--- insert an error into the error collection for this data element --->
-						<cfset errorCollection.addError( dataElement.name, "", dataElement.message ) />
-					
-					</cfif> <!--- end: if the data value is present --->
-				
-				<!--- else if the data element is not required --->
-				<cfelseif dataElement.required EQ "false" >
-					
-					<!--- is the data value present --->
-					<cfif structKeyExists( dataStr, dataElement.name ) >
-					
-						<!--- if the data value is a simple value and an empty string --->
-						<cfif isSimpleValue( dataStr[dataElement.name] ) AND len( trim ( dataStr[dataElement.name] ) ) EQ 0 >
-							
-							<!--- set the validation flag to false to skip checking all assertions for this data element --->
-							<cfset validate = false />
-
-						<cfelse> <!--- else: data value is not a simple string or it contains a value --->
-							
-							<!--- set the validation flag to true to check all assertions for this data element --->
-							<cfset validate = true />
-												
-						</cfif> <!--- end: if the data value is a simple value and an empty string --->
-					
-					<!--- the data value is not present --->
-					<cfelse>
-						
-						<!--- set the validation flag to false to skip checking all assertions for this data element --->
-						<cfset validate = false />
-					
-					</cfif> <!--- end: if the data value is present --->
-				
-				<!--- else if the data element is optional --->
-				<cfelse>
-						
-					<!--- set the validation flag to false to skip checking all assertions for this data element --->
-					<cfset validate = false />
-				
-				</cfif> <!--- end: if the data element is required --->
-				
-				<!--- if assertion validation should continue --->
-				<cfif validate >
-	
-					<!--- get the data element assertions --->
-					<cfset assertions = getAllAsserts( arguments.dataSetName, dataElement.name ) />
-				
-					<!--- loop through the data set assertions --->
-					<cfloop from="1" to="#arrayLen( assertions )#" index="assertPtr" >
-		
-						<!--- get the current assertion (rule) name --->
-						<cfset assertion = assertions[assertPtr].rule />
-				
-						<!--- locate the corresponding validation rule --->
-						<cfif NOT ruleExists( assertion ) >
-							<cfthrow type="validat.invalidAssertion" message="validat: The validation rule specified for the assertion ('#assertion#') does not exist." />
-						</cfif> <!--- end: the assertion does not match a validation rule --->
-		
-						<!--- get the validator object for the corresponding validation rule --->
-						<cfset validator = variables.instance.factory.getBean( getRule(assertion).validator ) />
-					
-						<!--- build an arguments collection to pass to the validator --->
-						<cfset args = structNew() />
-					
-						<!--- insert any default arguments for the validation rule into the argument collection --->
-						<cfif structKeyExists ( getRule( assertion ), 'args' ) >
-							<cfset structAppend( args, getRule(assertion).args ) />
-						</cfif>
-					
-						<!--- insert (and overwrite) any arguments for the data element into the argument collection --->
-						<cfif structKeyExists ( getAssert( arguments.dataSetName, dataElement.name, assertion ), 'args' ) >
-							<cfset structAppend( args, getAssert( arguments.dataSetName, dataElement.name, assertion ).args, true ) />
-						</cfif>
-					
-						<!--- validate the data value --->
-						<cfset result = validator.validate( dataStr[dataElement.name], args ) />
-					
-						<!--- if the assertion validation fails --->
-						<cfif result NEQ true >
-					
-							<!--- attempt to locate the specified message in the assertion defintion --->
-							<cfif structKeyExists( getAssert( arguments.dataSetName, dataElement.name, assertion ).messages, result ) >
-		
-								<!--- add an error to the error collection --->
-								<cfset errorCollection.addError( dataElement.name, dataStr[dataElement.name], getAssert( arguments.dataSetName, dataElement.name, assertion ).messages[result] ) />
-		
-								<!--- check the assertion continue attribute --->
-								<cfif NOT getAssert( arguments.dataSetName, dataElement.name, assertion ).continueOnFail >
-									<!--- stop validation checks on the current data value --->
-									<cfbreak />
-								</cfif> <!--- end: if assertion continue attribute is false --->
-					
-							<!--- attempt to locate the specified message in the default validation rule defintion --->
-							<cfelseif structKeyExists( getRule( assertion ).messages, result ) >
-		
-								<!--- add an error to the error collection --->
-								<cfset errorCollection.addError( dataElement.name, dataStr[dataElement.name], getRule( assertion ).messages[result] ) />
-		
-								<!--- check the assertion continue attribute --->
-								<cfif NOT getAssert( arguments.dataSetName, dataElement.name, assertion ).continueOnFail >
-									<!--- stop validation checks on the current data value --->
-									<cfbreak />
-								</cfif> <!--- end: if assertion continue attribute is false --->
-		
-							<!--- bad error message, throw an error --->
-							<cfelse>
-								<cfthrow type="validat.invalidMessage" message="validat: The error message returned from the validator ('#result#') does not exist." />
-						
-							</cfif> <!--- end: attempt to locate the specified message --->
-					
-						</cfif> <!--- end: if the assertion validation fails --->
-				
-					</cfloop> <!--- end: loop over data element assertion --->
-				
-				</cfif> <!--- end: if assertion validation should continue --->
-				
-			</cfloop> <!--- end: loop over data elements --->
-				
-			<!--- ------------------------------ --->
 			<!--- attempt to process any data set level assertions --->
-				
-			<!--- get the data set assertions --->
-			<cfset assertions = getAllAsserts( arguments.dataSetName ) />
-		
-			<!--- loop through the data set assertions --->
-			<cfloop from="1" to="#arrayLen( assertions )#" index="assertPtr" >
-
-				<!--- get the current assertion (rule) name --->
-				<cfset assertion = assertions[assertPtr].rule />
-		
-				<!--- locate the corresponding validation rule --->
-				<cfif NOT ruleExists( assertion ) >
-					<cfthrow type="validat.invalidAssertion" message="validat: The validation rule specified for the assertion ('#assertion#') does not exist." />
-				</cfif> <!--- end: the assertion does not match a validation rule --->
-
-				<!--- get the validator object for the corresponding validation rule --->
-				<cfset validator = variables.instance.factory.getBean( getRule[assertion].validator ) />
-			
-				<!--- build an arguments collection to pass to the validator --->
-				<cfset args = structNew() />
-			
-				<!--- insert any default arguments for the validation rule into the argument collection --->
-				<cfif structKeyExists ( getRule[assertion], 'args' ) >
-					<cfset structAppend( argCollection, getRule[assertion].args ) />
-				</cfif>
-			
-				<!--- insert (and overwrite) any arguments for the data element into the argument collection --->
-				<cfif structKeyExists ( getAssert( dataSetName = arguments.dataSetName, rule = assertion ), 'args' ) >
-					<cfset structAppend( argCollection, getAssert( dataSetName = arguments.dataSetName, rule = assertion ).args, true ) />
-				</cfif>
-			
-				<!--- validate the data value --->
-				<cfset result = validator.validate( dataStr, args ) />
-			
-				<!--- if the assertion validation fails --->
-				<cfif result NEQ true >
-			
-					<!--- attempt to locate the specified message --->
-					<cfif structKeyExists( getAssert( dataSetName = arguments.dataSetName, rule = assertion ).messages, result ) >
-
-						<!--- add an error to the error collection --->
-						<cfset errorCollection.addError( message = getAssert( dataSetName = arguments.dataSetName, rule = assertion ).messages[result] ) />
-
-						<!--- check the assertion continue attribute --->
-						<cfif NOT getAssert( dataSetName = arguments.dataSetName, rule = assertion ).continueOnFail >
-							<!--- stop validation checks on the current data value --->
-							<cfbreak />
-						</cfif> <!--- end: if assertion continue attribute is false --->
-					
-					<!--- attempt to locate the specified message in the default validation rule defintion --->
-					<cfelseif structKeyExists( getRule( assertion ).messages, result ) >
-
-						<!--- add an error to the error collection --->
-						<cfset errorCollection.addError( message = getRule( assertion ).messages[result] ) />
-
-						<!--- check the assertion continue attribute --->
-						<cfif NOT getAssert( arguments.dataSetName, dataElement.name, assertion ).continueOnFail >
-							<!--- stop validation checks on the current data value --->
-							<cfbreak />
-						</cfif> <!--- end: if assertion continue attribute is false --->
-
-					<!--- bad error message, throw an error --->
-					<cfelse>
-						<cfthrow type="validat.invalidMessage" message="validat: The error message returned from the validator ('#result#') does not exist." />
-				
-					</cfif> <!--- end: attempt to locate the specified message --->
-			
-				</cfif> <!--- end: if the assertion validation fails --->
-		
-			</cfloop> <!--- end: loop over data set assertion --->
+			<cfset errorCollection.append( validateDataSet( arguments.dataSetName, dataStr, arguments.skipAsserts ) ) />
 	
 		<!--- othersise, throw an error --->	
 		<cfelse>
@@ -681,7 +450,7 @@ Release: 0.1.0
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set to associate the data element with" />
 		<cfargument name="dataElementName" type="string" required="true" hint="The name of the data element" />
 		<cfargument name="dataSetConnectionName" type="string" required="false" default="" hint="The name of the data set for which this complex data element connects to" />
-		<cfargument name="required" type="string" required="false" default="false" hint="Is this data element required? (true/false/optional)" />
+		<cfargument name="required" type="boolean" required="false" default="false" hint="Is this data element required?" />
 		<cfargument name="message" type="string" required="false" default="" hint="The error message to be displayed if the data element is required and no value is provided" />
 		<cfargument name="overwrite" type="boolean"  required="false" default="false" hint="Overwrite an existing data element?" />
 
@@ -691,11 +460,6 @@ Release: 0.1.0
 		<!--- check if the specified data set exists --->
 		<cfif NOT dataSetExists( arguments.dataSetName ) >
 			<cfthrow type="validat.invalidDataElement" message="validat: The data set name specified ('#arguments.dataSetName#') does not exist." />
-		</cfif>
-	
-		<!--- check if the required argument contains a valid value (true/false/optional) --->
-		<cfif NOT listFindNoCase( 'true,false,optional', arguments.required ) >
-			<cfthrow type="validat.invalidDataElement" message="validat: The value provided for the required argument ('#arguments.required#') is not valid.  Possible values include 'true', 'false', or 'optional'." />
 		</cfif>
 
 		<!--- if a data element does not exist with the given data element name OR overwrite is true --->
@@ -745,7 +509,7 @@ Release: 0.1.0
 
 		<!--- pass the data element attributes to the addDataElement function for addition to the data set collection --->
 		<cfparam name="oXML.xmlRoot.xmlAttributes.dataSet" default="" />
-		<cfparam name="oXML.xmlRoot.xmlAttributes.required" default="" />
+		<cfparam name="oXML.xmlRoot.xmlAttributes.required" default="false" />
 		<cfparam name="oXML.xmlRoot.xmlAttributes.message" default="" />
 		<cfset addDataElement( arguments.dataSetName, oXML.xmlRoot.xmlAttributes.name, oXML.xmlRoot.xmlAttributes.dataSet, oXML.xmlRoot.xmlAttributes.required, oXML.xmlRoot.xmlAttributes.message, arguments.overwrite ) />
 
@@ -879,6 +643,7 @@ Release: 0.1.0
 		<cfargument name="ruleName" type="string" required="true" hint="The name of the rule to which this assertion corresponds" />
 		<cfargument name="continueOnFail" type="boolean" required="false" default="false" hint="Should validation continue if this assertion fails" />
 		<cfargument name="args" type="struct" required="false" hint="A collection of arguments to be passed to the validator object along with the data value" />
+		<cfargument name="dependencies" type="struct" required="false" hint="A collection of data values upon which validation of the data element depends upon" />
 		<cfargument name="messages" type="struct" required="true" hint="A collection of error messages to be returned if the assertion fails" />
 
 		<!--- if a data element name was specified, call the addDEAssert method --->
@@ -930,10 +695,12 @@ Release: 0.1.0
 			<cfset assertParameters.continueOnFail = oXML.xmlRoot.xmlAttributes.continueOnFail />
 		</cfif>
 		<cfset assertParameters.args = structNew() />
+		<cfset assertParameters.dependencies = structNew() />
 		<cfset assertParameters.messages = structNew() />
 
 		<!--- for every child node of the assertion --->
 		<cfloop from="1" to="#arrayLen( oXML.xmlRoot.xmlChildren )#" index="argPtr">
+
 			<!--- if the child node is an argument --->
 			<cfif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'arg' >
 				<!--- verify it is a valid argument --->
@@ -941,7 +708,16 @@ Release: 0.1.0
 					<cfthrow type="validat.invalidAssert" message="validat: The xml snippet passed to the addAssertXML() method contains an invalid argument." detail="Invalid Argument: #toString(oXML.xmlRoot.xmlChildren[argPtr])#" />
 				</cfif>
 				<!--- insert the argument into the arguments collection --->
-				<cfset structInsert( assertParameters.args, ucase( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name ), oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
+				<cfset structInsert( assertParameters.args, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
+
+			<!--- else, if the child node is a dependency --->
+			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'depend' >
+				<!--- verify it is a valid dependency --->
+				<cfif NOT ( structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "value") ) >
+					<cfthrow type="validat.invalidDependency" message="validat: The xml snippet passed to the addAssertXML() method contains an invalid dependency." detail="Invalid Dependency: #toString(oXML.xmlRoot.xmlChildren[argPtr])#" />
+				</cfif>
+				<!--- insert the argument into the dependencies collection --->
+				<cfset structInsert( assertParameters.dependencies, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
 
 			<!--- else, if the child node is a message --->
 			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'message' >
@@ -950,7 +726,7 @@ Release: 0.1.0
 					<cfthrow type="validat.invalidMessage" message="validat: The xml snippet passed to the addAssertXML() method contains an invalid message." detail="Invalid Message: #toString(oXML.xmlRoot.xmlChildren[argPtr])#" />
 				</cfif>
 				<!--- insert the argument into the messages collection --->
-				<cfset structInsert( assertParameters.messages, ucase( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name ), oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
+				<cfset structInsert( assertParameters.messages, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
 
 			<!--- else, throw an error - invalid node --->
 			<cfelse>
@@ -1155,6 +931,7 @@ Release: 0.1.0
 		<cfargument name="ruleName" type="string" required="true" hint="The name of the rule to which this assertion corresponds" />
 		<cfargument name="continueOnFail" type="boolean" required="false" default="false" hint="Should validation continue if this assertion fails" />
 		<cfargument name="args" type="struct" required="false" hint="A collection of arguments to be passed to the validator object along with the data value" />
+		<cfargument name="dependencies" type="struct" required="false" hint="A collection of data values upon which validation of the data element depends upon" />
 		<cfargument name="messages" type="struct" required="true" hint="A collection of error messages to be returned if the assertion fails" />
 
 		<!--- setup temporary variables --->
@@ -1173,10 +950,13 @@ Release: 0.1.0
 
 		<!--- setup the assertion based upon the received arguments --->
 		<cfset assertStr.rule = arguments.ruleName />
-		<cfset assertStr.ruleId = createUUID() />
+		<cfset assertStr.assertId = createUUID() />
 		<cfset assertStr.continueOnFail = arguments.continueOnFail />
 		<cfif NOT structIsEmpty( arguments.args ) >
 			<cfset assertStr.args = arguments.args />
+		</cfif>
+		<cfif NOT structIsEmpty( arguments.dependencies ) >
+			<cfset assertStr.dependencies = arguments.dependencies />
 		</cfif>
 		<cfif NOT structIsEmpty( arguments.messages ) >
 			<cfset assertStr.messages = arguments.messages />
@@ -1187,7 +967,7 @@ Release: 0.1.0
 
 		<!--- if an existing assertion was found, overwrite it --->
 		<cfif assertPtr GT 0 >
-			<cfset assertStr.ruleId = variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertions[assertPtr].ruleId />
+			<cfset assertStr.assertId = variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertions[assertPtr].assertId />
 			<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertions[assertPtr] = structCopy( assertStr ) />
 
 		<!--- existing assertion was not found, add assertion to the end of the array / list --->
@@ -1196,10 +976,10 @@ Release: 0.1.0
 	
 			<cfif listLen( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList ) EQ 0 >
 				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList = arguments.ruleName />
-				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIdList = assertStr.ruleId />
+				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIdList = assertStr.assertId />
 			<cfelse>
 				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList = listAppend( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList, arguments.ruleName ) />
-				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIdList = listAppend( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIDList, assertStr.ruleId ) />
+				<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIdList = listAppend( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIDList, assertStr.assertId ) />
 			</cfif>
 
 		</cfif> <!--- end: if existing assertion was found --->
@@ -1221,6 +1001,7 @@ Release: 0.1.0
 		<cfargument name="ruleName" type="string" required="true" hint="The name of the rule to which this assertion corresponds" />
 		<cfargument name="continueOnFail" type="boolean" required="false" default="false" hint="Should validation continue if this assertion fails" />
 		<cfargument name="args" type="struct" required="false" hint="A collection of arguments to be passed to the validator object along with the data value" />
+		<cfargument name="dependencies" type="struct" required="false" hint="A collection of data values upon which validation of the data element depends upon" />
 		<cfargument name="messages" type="struct" required="true" hint="A collection of error messages to be returned if the assertion fails" />
 
 		<!--- setup temporary variables --->
@@ -1234,10 +1015,13 @@ Release: 0.1.0
 
 		<!--- setup the assertion based upon the received arguments --->
 		<cfset assertStr.rule = arguments.ruleName />
-		<cfset assertStr.ruleId = createUUID() />
+		<cfset assertStr.assertId = createUUID() />
 		<cfset assertStr.continueOnFail = arguments.continueOnFail />
 		<cfif NOT structIsEmpty( arguments.args ) >
 			<cfset assertStr.args = arguments.args />
+		</cfif>
+		<cfif NOT structIsEmpty( arguments.dependencies ) >
+			<cfset assertStr.dependencies = arguments.dependencies />
 		</cfif>
 		<cfif NOT structIsEmpty( arguments.messages ) >
 			<cfset assertStr.messages = arguments.messages />
@@ -1248,10 +1032,10 @@ Release: 0.1.0
 
 		<cfif listLen( variables.instance.dataSets[arguments.dataSetName].assertionRuleList ) EQ 0 >
 			<cfset variables.instance.dataSets[arguments.dataSetName].assertionRuleList = arguments.ruleName />
-			<cfset variables.instance.dataSets[arguments.dataSetName].assertionIdList = assertStr.ruleId />
+			<cfset variables.instance.dataSets[arguments.dataSetName].assertionIdList = assertStr.assertId />
 		<cfelse>
 			<cfset variables.instance.dataSets[arguments.dataSetName].assertionRuleList = listAppend( variables.instance.dataSets[arguments.dataSetName].assertionRuleList, arguments.ruleName ) />
-			<cfset variables.instance.dataSets[arguments.dataSetName].assertionIdList = listAppend( variables.instance.dataSets[arguments.dataSetName].assertionIdList, assertStr.ruleId ) />
+			<cfset variables.instance.dataSets[arguments.dataSetName].assertionIdList = listAppend( variables.instance.dataSets[arguments.dataSetName].assertionIdList, assertStr.assertId ) />
 		</cfif>
 
 		<!--- return --->
@@ -1367,5 +1151,333 @@ Release: 0.1.0
 
 		<cfreturn />
 	</cffunction> <!--- end: parseConfigXML() --->
+
+	<!--- 
+		function: 		validateDataElements
+
+		description:	Attempts to validate a collection of data based upon the data element assertions
+						for the specified data set name.  An validation errors will be collected in
+						an errorCollection and returned.
+	--->
+	<cffunction name="validateDataElements" access="private" output="false" returntype="any"
+		hint="Attempts to validate a collection of data based upon the data element assertions for the specified data set name.">
+
+		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set by which to validate the data collection" />
+		<cfargument name="dataCollection" type="struct" required="true" hint="The data collection to be validated" />
+		<cfargument name="skipAsserts" type="string" required="false" default="" hint="An optional list of assertion identifiers for which to skip any validation for" />
+
+		<!--- setup temporary variables --->
+		<cfset var errorCollection = variables.instance.factory.getBean('errorCollection').init() />
+		<cfset var dataElements = "" />
+		<cfset var dataElement = "" />
+		<cfset var validate = false />
+		<cfset var assertions = "" />
+		<cfset var assertion = "" />
+		<cfset var assertPtr = 0 />
+		<cfset var validator = "" />
+		<cfset var args = structNew() />
+		<cfset var dependencies = structNew() />
+		<cfset var dependName = "" />
+		<cfset var result = "" />
+		
+		<!--- get all of the data elements for the data set --->
+		<cfset dataElements = getAllDataElements( arguments.dataSetName ) /> 
+	
+		<!--- loop through the data elements --->
+		<cfloop collection="#dataElements#" item="dataElement" >
+		
+			<!--- get the data element --->
+			<cfset dataElement = dataElements[dataElement] />
+			
+			<!--- if the data element is required --->
+			<cfif dataElement.required EQ "true" >
+				
+				<!--- is the data value present --->
+				<cfif structKeyExists( arguments.dataCollection, dataElement.name ) >
+				
+					<!--- if the data value is a simple value and an empty string --->
+					<cfif isSimpleValue( arguments.dataCollection[dataElement.name] ) AND len( trim ( arguments.dataCollection[dataElement.name] ) ) EQ 0 >
+					
+						<!--- set the validation flag to false to skip checking all assertions for this data element --->
+						<cfset validate = false />
+						
+						<!--- insert an error into the error collection for this data element --->
+						<cfset errorCollection.addError( dataElement.name, "", dataElement.message ) />
+
+					<cfelse> <!--- else: data value is not a simple string or it contains a value --->
+						
+						<!--- set the validation flag to true to check all assertions for this data element --->
+						<cfset validate = true />
+											
+					</cfif> <!--- end: if the data value is a simple value and an empty string --->
+				
+				<!--- the data value is not present --->
+				<cfelse>
+					
+					<!--- set the validation flag to false to skip checking all assertions for this data element --->
+					<cfset validate = false />
+					
+					<!--- insert an error into the error collection for this data element --->
+					<cfset errorCollection.addError( dataElement.name, "", dataElement.message ) />
+				
+				</cfif> <!--- end: if the data value is present --->
+			
+			<!--- else if the data element is not required --->
+			<cfelseif dataElement.required EQ "false" >
+				
+				<!--- is the data value present --->
+				<cfif structKeyExists( arguments.dataCollection, dataElement.name ) >
+				
+					<!--- if the data value is a simple value and an empty string --->
+					<cfif isSimpleValue( arguments.dataCollection[dataElement.name] ) AND len( trim ( arguments.dataCollection[dataElement.name] ) ) EQ 0 >
+						
+						<!--- set the validation flag to false to skip checking all assertions for this data element --->
+						<cfset validate = false />
+
+					<cfelse> <!--- else: data value is not a simple string or it contains a value --->
+						
+						<!--- set the validation flag to true to check all assertions for this data element --->
+						<cfset validate = true />
+											
+					</cfif> <!--- end: if the data value is a simple value and an empty string --->
+				
+				<!--- the data value is not present --->
+				<cfelse>
+					
+					<!--- set the validation flag to false to skip checking all assertions for this data element --->
+					<cfset validate = false />
+				
+				</cfif> <!--- end: if the data value is present --->
+			
+			<!--- else if the data element is optional --->
+			<cfelse>
+					
+				<!--- set the validation flag to false to skip checking all assertions for this data element --->
+				<cfset validate = false />
+			
+			</cfif> <!--- end: if the data element is required --->
+			
+			<!--- if assertion validation should continue --->
+			<cfif validate >
+			
+				<!--- is the current data element a complex value? --->
+				<cfif len( dataElement.connectTo ) >
+				
+					<!--- recursively validate this data element --->
+					<cfset errorCollection.append( this.validate( dataElement.connectTo, arguments.dataCollection[dataElement.name], arguments.skipAsserts ) ) />
+				
+				<!--- else, validate the data element as a simple value --->
+				<cfelse>
+
+					<!--- get the data element assertions --->
+					<cfset assertions = dataElement.assertions />
+				
+					<!--- loop through the data set assertions --->
+					<cfloop from="1" to="#arrayLen( assertions )#" index="assertPtr" >
+			
+						<!--- if the current assertion identifier is included in the list of rules to skip, stop processing --->
+						<cfif NOT listFindNoCase( arguments.skipAsserts, assertions[assertPtr].assertId ) >
+					
+							<!--- locate the corresponding validation rule --->
+							<cfif NOT ruleExists( assertions[assertPtr].rule ) >
+								<cfthrow type="validat.invalidAssertion" message="validat: The validation rule specified for the assertion ('#assertions[assertPtr].rule#') does not exist." />
+							</cfif> <!--- end: the assertion does not match a validation rule --->
+			
+							<!--- get the validator object for the corresponding validation rule --->
+							<cfset validator = variables.instance.factory.getBean( getRule( assertions[assertPtr].rule ).validator ) />
+						
+							<!--- build an arguments collection to pass to the validator --->
+							<cfset args = structNew() />
+						
+							<!--- insert any default arguments for the validation rule into the argument collection --->
+							<cfif structKeyExists( getRule( assertions[assertPtr].rule ), 'args' ) >
+								<cfset structAppend( args, getRule( assertions[assertPtr].rule ).args ) />
+							</cfif>
+						
+							<!--- insert (and overwrite) any arguments for the data element into the argument collection --->
+							<cfif structKeyExists( assertions[assertPtr], 'args' ) >
+								<cfset structAppend( args, assertions[assertPtr].args, true ) />
+							</cfif>
+						
+							<!--- build a dependencies collection to pass to the validator --->
+							<cfset dependencies = structNew() />
+							
+							<!--- if the assertioh specifies any dependencies, add them to the collection --->
+							<cfif structKeyExists( assertions[assertPtr], 'dependencies' ) >
+							
+								<!--- for each dependency --->
+								<cfloop collection="#assertions[assertPtr].dependencies#" item="dependName">
+								
+									<!--- insert the dependency and its value into the collection --->
+									<cfif structKeyExists( arguments.dataCollection, structFind( assertions[assertPtr].dependencies, dependName ) ) >
+										<cfset dependencies[dependName] = arguments.dataCollection[ structFind( assertions[assertPtr].dependencies, dependName ) ] />
+									<cfelse>
+										<cfset dependencies[dependName] = "" />
+									</cfif>
+								
+								</cfloop> <!--- end for each dependency --->
+							
+							</cfif> <!--- end: if the assertioh specifies any dependencies ---> 
+						
+							<!--- validate the data value --->
+							<cfset result = validator.validate( arguments.dataCollection[dataElement.name], args, dependencies ) />
+						
+							<!--- if the assertion validation fails --->
+							<cfif result NEQ true >
+						
+								<!--- attempt to locate the specified message in the assertion defintion --->
+								<cfif structKeyExists( assertions[assertPtr].messages, result ) >
+			
+									<!--- add an error to the error collection --->
+									<cfset errorCollection.addError( dataElement.name, arguments.dataCollection[dataElement.name], assertions[assertPtr].messages[result] ) />
+			
+								<!--- attempt to locate the specified message in the default validation rule defintion --->
+								<cfelseif structKeyExists( getRule( assertion ).messages, result ) >
+			
+									<!--- add an error to the error collection --->
+									<cfset errorCollection.addError( dataElement.name, arguments.dataCollection[dataElement.name], getRule( assertions[assertPtr].rule ).messages[result] ) />
+			
+								<!--- bad error message, throw an error --->
+								<cfelse>
+									<cfthrow type="validat.invalidMessage" message="validat: The error message returned from the validator ('#result#') does not exist." />
+							
+								</cfif> <!--- end: attempt to locate the specified message --->
+			
+								<!--- check the assertion continue attribute --->
+								<cfif NOT assertions[assertPtr].continueOnFail >
+									<!--- stop validation checks on the current data value --->
+									<cfbreak />
+								</cfif> <!--- end: if assertion continue attribute is false --->
+						
+							</cfif> <!--- end: if the assertion validation fails --->
+							
+						</cfif> <!--- end: if the current assertion identifier is included in the list of rules to skip, stop processing --->
+				
+					</cfloop> <!--- end: loop over data element assertion --->
+				
+				</cfif> <!--- end: is the current data element a complex value? --->
+			
+			</cfif> <!--- end: if assertion validation should continue --->
+			
+		</cfloop> <!--- end: loop over data elements --->
+
+		<!--- return the error collection --->
+		<cfreturn errorCollection />
+	</cffunction> <!--- end: validateDataElements() --->
+
+	<!--- 
+		function: 		validateDataSet
+
+		description:	Attempts to validate a collection of data based upon the data set assertions
+						for the specified data set name.  An validation errors will be collected in
+						an errorCollection and returned.
+	--->
+	<cffunction name="validateDataSet" access="private" output="false" returntype="any"
+		hint="Attempts to validate a collection of data based upon the data set assertions for the specified data set name.">
+
+		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set by which to validate the data collection" />
+		<cfargument name="dataCollection" type="struct" required="true" hint="The data collection to be validated" />
+		<cfargument name="skipAsserts" type="string" required="false" default="" hint="An optional list of assertion identifiers for which to skip any validation for" />
+
+		<!--- setup temporary variables --->
+		<cfset var errorCollection = variables.instance.factory.getBean('errorCollection').init() />
+		<cfset var assertions = "" />
+		<cfset var assertion = "" />
+		<cfset var assertPtr = 0 />
+		<cfset var validator = "" />
+		<cfset var args = structNew() />
+		<cfset var dependencies = structNew() />
+		<cfset var dependName = "" />
+		<cfset var result = "" />
+		
+			<!--- get the data set assertions --->
+			<cfset assertions = getAllAsserts( arguments.dataSetName ) />
+		
+			<!--- loop through the data set assertions --->
+			<cfloop from="1" to="#arrayLen( assertions )#" index="assertPtr" >
+
+				<!--- if the current assertion identifier is included in the list of rules to skip, stop processing --->
+				<cfif NOT listFindNoCase( arguments.skipAsserts, assertions[assertPtr].assertId ) >
+			
+					<!--- locate the corresponding validation rule --->
+					<cfif NOT ruleExists( assertion ) >
+						<cfthrow type="validat.invalidAssertion" message="validat: The validation rule specified for the assertion ('#assertions[assertPtr].rule#') does not exist." />
+					</cfif> <!--- end: the assertion does not match a validation rule --->
+	
+					<!--- get the validator object for the corresponding validation rule --->
+					<cfset validator = variables.instance.factory.getBean( getRule[ assertions[assertPtr]].validator ) />
+				
+					<!--- build an arguments collection to pass to the validator --->
+					<cfset args = structNew() />
+				
+					<!--- insert any default arguments for the validation rule into the argument collection --->
+					<cfif structKeyExists( getRule[ assertions[assertPtr].rule ], 'args' ) >
+						<cfset structAppend( argCollection, getRule[ assertions[assertPtr].rule ].args ) />
+					</cfif>
+				
+					<!--- insert (and overwrite) any arguments for the data element into the argument collection --->
+					<cfif structKeyExists( assertions[assertPtr], 'args' ) >
+						<cfset structAppend( argCollection, assertions[assertPtr].args, true ) />
+					</cfif>
+				
+					<!--- build a dependencies collection to pass to the validator --->
+					<cfset dependencies = structNew() />
+					
+					<!--- if the assertioh specifies any dependencies, add them to the collection --->
+					<cfif structKeyExists( assertions[assertPtr], 'dependencies' ) >
+					
+						<!--- for each dependency --->
+						<cfloop collection="#assertions[assertPtr].dependencies#" item="dependName">
+						
+							<!--- insert the dependency and its value into the collection --->
+							<cfif structKeyExists( arguments.dataCollection, structFind( assertions[assertPtr].dependencies, dependName ) ) >
+								<cfset dependencies[dependName] = arguments.dataCollection[ structFind( assertions[assertPtr].dependencies, dependName ) ] />
+							<cfelse>
+								<cfset dependencies[dependName] = "" />
+							</cfif>
+						
+						</cfloop> <!--- end for each dependency --->
+					
+					</cfif> <!--- end: if the assertioh specifies any dependencies ---> 
+				
+					<!--- validate the data value --->
+					<cfset result = validator.validate( "", args, dependencies ) />
+				
+					<!--- if the assertion validation fails --->
+					<cfif result NEQ true >
+				
+						<!--- attempt to locate the specified message --->
+						<cfif structKeyExists( assertions[assertPtr].messages, result ) >
+	
+							<!--- add an error to the error collection --->
+							<cfset errorCollection.addError( arguments.dataSetName, "", assertions[assertPtr].messages[result] ) />
+						
+						<!--- attempt to locate the specified message in the default validation rule defintion --->
+						<cfelseif structKeyExists( getRule( assertion ).messages, result ) >
+	
+							<!--- add an error to the error collection --->
+							<cfset errorCollection.addError( arguments.dataSetName, "", getRule( assertions[assertPtr].rule ).messages[result] ) />
+	
+						<!--- bad error message, throw an error --->
+						<cfelse>
+							<cfthrow type="validat.invalidMessage" message="validat: The error message returned from the validator ('#result#') does not exist." />
+					
+						</cfif> <!--- end: attempt to locate the specified message --->
+	
+						<!--- check the assertion continue attribute --->
+						<cfif NOT ssertions[assertPtr].continueOnFail >
+							<!--- stop validation checks on the current data value --->
+							<cfbreak />
+						</cfif> <!--- end: if assertion continue attribute is false --->
+				
+					</cfif> <!--- end: if the assertion validation fails --->
+						
+				</cfif> <!--- end: if the current assertion identifier is included in the list of rules to skip, stop processing --->
+		
+			</cfloop> <!--- end: loop over data set assertion --->
+
+		<!--- return the error collection --->
+		<cfreturn errorCollection />
+	</cffunction> <!--- end: validateDataSet() --->
 
 </cfcomponent>

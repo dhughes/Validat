@@ -53,7 +53,7 @@ Release: 0.1.0
 	<cffunction name="addError" access="public" output="false" returntype="errorCollection"
 		hint="Adds a single error to the error collection.">
 		
-		<cfargument name="dataElement" type="string" required="false" default="" hint="the name of the data element for which the error occurred" />
+		<cfargument name="dataElement" type="string" required="true" hint="the name of the data element for which the error occurred" />
 		<cfargument name="dataValue" type="string" required="false" default="" hint="the value of the data element for which the error occurred" />
 		<cfargument name="message" type="string" required="true" hint="the error message for the error to be added to the error collection" />
 
@@ -64,7 +64,7 @@ Release: 0.1.0
 		<cfset errorStruct["message"] = arguments.message />
 		
 		<!--- add the error structure to the array --->
-		<cfset arrayAppend(variables.instance.errors, errorStruct) />		
+		<cfset arrayAppend(variables.instance.errors, structCopy(errorStruct) ) />		
 		
 		<!--- return a pointer to this object to allow for chaining --->
 		<cfreturn this />
@@ -80,21 +80,33 @@ Release: 0.1.0
 		
 		<cfargument name="errorCollection" type="errorCollection" required="true" hint="The error collection from which to append errors to the current error collection" />
 
+		<cfset var dataElement = "" />
 		<cfset var errorPtr = 0 />
-
-		<!--- get the errors from the error collection --->
+		
+		<!--- get the errors from the error collection being appended --->
 		<cfset var errors = arguments.errorCollection.getErrors() />
+
+		<!--- for each data element in the errors collection --->
+		<cfloop collection="#errors#" item="dataElement">
 		
-		<!--- add each error to the current error collection --->
-		<cfloop from="1" to="#arrayLen( errors )#" index="errorPtr">
+			<!--- if the data element key is not '_errorCount', loop over the errors --->
+			<cfif dataElement NEQ "_errorCount" >
+			
+				<!--- loop over the errors array --->
+				<cfloop from="1" to="#arrayLen( structFind(errors, dataElement).errors )#" index="errorPtr">
+				
+					<!--- add each array to the current error collection --->
+					<cfset addError( dataElement, structFind(errors, dataElement).value, structFind(errors, dataElement).errors[errorPtr] ) />
+				
+				</cfloop>
+			
+			</cfif> <!--- end: if the data element key is not '_errorCount', loop over the errors --->
 		
-			<cfset addError( errors[errorPtr].dataElement, errors[errorPtr].dataValue, errors[errorPtr].message ) />
-		
-		</cfloop> <!--- end: for each error in the current error collection --->
-		
+		</cfloop> <!--- end: for each data element in the errors collection --->
+
 		<!--- return a pointer to this object to allow for chaining --->
 		<cfreturn this />
-	</cffunction> <!--- end: addError() --->
+	</cffunction> <!--- end: append() --->
 
 	<!--- 
 		function: 		clearErrors
@@ -105,7 +117,7 @@ Release: 0.1.0
 		hint="Removes any errors stored in the error collection.">
 		
 		<!--- reset the errors array --->
-		<cfset variables.instance.errors = arrayNew(1) />
+		<cfset arrayClear( variables.instance.errors ) />
 		
 		<!--- return a pointer to this object to allow for chaining --->
 		<cfreturn this />
@@ -148,9 +160,9 @@ Release: 0.1.0
 				<!--- increment the error count --->
 				<cfset resultStr._errorCount = resultStr._errorCount + 1 />
 
-			</cfif>
+			</cfif> <!--- end: if a specific data element was not specified, or if the specified data element matches the current error data element --->
 			
-		</cfloop>
+		</cfloop> <!--- end: insert each error into the result structure --->
 		
 		<cfreturn resultStr />
 	</cffunction> <!--- end: getErrors() --->
