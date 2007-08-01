@@ -1164,7 +1164,7 @@ Release: 0.1.0
 
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set by which to validate the data collection" />
 		<cfargument name="dataCollection" type="struct" required="true" hint="The data collection to be validated" />
-		<cfargument name="skipAsserts" type="string" required="false" default="" hint="An optional list of assertion identifiers for which to skip any validation for" />
+		<cfargument name="skipAsserts" type="string" required="false" default="" hint="An optional list of data element names and/or assertion identifiers for which to skip any validation for" />
 
 		<!--- setup temporary variables --->
 		<cfset var errorCollection = variables.instance.factory.getBean('errorCollection').init() />
@@ -1189,8 +1189,14 @@ Release: 0.1.0
 			<!--- get the data element --->
 			<cfset dataElement = dataElements[dataElement] />
 			
+			<!--- if the data element is listed in the skipAsserts list --->
+			<cfif listFindNoCase( arguments.skipAsserts, dataElement.name ) >
+
+				<!--- set the validation flag to false to skip checking all assertions for this data element --->
+				<cfset validate = false />
+			
 			<!--- if the data element is required --->
-			<cfif dataElement.required EQ "true" >
+			<cfelseif dataElement.required EQ "true" >
 				
 				<!--- is the data value present --->
 				<cfif structKeyExists( arguments.dataCollection, dataElement.name ) >
@@ -1202,7 +1208,7 @@ Release: 0.1.0
 						<cfset validate = false />
 						
 						<!--- insert an error into the error collection for this data element --->
-						<cfset errorCollection.addError( dataElement.name, "", dataElement.message ) />
+						<cfset errorCollection.addError( dataElement.name, "", dataElement.message, dataElement.name ) />
 
 					<cfelse> <!--- else: data value is not a simple string or it contains a value --->
 						
@@ -1218,7 +1224,7 @@ Release: 0.1.0
 					<cfset validate = false />
 					
 					<!--- insert an error into the error collection for this data element --->
-					<cfset errorCollection.addError( dataElement.name, "", dataElement.message ) />
+					<cfset errorCollection.addError( dataElement.name, "", dataElement.message, dataElement.name ) />
 				
 				</cfif> <!--- end: if the data value is present --->
 			
