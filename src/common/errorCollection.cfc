@@ -56,12 +56,14 @@ Release: 0.1.0
 		<cfargument name="dataElement" type="string" required="true" hint="the name of the data element for which the error occurred" />
 		<cfargument name="dataValue" type="string" required="false" default="" hint="the value of the data element for which the error occurred" />
 		<cfargument name="message" type="string" required="true" hint="the error message for the error to be added to the error collection" />
+		<cfargument name="failedRule" type="string" required="false" default="" hint="the identifier for the validation rule the data element failed" />
 
 		<!--- create a new error structure with the provided data --->
 		<cfset var errorStruct = structNew() />
 		<cfset errorStruct["dataElement"] = arguments.dataElement />
 		<cfset errorStruct["dataValue"] = arguments.dataValue />
 		<cfset errorStruct["message"] = arguments.message />
+		<cfset errorStruct["rule"] = arguments.failedRule />
 		
 		<!--- add the error structure to the array --->
 		<cfset arrayAppend(variables.instance.errors, structCopy(errorStruct) ) />		
@@ -96,7 +98,7 @@ Release: 0.1.0
 				<cfloop from="1" to="#arrayLen( structFind(errors, dataElement).errors )#" index="errorPtr">
 				
 					<!--- add each array to the current error collection --->
-					<cfset addError( dataElement, structFind(errors, dataElement).value, structFind(errors, dataElement).errors[errorPtr] ) />
+					<cfset addError( dataElement, structFind(errors, dataElement).value, structFind(errors, dataElement).errors[errorPtr].message, structFind(errors, dataElement).errors[errorPtr].rule ) />
 				
 				</cfloop>
 			
@@ -138,6 +140,7 @@ Release: 0.1.0
 		<!--- setup a return struct, and array pointer --->
 		<cfset var errorPtr = 0 />
 		<cfset var resultStr = structNew() />
+		<cfset var errorStruct = structNew() />
 
 		<cfset resultStr["_errorCount"] = 0 />
 		
@@ -154,8 +157,11 @@ Release: 0.1.0
 					<cfset resultStr["#variables.instance.errors[errorPtr].dataElement#"]["errors"] = arrayNew(1) />
 				</cfif>
 				
-				<!--- insert the error message --->
-				<cfset arrayAppend( resultStr[variables.instance.errors[errorPtr].dataElement].errors, variables.instance.errors[errorPtr].message ) />
+				<!--- insert the error details --->
+				<cfset errorStruct = structNew() />
+				<cfset errorStruct["message"] = variables.instance.errors[errorPtr].message />
+				<cfset errorStruct["rule"] = variables.instance.errors[errorPtr].rule />
+				<cfset arrayAppend( resultStr[variables.instance.errors[errorPtr].dataElement].errors, errorStruct ) />
 				
 				<!--- increment the error count --->
 				<cfset resultStr._errorCount = resultStr._errorCount + 1 />

@@ -1329,13 +1329,13 @@ Release: 0.1.0
 								<cfif structKeyExists( assertions[assertPtr].messages, result ) >
 			
 									<!--- add an error to the error collection --->
-									<cfset errorCollection.addError( dataElement.name, arguments.dataCollection[dataElement.name], assertions[assertPtr].messages[result] ) />
+									<cfset errorCollection.addError( dataElement.name, arguments.dataCollection[dataElement.name], assertions[assertPtr].messages[result], assertions[assertPtr].assertId ) />
 			
 								<!--- attempt to locate the specified message in the default validation rule defintion --->
 								<cfelseif structKeyExists( getRule( assertion ).messages, result ) >
 			
 									<!--- add an error to the error collection --->
-									<cfset errorCollection.addError( dataElement.name, arguments.dataCollection[dataElement.name], getRule( assertions[assertPtr].rule ).messages[result] ) />
+									<cfset errorCollection.addError( dataElement.name, arguments.dataCollection[dataElement.name], getRule( assertions[assertPtr].rule ).messages[result], assertions[assertPtr].assertId ) />
 			
 								<!--- bad error message, throw an error --->
 								<cfelse>
@@ -1450,13 +1450,13 @@ Release: 0.1.0
 						<cfif structKeyExists( assertions[assertPtr].messages, result ) >
 	
 							<!--- add an error to the error collection --->
-							<cfset errorCollection.addError( arguments.dataSetName, "", assertions[assertPtr].messages[result] ) />
+							<cfset errorCollection.addError( arguments.dataSetName, "", assertions[assertPtr].messages[result], assertions[assertPtr].assertId ) />
 						
 						<!--- attempt to locate the specified message in the default validation rule defintion --->
 						<cfelseif structKeyExists( getRule( assertion ).messages, result ) >
 	
 							<!--- add an error to the error collection --->
-							<cfset errorCollection.addError( arguments.dataSetName, "", getRule( assertions[assertPtr].rule ).messages[result] ) />
+							<cfset errorCollection.addError( arguments.dataSetName, "", getRule( assertions[assertPtr].rule ).messages[result], assertions[assertPtr].assertId ) />
 	
 						<!--- bad error message, throw an error --->
 						<cfelse>
