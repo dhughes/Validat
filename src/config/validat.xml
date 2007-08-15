@@ -1,6 +1,25 @@
 
 <beans>
 	
+	<!-- 
+		This is the default Validat configuration.  You can override this with something
+		like this in your own ColdSpring xml file:
+		
+		<bean id="Validat">
+	
+		</bean>
+		
+	
+	 -->
+	<bean id="ValidatCore" class="Validat.Validat">
+		<constructor-arg name="factory">
+			<ref bean="csFactory" />
+		</constructor-arg>
+		<constructor-arg name="pathToConfigXML">
+			<value>/config/Validat.xml</value>
+		</constructor-arg>
+	</bean>
+	
 	<!-- these are common base objects that are included as part of the validat library -->
 	<bean id="csFactory" 			class="validat.common.csFactory" />
 	<bean id="errorCollection"		class="validat.common.errorCollection"	singleton="false" />

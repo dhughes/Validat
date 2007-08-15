@@ -46,6 +46,23 @@ Release: 0.1.0
 	<!--- public functions --->
 
 	<!--- 
+		function: 		hasErrors
+	
+		description:	Indicates if the collection or named element has any errors
+	--->
+	<cffunction name="hasErrors" access="public" output="false" returntype="boolean"
+		hint="Indicates if the collection has any errors.">
+		
+		<cfargument name="dataElement" type="string" required="false" hint="the name of the data element to check if error occurred" />
+		
+		<!--- get the current errors --->
+		<cfset var errorStruct = getErrors(argumentCollection = arguments) />
+	
+		<!--- return if there are any errors --->
+		<cfreturn errorStruct._errorCount GT 0 />
+	</cffunction> <!--- end: hasErrors() --->
+
+	<!--- 
 		function: 		addError
 	
 		description:	Adds a single error to the error collection.
