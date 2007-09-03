@@ -25,7 +25,7 @@ Release: 0.1.0
 <cfcomponent
 	displayname="validateState"
 	output="false"
-	hint="US Social Security Number validation rule."
+	hint="US and Canada state/provice validation rule."
 	extends="validator">
 	
 	<!--- ------------------------------------------------------------ --->
@@ -94,7 +94,7 @@ Release: 0.1.0
 			
 			<!--- the state field must be a valid U.S. state --->
 			<cfif NOT ( listFindNoCase( variables.instance.USStateAbbrStrings, arguments.data ) OR listFindNoCase( variables.instance.USStateStrings, arguments.data ) ) >
-				<cfreturn invalid />
+				<cfreturn "invalid" />
  			</cfif>
 		
 		<!--- if the country value matches a Canadian string --->
