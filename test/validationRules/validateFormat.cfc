@@ -48,11 +48,11 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testValidate_Valid_Phone
+		function: 		test_validate_Valid_Phone
 
 		description:	I will test the validate function, passing in a valid 10 digit phone number in the format "(xxx) xxx-xxxx".
 	--->
-	<cffunction name="testValidate_Valid_Phone" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Phone" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid 10 digit phone number in the format '(xxx) xxx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -71,14 +71,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Phone() --->
+	</cffunction> <!--- end: test_validate_Valid_Phone() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_Phone
+		function: 		test_validate_Invalid_Phone
 
 		description:	I will test the validate function, passing in an invalid 10 digit phone number in the format "(xxx) xxx-xxxx".
 	--->
-	<cffunction name="testValidate_Invalid_Phone" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_Phone" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid 10 digit phone number in the format '(xxx) xxx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -97,14 +97,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_Phone() --->
+	</cffunction> <!--- end: test_validate_Invalid_Phone() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Phone2
+		function: 		test_validate_Valid_Phone2
 
 		description:	I will test the validate function, passing in an invalid 10 digit phone number in the format "xxx-xxx-xxxx".
 	--->
-	<cffunction name="testValidate_Valid_Phone2" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Phone2" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid 10 digit phone number in the format 'xxx-xxx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -123,14 +123,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Phone2() --->
+	</cffunction> <!--- end: test_validate_Valid_Phone2() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_Phone2
+		function: 		test_validate_Invalid_Phone2
 
 		description:	I will test the validate function, passing in an invalid 10 digit phone number in the format "xxx-xxx-xxxx".
 	--->
-	<cffunction name="testValidate_Invalid_Phone2" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_Phone2" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid 10 digit phone number with format 'xxx-xxx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -149,14 +149,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_Phone2() --->
+	</cffunction> <!--- end: test_validate_Invalid_Phone2() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Phone3
+		function: 		test_validate_Valid_Phone3
 
 		description:	I will test the validate function, passing in a valid 10 digit phone number in the format "xxx/xxx-xxxx".
 	--->
-	<cffunction name="testValidate_Valid_Phone3" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Phone3" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid 10 digit phone number in the format 'xxx/xxx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -175,14 +175,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Phone3() --->
+	</cffunction> <!--- end: test_validate_Valid_Phone3() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_Phone3
+		function: 		test_validate_Invalid_Phone3
 
 		description:	I will test the validate function, passing in an invalid phone number in the format "xxx/xxx-xxxx".
 	--->
-	<cffunction name="testValidate_Invalid_Phone3" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_Phone3" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid phone number in the format 'xxx/xxx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -201,14 +201,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_Phone3() --->
+	</cffunction> <!--- end: test_validate_Invalid_Phone3() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Phone7
+		function: 		test_validate_Valid_Phone7
 
 		description:	I will test the validate function, passing in a valid 7 digit phone number in the format "xxx-xxxx".
 	--->
-	<cffunction name="testValidate_Valid_Phone7" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Phone7" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid 7 digit phone number in the format 'xxx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -227,14 +227,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Phone7() --->
+	</cffunction> <!--- end: test_validate_Valid_Phone7() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_Phone7
+		function: 		test_validate_Invalid_Phone7
 
 		description:	I will test the validate function, passing in an invalid 7 digit phone number in the format "xxx-xxxx".
 	--->
-	<cffunction name="testValidate_Invalid_Phone7" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_Phone7" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid 7 digit phone number in the format 'xxx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -253,14 +253,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_Phone7() --->
+	</cffunction> <!--- end: test_validate_Invalid_Phone7() --->
 
 	<!--- 
-		function: 		testValidate_Valid_PostalCode
+		function: 		test_validate_Valid_PostalCode
 
 		description:	I will test the validate function, passing in a valid 5 digit postal(zip) code in the format "xxxxx".
 	--->
-	<cffunction name="testValidate_Valid_PostalCode" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_PostalCode" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid 5 digit postal(zip) code in the format 'xxxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -279,14 +279,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_PostalCode() --->
+	</cffunction> <!--- end: test_validate_Valid_PostalCode() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_PostalCode
+		function: 		test_validate_Invalid_PostalCode
 
 		description:	I will test the validate function, passing in an invalid postal(zip) code.
 	--->
-	<cffunction name="testValidate_Invalid_PostalCode" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_PostalCode" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid postal(zip) code." >
 	
 		<!--- setup temporary variables --->
@@ -305,14 +305,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_PostalCode() --->
+	</cffunction> <!--- end: test_validate_Invalid_PostalCode() --->
 
 	<!--- 
-		function: 		testValidate_Valid_PostalCode2
+		function: 		test_validate_Valid_PostalCode2
 
 		description:	I will test the validate function, passing in a valid 9 digit postal(zip) code in the format "xxxxx-xxxx".
 	--->
-	<cffunction name="testValidate_Valid_PostalCode2" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_PostalCode2" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid 9 digit postal(zip) code in the format 'xxxxx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -331,14 +331,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_PostalCode2() --->
+	</cffunction> <!--- end: test_validate_Valid_PostalCode2() --->
 
 	<!--- 
-		function: 		testValidate_Valid_PostalCode5
+		function: 		test_validate_Valid_PostalCode5
 
 		description:	I will test the validate function, passing in a valid 5 digit postal(zip) code in the format "xxxxx".
 	--->
-	<cffunction name="testValidate_Valid_PostalCode5" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_PostalCode5" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid 5 digit postal(zip) code in the format 'xxxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -357,14 +357,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_PostalCode5() --->
+	</cffunction> <!--- end: test_validate_Valid_PostalCode5() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_PostalCode5
+		function: 		test_validate_Invalid_PostalCode5
 
 		description:	I will test the validate function, passing in an invalid 5 digit postal(zip) code in the format "xxxxx".
 	--->
-	<cffunction name="testValidate_Invalid_PostalCode5" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_PostalCode5" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid 5 digit postal(zip) code in the format 'xxxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -383,14 +383,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_PostalCode5() --->
+	</cffunction> <!--- end: test_validate_Invalid_PostalCode5() --->
 
 	<!--- 
-		function: 		testValidate_Valid_PostalCode9
+		function: 		test_validate_Valid_PostalCode9
 
 		description:	I will test the validate function, passing in a valid 9 digit postal(zip) code in the format "xxxxx-xxxx".
 	--->
-	<cffunction name="testValidate_Valid_PostalCode9" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_PostalCode9" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid 9 digit postal(zip) code in the format 'xxxxx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -409,14 +409,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_PostalCode9() --->
+	</cffunction> <!--- end: test_validate_Valid_PostalCode9() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_PostalCode9
+		function: 		test_validate_Invalid_PostalCode9
 
 		description:	I will test the validate function, passing in an invalid 9 digit postal(zip) code in the format "xxxxx-xxxx".
 	--->
-	<cffunction name="testValidate_Invalid_PostalCode9" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_PostalCode9" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid 9 digit postal(zip) code in the format 'xxxxx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -435,14 +435,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_PostalCode9() --->
+	</cffunction> <!--- end: test_validate_Invalid_PostalCode9() --->
 
 	<!--- 
-		function: 		testValidate_Valid_SSN
+		function: 		test_validate_Valid_SSN
 
 		description:	I will test the validate function, passing in a valid social security number in the format "xxx-xx-xxxx".
 	--->
-	<cffunction name="testValidate_Valid_SSN" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_SSN" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid social security number in the format 'xxx-xx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -461,14 +461,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_SSN() --->
+	</cffunction> <!--- end: test_validate_Valid_SSN() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_SSN
+		function: 		test_validate_Invalid_SSN
 
 		description:	I will test the validate function, passing in an invalid social security number in the format "xxx-xx-xxxx".
 	--->
-	<cffunction name="testValidate_Invalid_SSN" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_SSN" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid social security number in the format 'xxx-xx-xxxx'." >
 	
 		<!--- setup temporary variables --->
@@ -487,15 +487,15 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_SSN() --->
+	</cffunction> <!--- end: test_validate_Invalid_SSN() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Custom
+		function: 		test_validate_Valid_Custom
 
 		description:	I will test the validate function, passing in a custom regular expression string representing an AMEX credit card number,
 						along with a valid credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_Custom" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Custom" access="public" returntype="void"
 		hint="I will test the validate function, passing in a custom regular expression string representing an AMEX credit card number." >
 	
 		<!--- setup temporary variables --->
@@ -514,15 +514,15 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Custom() --->
+	</cffunction> <!--- end: test_validate_Valid_Custom() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_Custom
+		function: 		test_validate_Invalid_Custom
 
 		description:	I will test the validate function, passing in a custom regular expression string representing an AMEX credit card number,
 						along with an invalid credit card data string.
 	--->
-	<cffunction name="testValidate_Invalid_Custom" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_Custom" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid, alpha numeric data string." >
 	
 		<!--- setup temporary variables --->
@@ -541,14 +541,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_Custom() --->
+	</cffunction> <!--- end: test_validate_Invalid_Custom() --->
 
 	<!--- 
-		function: 		testValidate_MissingArg
+		function: 		test_validate_MissingArg
 
 		description:	I will test the validate function, passing in a valid data string, but no arguments collection.
 	--->
-	<cffunction name="testValidate_MissingArg" access="public" returntype="void"
+	<cffunction name="test_validate_MissingArg" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid data string, but no arguments collection." >
 		
 		<!--- setup temporary variables --->
@@ -570,14 +570,14 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_MissingArg() --->
+	</cffunction> <!--- end: test_validate_MissingArg() --->
 
 	<!--- 
-		function: 		testValidate_ComplexData
+		function: 		test_validate_ComplexData
 
 		description:	I will test the validate function, passing in a complex data structure which should result in an error.
 	--->
-	<cffunction name="testValidate_ComplexData" access="public" returntype="void"
+	<cffunction name="test_validate_ComplexData" access="public" returntype="void"
 		hint="I will test the validate function, passing in a complex data structure which should result in an error." >
 		
 		<!--- setup temporary variables --->
@@ -599,6 +599,6 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_ComplexData() --->
+	</cffunction> <!--- end: test_validate_ComplexData() --->
 
 </cfcomponent>

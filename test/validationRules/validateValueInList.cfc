@@ -48,11 +48,11 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testValidate_Valid
+		function: 		test_validate_Valid
 
 		description:	I will test the validate function, passing in a valid prefix data string.
 	--->
-	<cffunction name="testValidate_Valid" access="public" returntype="void"
+	<cffunction name="test_validate_Valid" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid prefix data string." >
 	
 		<!--- setup temporary variables --->
@@ -72,14 +72,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid() --->
+	</cffunction> <!--- end: test_validate_Valid() --->
 
 	<!--- 
-		function: 		testValidate_Valid_NoCaseSensitive
+		function: 		test_validate_Valid_NoCaseSensitive
 
 		description:	I will test the validate function, passing in a valid prefix data string but no caseSensitive argument.
 	--->
-	<cffunction name="testValidate_Valid_NoCaseSensitive" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_NoCaseSensitive" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid prefix data string but no caseSensitive argument." >
 	
 		<!--- setup temporary variables --->
@@ -98,14 +98,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_NoCaseSensitive() --->
+	</cffunction> <!--- end: test_validate_Valid_NoCaseSensitive() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Predefined
+		function: 		test_validate_Valid_Predefined
 
 		description:	I will test the validate function, passing in a valid prefix data string and the key for a predefined list.
 	--->
-	<cffunction name="testValidate_Valid_Predefined" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Predefined" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid prefix data string and the key for a predefined list" >
 	
 		<!--- setup temporary variables --->
@@ -124,14 +124,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Predefined() --->
+	</cffunction> <!--- end: test_validate_Valid_Predefined() --->
 
 	<!--- 
-		function: 		testValidate_Invalid
+		function: 		test_validate_Invalid
 
 		description:	I will test the validate function, passing in an invalid prefix data string.
 	--->
-	<cffunction name="testValidate_Invalid" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid prefix data string." >
 	
 		<!--- setup temporary variables --->
@@ -150,14 +150,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid() --->
+	</cffunction> <!--- end: test_validate_Invalid() --->
 
 	<!--- 
-		function: 		testValidate_MissingArg
+		function: 		test_validate_MissingArg
 
 		description:	I will test the validate function, passing in a valid data string, but no arguments collection.
 	--->
-	<cffunction name="testValidate_MissingArg" access="public" returntype="void"
+	<cffunction name="test_validate_MissingArg" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid data string, but no arguments collection." >
 		
 		<!--- setup temporary variables --->
@@ -179,14 +179,14 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_MissingArg() --->
+	</cffunction> <!--- end: test_validate_MissingArg() --->
 
 	<!--- 
-		function: 		testValidate_ComplexData
+		function: 		test_validate_ComplexData
 
 		description:	I will test the validate function, passing in a complex data structure which should result in an error.
 	--->
-	<cffunction name="testValidate_ComplexData" access="public" returntype="void"
+	<cffunction name="test_validate_ComplexData" access="public" returntype="void"
 		hint="I will test the validate function, passing in a complex data structure which should result in an error." >
 		
 		<!--- setup temporary variables --->
@@ -208,6 +208,6 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_ComplexData() --->
+	</cffunction> <!--- end: test_validate_ComplexData() --->
 
 </cfcomponent>

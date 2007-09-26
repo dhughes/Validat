@@ -13,19 +13,13 @@
 
 	<validationRules>
 
-		<rule name="prefix" validator="validatePrefix" />
-		<rule name="suffix" validator="validateSuffix" />
+		<rule name="postalCode" validator="validatePostalCode" />
 		
 	</validationRules>
 	
 	<dataSets>
 		
 		<dataSet name="address" >
-			
-			<assert rule="state" >
-				<message name="required" value="errors.validation.address.state.required" />
-				<message name="invalid" value="errors.validation.address.state.invalid" />
-			</assert>
 
 			<dataElement name="street1" required="true" message="errors.validation.address.street1.required" >
 				<assert rule="length" >
@@ -50,6 +44,14 @@
 					<message name="invalid" value="errors.validation.address.city.invalidLength" />
 				</assert>
 			</dataElement>
+			
+			<dataElement name="state">
+				<assert rule="state" >
+					<depend name="country" value="country" />
+					<message name="required" value="errors.validation.address.state.required" />
+					<message name="invalid" value="errors.validation.address.state.invalid" />
+				</assert>
+			</dataElement>
 
 			<dataElement name="postalCode" required="true" message="errors.validation.address.postalCode.required" >
 				<assert rule="postalCode" >
@@ -57,11 +59,7 @@
 				</assert>
 			</dataElement>
 
-			<dataElement name="country" required="true" message="errors.validation.address.country.required" >
-				<assert rule="country" >
-					<message name="invalid" value="errors.validation.address.country.invalid" />
-				</assert>
-			</dataElement>
+			<dataElement name="country" required="true" message="errors.validation.address.country.required" />
 			
 		</dataSet> 
 

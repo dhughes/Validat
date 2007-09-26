@@ -25,12 +25,13 @@
 			<arg name="max" value="120" />
 		</rule>
 		<rule name="creditCard" validator="validateCreditCard" />
-		<rule name="duplicatePerson" validator="validateDuplicatePerson" />
+		<rule name="emailAddress" validator="validateEmail" />
 		<rule name="length" validator="validateLength">
 			<arg name="min" value="0" />
 			<arg name="max" value="100" />
 		</rule>
 		<rule name="ssn" validator="validateSSN" />
+		<rule name="state" validator="validateState" />
 		
 	</validationRules>
 	
@@ -84,11 +85,6 @@
 		</dataSet>
 			
 		<dataSet name="person">
-
-			<assert rule="duplicatePerson" >
-				<message name="failByEmail" value="errors.validation.person.duplicate.email" />
-				<message name="failByName" value="errors.validation.person.duplicate.name" />
-			</assert>
 
 			<dataElement name="firstName" required="true" message="errors.validation.person.firstName.required" >
 				<assert rule="length" >

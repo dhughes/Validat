@@ -24,8 +24,9 @@
 <cfset base.dataSets.user.dataElements.prefix.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.user.dataElements.prefix.assertions[1].messages = structNew() />
 <cfset base.dataSets.user.dataElements.prefix.assertions[1].rule = "prefix" />
+<cfset base.dataSets.user.dataElements.prefix.assertions[1].assertId = "" />
 
-<cfset base.dataSets.user.dataElements.prefix.assertions[1].messages.invalid = "errors.validation.user.prefix.invalid" />
+<cfset base.dataSets.user.dataElements.prefix.assertions[1].messages["invalid"] = "errors.validation.user.prefix.invalid" />
 
 <cfset base.dataSets.user.dataElements.firstName = structNew() />
 <cfset base.dataSets.user.dataElements.firstName.assertionIdList = "" />
@@ -41,11 +42,12 @@
 <cfset base.dataSets.user.dataElements.firstName.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.user.dataElements.firstName.assertions[1].messages = structNew() />
 <cfset base.dataSets.user.dataElements.firstName.assertions[1].rule = "length" />
+<cfset base.dataSets.user.dataElements.firstName.assertions[1].assertId = "" />
 
 <cfset base.dataSets.user.dataElements.firstName.assertions[1].args.max = 100 />
 <cfset base.dataSets.user.dataElements.firstName.assertions[1].args.min = 1 />
 
-<cfset base.dataSets.user.dataElements.firstName.assertions[1].messages.invalid = "errors.validation.user.firstName.invalidLength" />
+<cfset base.dataSets.user.dataElements.firstName.assertions[1].messages["invalid"] = "errors.validation.user.firstName.invalidLength" />
 
 <cfset base.dataSets.user.dataElements.middleName = structNew() />
 <cfset base.dataSets.user.dataElements.middleName.assertionIdList = "" />
@@ -61,11 +63,12 @@
 <cfset base.dataSets.user.dataElements.middleName.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.user.dataElements.middleName.assertions[1].messages = structNew() />
 <cfset base.dataSets.user.dataElements.middleName.assertions[1].rule = "length" />
+<cfset base.dataSets.user.dataElements.middleName.assertions[1].assertId = "" />
 
 <cfset base.dataSets.user.dataElements.middleName.assertions[1].args.max = 100 />
 <cfset base.dataSets.user.dataElements.middleName.assertions[1].args.min = 1 />
 
-<cfset base.dataSets.user.dataElements.middleName.assertions[1].messages.invalid = "errors.validation.user.middleName.invalidLength" />
+<cfset base.dataSets.user.dataElements.middleName.assertions[1].messages["invalid"] = "errors.validation.user.middleName.invalidLength" />
 
 <cfset base.dataSets.user.dataElements.lastName = structNew() />
 <cfset base.dataSets.user.dataElements.lastName.assertionIdList = "" />
@@ -81,11 +84,12 @@
 <cfset base.dataSets.user.dataElements.lastName.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.user.dataElements.lastName.assertions[1].messages = structNew() />
 <cfset base.dataSets.user.dataElements.lastName.assertions[1].rule = "length" />
+<cfset base.dataSets.user.dataElements.lastName.assertions[1].assertId = "" />
 
 <cfset base.dataSets.user.dataElements.lastName.assertions[1].args.max = 100 />
 <cfset base.dataSets.user.dataElements.lastName.assertions[1].args.min = 1 />
 
-<cfset base.dataSets.user.dataElements.lastName.assertions[1].messages.invalid = "errors.validation.user.lastName.invalidLength" />
+<cfset base.dataSets.user.dataElements.lastName.assertions[1].messages["invalid"] = "errors.validation.user.lastName.invalidLength" />
 
 <cfset base.dataSets.user.dataElements.suffix = structNew() />
 <cfset base.dataSets.user.dataElements.suffix.assertionIdList = "" />
@@ -100,8 +104,9 @@
 <cfset base.dataSets.user.dataElements.suffix.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.user.dataElements.suffix.assertions[1].messages = structNew() />
 <cfset base.dataSets.user.dataElements.suffix.assertions[1].rule = "suffix" />
+<cfset base.dataSets.user.dataElements.suffix.assertions[1].assertId = "" />
 
-<cfset base.dataSets.user.dataElements.suffix.assertions[1].messages.invalid = "errors.validation.user.suffix.invalid" />
+<cfset base.dataSets.user.dataElements.suffix.assertions[1].messages["invalid"] = "errors.validation.user.suffix.invalid" />
 
 <cfset base.dataSets.user.dataElements.birthdate = structNew() />
 <cfset base.dataSets.user.dataElements.birthdate.assertionIdList = "" />
@@ -116,8 +121,9 @@
 <cfset base.dataSets.user.dataElements.birthdate.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.user.dataElements.birthdate.assertions[1].messages = structNew() />
 <cfset base.dataSets.user.dataElements.birthdate.assertions[1].rule = "birthdate" />
+<cfset base.dataSets.user.dataElements.birthdate.assertions[1].assertId = "" />
 
-<cfset base.dataSets.user.dataElements.birthdate.assertions[1].messages.invalid = "errors.validation.user.birthdate.invalid" />
+<cfset base.dataSets.user.dataElements.birthdate.assertions[1].messages["invalid"] = "errors.validation.user.birthdate.invalid" />
 
 <cfset base.dataSets.user.dataElements.ssn = structNew() />
 <cfset base.dataSets.user.dataElements.ssn.assertionIdList = "" />
@@ -132,25 +138,18 @@
 <cfset base.dataSets.user.dataElements.ssn.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.user.dataElements.ssn.assertions[1].messages = structNew() />
 <cfset base.dataSets.user.dataElements.ssn.assertions[1].rule = "ssn" />
+<cfset base.dataSets.user.dataElements.ssn.assertions[1].assertId = "" />
 
-<cfset base.dataSets.user.dataElements.ssn.assertions[1].messages.invalid = "errors.validation.user.ssn.invalid" />
+<cfset base.dataSets.user.dataElements.ssn.assertions[1].messages["invalid"] = "errors.validation.user.ssn.invalid" />
 
 <cfset base.dataSets.person = structNew() />
 
 <cfset base.dataSets.person.assertionIdList = "" />
-<cfset base.dataSets.person.assertionRuleList = "duplicatePerson" />
+<cfset base.dataSets.person.assertionRuleList = "" />
 <cfset base.dataSets.person.assertions = arrayNew(1) />
 <cfset base.dataSets.person.dataElements = structNew() />
 <cfset base.dataSets.person.name = "person" />
 <cfset base.dataSets.person.transformer = "" />
-
-<cfset base.dataSets.person.assertions[1] = structNew() />
-<cfset base.dataSets.person.assertions[1].continueOnFail = "false" />
-<cfset base.dataSets.person.assertions[1].messages = structNew() />
-<cfset base.dataSets.person.assertions[1].rule = "duplicatePerson" />
-
-<cfset base.dataSets.person.assertions[1].messages.failByEmail = "errors.validation.person.duplicate.email" />
-<cfset base.dataSets.person.assertions[1].messages.failByName = "errors.validation.person.duplicate.name" />
 
 <cfset base.dataSets.person.dataElements.firstName = structNew() />
 <cfset base.dataSets.person.dataElements.firstName.assertionIdList = "" />
@@ -166,11 +165,12 @@
 <cfset base.dataSets.person.dataElements.firstName.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.person.dataElements.firstName.assertions[1].messages = structNew() />
 <cfset base.dataSets.person.dataElements.firstName.assertions[1].rule = "length" />
+<cfset base.dataSets.person.dataElements.firstName.assertions[1].assertId = "" />
 
 <cfset base.dataSets.person.dataElements.firstName.assertions[1].args.max = 100 />
 <cfset base.dataSets.person.dataElements.firstName.assertions[1].args.min = 1 />
 
-<cfset base.dataSets.person.dataElements.firstName.assertions[1].messages.invalid = "errors.validation.person.firstName.invalidLength" />
+<cfset base.dataSets.person.dataElements.firstName.assertions[1].messages["invalid"] = "errors.validation.person.firstName.invalidLength" />
 
 <cfset base.dataSets.person.dataElements.middleName = structNew() />
 <cfset base.dataSets.person.dataElements.middleName.assertionIdList = "" />
@@ -186,11 +186,12 @@
 <cfset base.dataSets.person.dataElements.middleName.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.person.dataElements.middleName.assertions[1].messages = structNew() />
 <cfset base.dataSets.person.dataElements.middleName.assertions[1].rule = "length" />
+<cfset base.dataSets.person.dataElements.middleName.assertions[1].assertId = "" />
 
 <cfset base.dataSets.person.dataElements.middleName.assertions[1].args.max = 100 />
 <cfset base.dataSets.person.dataElements.middleName.assertions[1].args.min = 1 />
 
-<cfset base.dataSets.person.dataElements.middleName.assertions[1].messages.invalid = "errors.validation.person.middleName.invalidLength" />
+<cfset base.dataSets.person.dataElements.middleName.assertions[1].messages["invalid"] = "errors.validation.person.middleName.invalidLength" />
 
 <cfset base.dataSets.person.dataElements.lastName = structNew() />
 <cfset base.dataSets.person.dataElements.lastName.assertionIdList = "" />
@@ -206,11 +207,12 @@
 <cfset base.dataSets.person.dataElements.lastName.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.person.dataElements.lastName.assertions[1].messages = structNew() />
 <cfset base.dataSets.person.dataElements.lastName.assertions[1].rule = "length" />
+<cfset base.dataSets.person.dataElements.lastName.assertions[1].assertId = "" />
 
 <cfset base.dataSets.person.dataElements.lastName.assertions[1].args.max = 100 />
 <cfset base.dataSets.person.dataElements.lastName.assertions[1].args.min = 1 />
 
-<cfset base.dataSets.person.dataElements.lastName.assertions[1].messages.invalid = "errors.validation.person.lastName.invalidLength" />
+<cfset base.dataSets.person.dataElements.lastName.assertions[1].messages["invalid"] = "errors.validation.person.lastName.invalidLength" />
 
 <cfset base.dataSets.person.dataElements.billingAddress = structNew() />
 <cfset base.dataSets.person.dataElements.billingAddress.assertionIdList = "" />
@@ -243,14 +245,16 @@
 <cfset base.dataSets.person.dataElements.emailAddress.assertions[1].continueOnFail = "true" />
 <cfset base.dataSets.person.dataElements.emailAddress.assertions[1].messages = structNew() />
 <cfset base.dataSets.person.dataElements.emailAddress.assertions[1].rule = "emailAddress" />
+<cfset base.dataSets.person.dataElements.emailAddress.assertions[1].assertId = "" />
 
-<cfset base.dataSets.person.dataElements.emailAddress.assertions[1].messages.invalid = "errors.validation.person.emailAddress.invalid" />
+<cfset base.dataSets.person.dataElements.emailAddress.assertions[1].messages["invalid"] = "errors.validation.person.emailAddress.invalid" />
 
 <cfset base.dataSets.person.dataElements.emailAddress.assertions[2] = structNew() />
 <cfset base.dataSets.person.dataElements.emailAddress.assertions[2].args = structNew() />
 <cfset base.dataSets.person.dataElements.emailAddress.assertions[2].continueOnFail = "false" />
 <cfset base.dataSets.person.dataElements.emailAddress.assertions[2].messages = structNew() />
 <cfset base.dataSets.person.dataElements.emailAddress.assertions[2].rule = "length" />
+<cfset base.dataSets.person.dataElements.emailAddress.assertions[2].assertId = "" />
 
 <cfset base.dataSets.person.dataElements.emailAddress.assertions[2].args.max = 100 />
 <cfset base.dataSets.person.dataElements.emailAddress.assertions[2].args.min = 1 />
@@ -261,19 +265,11 @@
 <cfset base.dataSets.address = structNew() />
 
 <cfset base.dataSets.address.assertionIdList = "" />
-<cfset base.dataSets.address.assertionRuleList = "state" />
+<cfset base.dataSets.address.assertionRuleList = "" />
 <cfset base.dataSets.address.assertions = arrayNew(1) />
 <cfset base.dataSets.address.dataElements = structNew() />
 <cfset base.dataSets.address.name = "address" />
 <cfset base.dataSets.address.transformer = "" />
-
-<cfset base.dataSets.address.assertions[1] = structNew() />
-<cfset base.dataSets.address.assertions[1].continueOnFail = "false" />
-<cfset base.dataSets.address.assertions[1].messages = structNew() />
-<cfset base.dataSets.address.assertions[1].rule = "state" />
-
-<cfset base.dataSets.address.assertions[1].messages.invalid = "errors.validation.address.state.invalid" />
-<cfset base.dataSets.address.assertions[1].messages.required = "errors.validation.address.state.required" />
 
 <cfset base.dataSets.address.dataElements.street1 = structNew() />
 <cfset base.dataSets.address.dataElements.street1.assertionIdList = "" />
@@ -289,11 +285,12 @@
 <cfset base.dataSets.address.dataElements.street1.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.address.dataElements.street1.assertions[1].messages = structNew() />
 <cfset base.dataSets.address.dataElements.street1.assertions[1].rule = "length" />
+<cfset base.dataSets.address.dataElements.street1.assertions[1].assertId = "" />
 
 <cfset base.dataSets.address.dataElements.street1.assertions[1].args.max = 100 />
 <cfset base.dataSets.address.dataElements.street1.assertions[1].args.min = 1 />
 
-<cfset base.dataSets.address.dataElements.street1.assertions[1].messages.invalid = "errors.validation.address.street1.invalidLength" />
+<cfset base.dataSets.address.dataElements.street1.assertions[1].messages["invalid"] = "errors.validation.address.street1.invalidLength" />
 
 <cfset base.dataSets.address.dataElements.street2 = structNew() />
 <cfset base.dataSets.address.dataElements.street2.assertionIdList = "" />
@@ -309,11 +306,12 @@
 <cfset base.dataSets.address.dataElements.street2.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.address.dataElements.street2.assertions[1].messages = structNew() />
 <cfset base.dataSets.address.dataElements.street2.assertions[1].rule = "length" />
+<cfset base.dataSets.address.dataElements.street2.assertions[1].assertId = "" />
 
 <cfset base.dataSets.address.dataElements.street2.assertions[1].args.max = 100 />
 <cfset base.dataSets.address.dataElements.street2.assertions[1].args.min = 1 />
 
-<cfset base.dataSets.address.dataElements.street2.assertions[1].messages.invalid = "errors.validation.address.street2.invalidLength" />
+<cfset base.dataSets.address.dataElements.street2.assertions[1].messages["invalid"] = "errors.validation.address.street2.invalidLength" />
 
 <cfset base.dataSets.address.dataElements.city = structNew() />
 <cfset base.dataSets.address.dataElements.city.assertionIdList = "" />
@@ -329,11 +327,33 @@
 <cfset base.dataSets.address.dataElements.city.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.address.dataElements.city.assertions[1].messages = structNew() />
 <cfset base.dataSets.address.dataElements.city.assertions[1].rule = "length" />
+<cfset base.dataSets.address.dataElements.city.assertions[1].assertId = "" />
 
 <cfset base.dataSets.address.dataElements.city.assertions[1].args.max = 100 />
 <cfset base.dataSets.address.dataElements.city.assertions[1].args.min = 1 />
 
-<cfset base.dataSets.address.dataElements.city.assertions[1].messages.invalid = "errors.validation.address.city.invalidLength" />
+<cfset base.dataSets.address.dataElements.city.assertions[1].messages["invalid"] = "errors.validation.address.city.invalidLength" />
+
+<cfset base.dataSets.address.dataElements.state = structNew() />
+<cfset base.dataSets.address.dataElements.state.assertionIdList = "" />
+<cfset base.dataSets.address.dataElements.state.assertionRuleList = "state" />
+<cfset base.dataSets.address.dataElements.state.assertions = arrayNew(1) />
+<cfset base.dataSets.address.dataElements.state.connectTo = "" />
+<cfset base.dataSets.address.dataElements.state.message = "" />
+<cfset base.dataSets.address.dataElements.state.name = "state" />
+<cfset base.dataSets.address.dataElements.state.required = "false" />
+
+<cfset base.dataSets.address.dataElements.state.assertions[1] = structNew() />
+<cfset base.dataSets.address.dataElements.state.assertions[1].continueOnFail = "false" />
+<cfset base.dataSets.address.dataElements.state.assertions[1].dependencies = structNew() />
+<cfset base.dataSets.address.dataElements.state.assertions[1].messages = structNew() />
+<cfset base.dataSets.address.dataElements.state.assertions[1].rule = "state" />
+<cfset base.dataSets.address.dataElements.state.assertions[1].assertId = "" />
+
+<cfset base.dataSets.address.dataElements.state.assertions[1].dependencies["country"] = "country" />
+
+<cfset base.dataSets.address.dataElements.state.assertions[1].messages["invalid"] = "errors.validation.address.state.invalid" />
+<cfset base.dataSets.address.dataElements.state.assertions[1].messages["required"] = "errors.validation.address.state.required" />
 
 <cfset base.dataSets.address.dataElements.postalCode = structNew() />
 <cfset base.dataSets.address.dataElements.postalCode.assertionIdList = "" />
@@ -348,25 +368,18 @@
 <cfset base.dataSets.address.dataElements.postalCode.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.address.dataElements.postalCode.assertions[1].messages = structNew() />
 <cfset base.dataSets.address.dataElements.postalCode.assertions[1].rule = "postalCode" />
+<cfset base.dataSets.address.dataElements.postalCode.assertions[1].assertId = "" />
 
-<cfset base.dataSets.address.dataElements.postalCode.assertions[1].messages.invalid = "errors.validation.address.postalCode.invalid" />
+<cfset base.dataSets.address.dataElements.postalCode.assertions[1].messages["invalid"] = "errors.validation.address.postalCode.invalid" />
 
 <cfset base.dataSets.address.dataElements.country = structNew() />
 <cfset base.dataSets.address.dataElements.country.assertionIdList = "" />
-<cfset base.dataSets.address.dataElements.country.assertionRuleList = "country" />
+<cfset base.dataSets.address.dataElements.country.assertionRuleList = "" />
 <cfset base.dataSets.address.dataElements.country.assertions = arrayNew(1) />
 <cfset base.dataSets.address.dataElements.country.connectTo = "" />
 <cfset base.dataSets.address.dataElements.country.message = "errors.validation.address.country.required" />
 <cfset base.dataSets.address.dataElements.country.name = "country" />
 <cfset base.dataSets.address.dataElements.country.required = "true" />
-
-<cfset base.dataSets.address.dataElements.country.assertions[1] = structNew() />
-<cfset base.dataSets.address.dataElements.country.assertions[1].continueOnFail = "false" />
-<cfset base.dataSets.address.dataElements.country.assertions[1].messages = structNew() />
-<cfset base.dataSets.address.dataElements.country.assertions[1].rule = "country" />
-
-<cfset base.dataSets.address.dataElements.country.assertions[1].messages.invalid = "errors.validation.address.country.invalid" />
-
 
 <!--- setup the validation rules collection --->
 <cfset base.validationRules = structNew() />
@@ -398,11 +411,11 @@
 <cfset base.validationRules.creditCard.name = "creditCard" />
 <cfset base.validationRules.creditCard.validator = "validateCreditCard" />
 
-<cfset base.validationRules.duplicatePerson = structNew() />
-<cfset base.validationRules.duplicatePerson.args = structNew() />
-<cfset base.validationRules.duplicatePerson.messages = structNew() />
-<cfset base.validationRules.duplicatePerson.name = "duplicatePerson" />
-<cfset base.validationRules.duplicatePerson.validator = "validateDuplicatePerson" />
+<cfset base.validationRules.emailAddress = structNew() />
+<cfset base.validationRules.emailAddress.args = structNew() />
+<cfset base.validationRules.emailAddress.messages = structNew() />
+<cfset base.validationRules.emailAddress.name = "emailAddress" />
+<cfset base.validationRules.emailAddress.validator = "validateEmail" />
 
 <cfset base.validationRules.length = structNew() />
 <cfset base.validationRules.length.args = structNew() />
@@ -413,11 +426,11 @@
 <cfset base.validationRules.length.args.max = 100 />
 <cfset base.validationRules.length.args.min = 0 />
 
-<cfset base.validationRules.prefix = structNew() />
-<cfset base.validationRules.prefix.args = structNew() />
-<cfset base.validationRules.prefix.messages = structNew() />
-<cfset base.validationRules.prefix.name = "prefix" />
-<cfset base.validationRules.prefix.validator = "validatePrefix" />
+<cfset base.validationRules.postalCode = structNew() />
+<cfset base.validationRules.postalCode.args = structNew() />
+<cfset base.validationRules.postalCode.messages = structNew() />
+<cfset base.validationRules.postalCode.name = "postalCode" />
+<cfset base.validationRules.postalCode.validator = "validatePostalCode" />
 
 <cfset base.validationRules.ssn = structNew() />
 <cfset base.validationRules.ssn.args = structNew() />
@@ -425,8 +438,8 @@
 <cfset base.validationRules.ssn.name = "ssn" />
 <cfset base.validationRules.ssn.validator = "validateSSN" />
 
-<cfset base.validationRules.suffix = structNew() />
-<cfset base.validationRules.suffix.args = structNew() />
-<cfset base.validationRules.suffix.messages = structNew() />
-<cfset base.validationRules.suffix.name = "suffix" />
-<cfset base.validationRules.suffix.validator = "validateSuffix" />
+<cfset base.validationRules.state = structNew() />
+<cfset base.validationRules.state.args = structNew() />
+<cfset base.validationRules.state.messages = structNew() />
+<cfset base.validationRules.state.name = "state" />
+<cfset base.validationRules.state.validator = "validateState" />

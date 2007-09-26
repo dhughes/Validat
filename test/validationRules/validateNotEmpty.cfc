@@ -48,11 +48,11 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testValidate_Valid_String
+		function: 		test_validate_Valid_String
 
 		description:	I will test the validate function, passing in a valid data string.
 	--->
-	<cffunction name="testValidate_Valid_String" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_String" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid data string." >
 	
 		<!--- setup temporary variables --->
@@ -67,14 +67,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_String() --->
+	</cffunction> <!--- end: test_validate_Valid_String() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_String
+		function: 		test_validate_Invalid_String
 
 		description:	I will test the validate function, passing in an empty data string.
 	--->
-	<cffunction name="testValidate_Invalid_String" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_String" access="public" returntype="void"
 		hint="I will test the validate function, passing in an empty data string." >
 	
 		<!--- setup temporary variables --->
@@ -89,14 +89,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_String() --->
+	</cffunction> <!--- end: test_validate_Invalid_String() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Struct
+		function: 		test_validate_Valid_Struct
 
 		description:	I will test the validate function, passing in a valid data structure.
 	--->
-	<cffunction name="testValidate_Valid_Struct" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Struct" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid data structure." >
 	
 		<!--- setup temporary variables --->
@@ -115,14 +115,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Struct() --->
+	</cffunction> <!--- end: test_validate_Valid_Struct() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_Struct
+		function: 		test_validate_Invalid_Struct
 
 		description:	I will test the validate function, passing in an empty data struct.
 	--->
-	<cffunction name="testValidate_Invalid_Struct" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_Struct" access="public" returntype="void"
 		hint="I will test the validate function, passing in an empty data struct." >
 	
 		<!--- setup temporary variables --->
@@ -138,14 +138,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_Struct() --->
+	</cffunction> <!--- end: test_validate_Invalid_Struct() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Array
+		function: 		test_validate_Valid_Array
 
 		description:	I will test the validate function, passing in a valid data array.
 	--->
-	<cffunction name="testValidate_Valid_Array" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Array" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid data array." >
 	
 		<!--- setup temporary variables --->
@@ -164,14 +164,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Array() --->
+	</cffunction> <!--- end: test_validate_Valid_Array() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_Array
+		function: 		test_validate_Invalid_Array
 
 		description:	I will test the validate function, passing in an empty data array.
 	--->
-	<cffunction name="testValidate_Invalid_Array" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_Array" access="public" returntype="void"
 		hint="I will test the validate function, passing in an empty data array." >
 	
 		<!--- setup temporary variables --->
@@ -187,14 +187,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_Array() --->
+	</cffunction> <!--- end: test_validate_Invalid_Array() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Query
+		function: 		test_validate_Valid_Query
 
 		description:	I will test the validate function, passing in a valid data query.
 	--->
-	<cffunction name="testValidate_Valid_Query" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Query" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid data query." >
 	
 		<!--- setup temporary variables --->
@@ -214,14 +214,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Query() --->
+	</cffunction> <!--- end: test_validate_Valid_Query() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_Query
+		function: 		test_validate_Invalid_Query
 
 		description:	I will test the validate function, passing in an empty data query.
 	--->
-	<cffunction name="testValidate_Invalid_Query" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_Query" access="public" returntype="void"
 		hint="I will test the validate function, passing in an empty data query." >
 	
 		<!--- setup temporary variables --->
@@ -237,14 +237,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_Query() --->
+	</cffunction> <!--- end: test_validate_Invalid_Query() --->
 
 	<!--- 
-		function: 		testValidate_InvalidType
+		function: 		test_validate_InvalidType
 
 		description:	I will test the validate function, passing in an invalid data type which should result in an error.
 	--->
-	<cffunction name="testValidate_InvalidType" access="public" returntype="void"
+	<cffunction name="test_validate_InvalidType" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid data type which should result in an error." >
 	
 		<!--- setup temporary variables --->
@@ -267,6 +267,6 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_InvalidType() --->
+	</cffunction> <!--- end: test_validate_InvalidType() --->
 
 </cfcomponent>

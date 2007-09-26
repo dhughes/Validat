@@ -58,8 +58,4 @@ Release: 0.1.0
 		<cfreturn arguments.dataCollection />
 	</cffunction> <!--- end: getData() --->
 
-	<!--- ------------------------------------------------------------ --->
-	<!--- private methods --->
-
-
 </cfcomponent>

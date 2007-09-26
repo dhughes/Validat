@@ -4,7 +4,8 @@
 
 <cfset base.dataSets.user = structNew() />
 
-<cfset base.dataSets.user.assertionList = "" />
+<cfset base.dataSets.user.assertionIDList = "" />
+<cfset base.dataSets.user.assertionRuleList = "" />
 <cfset base.dataSets.user.assertions = arrayNew(1) />
 <cfset base.dataSets.user.dataElements = structNew() />
 <cfset base.dataSets.user.name = "user" />
@@ -24,6 +25,7 @@
 <cfset base.dataSets.user.dataElements.firstName.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.user.dataElements.firstName.assertions[1].messages = structNew() />
 <cfset base.dataSets.user.dataElements.firstName.assertions[1].rule = "length" />
+<cfset base.dataSets.user.dataElements.firstName.assertions[1].assertId = "" />
 
 <cfset base.dataSets.user.dataElements.firstName.assertions[1].args.max = 100 />
 <cfset base.dataSets.user.dataElements.firstName.assertions[1].args.min = 1 />
@@ -44,6 +46,7 @@
 <cfset base.dataSets.user.dataElements.middleName.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.user.dataElements.middleName.assertions[1].messages = structNew() />
 <cfset base.dataSets.user.dataElements.middleName.assertions[1].rule = "length" />
+<cfset base.dataSets.user.dataElements.middleName.assertions[1].assertId = "" />
 
 <cfset base.dataSets.user.dataElements.middleName.assertions[1].args.max = 100 />
 <cfset base.dataSets.user.dataElements.middleName.assertions[1].args.min = 1 />
@@ -64,6 +67,7 @@
 <cfset base.dataSets.user.dataElements.lastName.assertions[1].continueOnFail = "false" />
 <cfset base.dataSets.user.dataElements.lastName.assertions[1].messages = structNew() />
 <cfset base.dataSets.user.dataElements.lastName.assertions[1].rule = "length" />
+<cfset base.dataSets.user.dataElements.lastName.assertions[1].assertId = "" />
 
 <cfset base.dataSets.user.dataElements.lastName.assertions[1].args.max = 100 />
 <cfset base.dataSets.user.dataElements.lastName.assertions[1].args.min = 1 />

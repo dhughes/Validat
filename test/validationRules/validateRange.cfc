@@ -48,11 +48,11 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testValidate_Valid_String
+		function: 		test_validate_Valid_String
 
 		description:	I will test the validate function, passing in a valid string data value.
 	--->
-	<cffunction name="testValidate_Valid_String" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_String" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid string data value." >
 	
 		<!--- setup temporary variables --->
@@ -72,14 +72,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_String() --->
+	</cffunction> <!--- end: test_validate_Valid_String() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Numeric
+		function: 		test_validate_Valid_Numeric
 
 		description:	I will test the validate function, passing in a valid numeric data value.
 	--->
-	<cffunction name="testValidate_Valid_Numeric" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Numeric" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid numeric data value." >
 	
 		<!--- setup temporary variables --->
@@ -99,14 +99,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Numeric() --->
+	</cffunction> <!--- end: test_validate_Valid_Numeric() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_Numeric
+		function: 		test_validate_Invalid_Numeric
 
 		description:	I will test the validate function, passing in an invalid numeric data value.
 	--->
-	<cffunction name="testValidate_Invalid_Numeric" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_Numeric" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid numeric data value." >
 	
 		<!--- setup temporary variables --->
@@ -126,14 +126,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_Numeric() --->
+	</cffunction> <!--- end: test_validate_Invalid_Numeric() --->
 
 	<!--- 
-		function: 		testValidate_MissingArg
+		function: 		test_validate_MissingArg
 
 		description:	I will test the validate function, passing in a valid data string, but no arguments collection.
 	--->
-	<cffunction name="testValidate_MissingArg" access="public" returntype="void"
+	<cffunction name="test_validate_MissingArg" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid data string, but no arguments collection." >
 		
 		<!--- setup temporary variables --->
@@ -155,14 +155,14 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_MissingArg() --->
+	</cffunction> <!--- end: test_validate_MissingArg() --->
 
 	<!--- 
-		function: 		testValidate_ComplexData
+		function: 		test_validate_ComplexData
 
 		description:	I will test the validate function, passing in a complex data structure which should result in an error.
 	--->
-	<cffunction name="testValidate_ComplexData" access="public" returntype="void"
+	<cffunction name="test_validate_ComplexData" access="public" returntype="void"
 		hint="I will test the validate function, passing in a complex data structure which should result in an error." >
 		
 		<!--- setup temporary variables --->
@@ -184,6 +184,6 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_ComplexData() --->
+	</cffunction> <!--- end: test_validate_ComplexData() --->
 
 </cfcomponent>

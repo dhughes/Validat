@@ -38,7 +38,6 @@ Release: 0.1.0
 		
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateAlpha" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateAlphaNumeric" ) ) />
-		<!--- <cfset testSuite.addTestSuite( newObject( "test.validationRules.validateBirthDate" ) ) /> --->
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateCreditCard" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateDate" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateDifferent" ) ) />
@@ -51,9 +50,11 @@ Release: 0.1.0
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateNotEmpty" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateNumeric" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validatePhoneNumber" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validatePostalCode" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateRange" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateSame" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateSSN" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateState" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validationRules.validateValueInList" ) ) />
 		
 		<cfreturn testSuite/>

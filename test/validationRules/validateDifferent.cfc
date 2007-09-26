@@ -48,11 +48,11 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testValidate_Valid_WithArguments
+		function: 		test_validate_Valid_WithArguments
 
 		description:	I will test the validate function, passing in two different data strings and the argument collection.
 	--->
-	<cffunction name="testValidate_Valid_WithArguments" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_WithArguments" access="public" returntype="void"
 		hint="I will test the validate function, passing in two different data strings and the argument collection." >
 	
 		<!--- setup temporary variables --->
@@ -77,14 +77,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_WithArguments() --->
+	</cffunction> <!--- end: test_validate_Valid_WithArguments() --->
 
 	<!--- 
-		function: 		testValidate_Valid_NoArguments
+		function: 		test_validate_Valid_NoArguments
 
 		description:	I will test the validate function, passing in two different data strings and no argument collection.
 	--->
-	<cffunction name="testValidate_Valid_NoArguments" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_NoArguments" access="public" returntype="void"
 		hint="I will test the validate function, passing in two different data strings and no argument collection." >
 	
 		<!--- setup temporary variables --->
@@ -104,14 +104,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_NoArguments() --->
+	</cffunction> <!--- end: test_validate_Valid_NoArguments() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_SameData
+		function: 		test_validate_Invalid_SameData
 
 		description:	I will test the validate function, passing in two matching data strings and no argument collection.
 	--->
-	<cffunction name="testValidate_Invalid_SameData" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_SameData" access="public" returntype="void"
 		hint="I will test the validate function, passing in two matching data strings and no argument collection." >
 	
 		<!--- setup temporary variables --->
@@ -131,14 +131,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_SameData() --->
+	</cffunction> <!--- end: test_validate_Invalid_SameData() --->
 
 	<!--- 
-		function: 		testValidate_BadData
+		function: 		test_validate_BadData
 
 		description:	I will test the validate function, passing in a simple string data structure which should result in an error.
 	--->
-	<cffunction name="testValidate_BadData" access="public" returntype="void"
+	<cffunction name="test_validate_BadData" access="public" returntype="void"
 		hint="I will test the validate function, passing in a simple string data structure which should result in an error." >
 		
 		<!--- setup temporary variables --->
@@ -160,6 +160,6 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_BadData() --->
+	</cffunction> <!--- end: test_validate_BadData() --->
 
 </cfcomponent>

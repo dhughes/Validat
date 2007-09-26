@@ -48,11 +48,11 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testValidate_Valid_AMEX
+		function: 		test_validate_Valid_AMEX
 
 		description:	I will test the validate function, passing in a valid AMEX credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_AMEX" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_AMEX" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid AMEX credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -67,14 +67,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_AMEX() --->
+	</cffunction> <!--- end: test_validate_Valid_AMEX() --->
 
 	<!--- 
-		function: 		testValidate_Valid_CarteBlanche
+		function: 		test_validate_Valid_CarteBlanche
 
 		description:	I will test the validate function, passing in a valid CarteBlanche credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_CarteBlanche" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_CarteBlanche" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid Carte Blanche credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -89,14 +89,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_CarteBlanche() --->
+	</cffunction> <!--- end: test_validate_Valid_CarteBlanche() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Diner
+		function: 		test_validate_Valid_Diner
 
 		description:	I will test the validate function, passing in a valid Diner credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_Diner" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Diner" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid Diner credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -111,14 +111,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Diner() --->
+	</cffunction> <!--- end: test_validate_Valid_Diner() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Discover
+		function: 		test_validate_Valid_Discover
 
 		description:	I will test the validate function, passing in a valid Discover credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_Discover" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Discover" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid Discover credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -133,14 +133,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Discover() --->
+	</cffunction> <!--- end: test_validate_Valid_Discover() --->
 
 	<!--- 
-		function: 		testValidate_Valid_EnRoute
+		function: 		test_validate_Valid_EnRoute
 
 		description:	I will test the validate function, passing in a valid EnRoute credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_EnRoute" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_EnRoute" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid EnRoute credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -155,14 +155,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) /><!--- currently returning invalid as the EnRoute validation is incomplete --->
 
-	</cffunction> <!--- end: testValidate_Valid_EnRoute() --->
+	</cffunction> <!--- end: test_validate_Valid_EnRoute() --->
 
 	<!--- 
-		function: 		testValidate_Valid_JCB
+		function: 		test_validate_Valid_JCB
 
 		description:	I will test the validate function, passing in a valid JCB credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_JCB" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_JCB" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid JCB credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -177,14 +177,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) /><!--- currently returning invalid as the JCB validation is incomplete --->
 
-	</cffunction> <!--- end: testValidate_Valid_JCB() --->
+	</cffunction> <!--- end: test_validate_Valid_JCB() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Maestro
+		function: 		test_validate_Valid_Maestro
 
 		description:	I will test the validate function, passing in a valid Maestro credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_Maestro" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Maestro" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid Maestro credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -199,14 +199,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) /><!--- currently returning invalid as the Maestro validation is incomplete --->
 
-	</cffunction> <!--- end: testValidate_Valid_Maestro() --->
+	</cffunction> <!--- end: test_validate_Valid_Maestro() --->
 
 	<!--- 
-		function: 		testValidate_Valid_MasterCard
+		function: 		test_validate_Valid_MasterCard
 
 		description:	I will test the validate function, passing in a valid MasterCard credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_MasterCard" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_MasterCard" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid MasterCard credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -221,14 +221,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_MasterCard() --->
+	</cffunction> <!--- end: test_validate_Valid_MasterCard() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Solo
+		function: 		test_validate_Valid_Solo
 
 		description:	I will test the validate function, passing in a valid Solo credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_Solo" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Solo" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid Solo credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -243,14 +243,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Solo() --->
+	</cffunction> <!--- end: test_validate_Valid_Solo() --->
 
 	<!--- 
-		function: 		testValidate_Valid_Switch
+		function: 		test_validate_Valid_Switch
 
 		description:	I will test the validate function, passing in a valid Switch credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_Switch" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Switch" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid Switch credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -265,14 +265,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) /> <!--- currently returning invalid as the Switch validation is incomplete --->
 
-	</cffunction> <!--- end: testValidate_Valid_Switch() --->
+	</cffunction> <!--- end: test_validate_Valid_Switch() --->
 
 	<!--- 
-		function: 		testValidate_Valid_VISA
+		function: 		test_validate_Valid_VISA
 
 		description:	I will test the validate function, passing in a valid VISA credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_VISA" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_VISA" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid VISA credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -287,14 +287,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_VISA() --->
+	</cffunction> <!--- end: test_validate_Valid_VISA() --->
 
 	<!--- 
-		function: 		testValidate_Valid_VISA2
+		function: 		test_validate_Valid_VISA2
 
 		description:	I will test the validate function, passing in a valid VISA credit card data string.
 	--->
-	<cffunction name="testValidate_Valid_VISA2" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_VISA2" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid VISA credit card data string." >
 	
 		<!--- setup temporary variables --->
@@ -309,14 +309,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_VISA2() --->
+	</cffunction> <!--- end: test_validate_Valid_VISA2() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_CardNumber
+		function: 		test_validate_Invalid_CardNumber
 
 		description:	I will test the validate function, passing in an invalid credt card data string.
 	--->
-	<cffunction name="testValidate_Invalid_CardNumber" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_CardNumber" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid credt card data string." >
 	
 		<!--- setup temporary variables --->
@@ -331,14 +331,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_CardNumber() --->
+	</cffunction> <!--- end: test_validate_Invalid_CardNumber() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_CardType
+		function: 		test_validate_Invalid_CardType
 
 		description:	I will test the validate function, passing in an valid credit card data string but for a credit card type not specified in the arguments collection.
 	--->
-	<cffunction name="testValidate_Invalid_CardType" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_CardType" access="public" returntype="void"
 		hint="I will test the validate function, passing in an valid credit card data string but for a credit card type not specified in the arguments collection." >
 	
 		<!--- setup temporary variables --->
@@ -357,14 +357,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_CardType() --->
+	</cffunction> <!--- end: test_validate_Invalid_CardType() --->
 
 	<!--- 
-		function: 		testValidate_ComplexData
+		function: 		test_validate_ComplexData
 
 		description:	I will test the validate function, passing in a complex data structure which should result in an error.
 	--->
-	<cffunction name="testValidate_ComplexData" access="public" returntype="void"
+	<cffunction name="test_validate_ComplexData" access="public" returntype="void"
 		hint="I will test the validate function, passing in a complex data structure which should result in an error." >
 		
 		<!--- setup temporary variables --->
@@ -386,6 +386,6 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_ComplexData() --->
+	</cffunction> <!--- end: test_validate_ComplexData() --->
 
 </cfcomponent>

@@ -48,11 +48,11 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testValidate_Valid
+		function: 		test_validate_Valid
 
 		description:	I will test the validate function, passing in a valid numeric data string.
 	--->
-	<cffunction name="testValidate_Valid" access="public" returntype="void"
+	<cffunction name="test_validate_Valid" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid numeric data string." >
 	
 		<!--- setup temporary variables --->
@@ -67,14 +67,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid() --->
+	</cffunction> <!--- end: test_validate_Valid() --->
 
 	<!--- 
-		function: 		testValidate_Valid_WithCommas
+		function: 		test_validate_Valid_WithCommas
 
 		description:	I will test the validate function, passing in a valid numeric data string with comma seperators.
 	--->
-	<cffunction name="testValidate_Valid_WithCommas" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_WithCommas" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid numeric data string with comma seperators." >
 	
 		<!--- setup temporary variables --->
@@ -89,14 +89,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_WithCommas() --->
+	</cffunction> <!--- end: test_validate_Valid_WithCommas() --->
 
 	<!--- 
-		function: 		testValidate_Valid_WithSign
+		function: 		test_validate_Valid_WithSign
 
 		description:	I will test the validate function, passing in a valid numeric data string with a negative sign and comma seperators.
 	--->
-	<cffunction name="testValidate_Valid_WithSign" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_WithSign" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid numeric data string with a negative sign and comma seperators." >
 	
 		<!--- setup temporary variables --->
@@ -111,14 +111,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_WithSign() --->
+	</cffunction> <!--- end: test_validate_Valid_WithSign() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_NonNumeric
+		function: 		test_validate_Invalid_NonNumeric
 
 		description:	I will test the validate function, passing in an invalid non-numeric data string.
 	--->
-	<cffunction name="testValidate_Invalid_NonNumeric" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_NonNumeric" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid non-numeric data string." >
 	
 		<!--- setup temporary variables --->
@@ -133,14 +133,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_NonNumeric() --->
+	</cffunction> <!--- end: test_validate_Invalid_NonNumeric() --->
 
 	<!--- 
-		function: 		testValidate_ComplexData
+		function: 		test_validate_ComplexData
 
 		description:	I will test the validate function, passing in a complex data structure which should result in an error.
 	--->
-	<cffunction name="testValidate_ComplexData" access="public" returntype="void"
+	<cffunction name="test_validate_ComplexData" access="public" returntype="void"
 		hint="I will test the validate function, passing in a complex data structure which should result in an error." >
 		
 		<!--- setup temporary variables --->
@@ -162,6 +162,6 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_ComplexData() --->
+	</cffunction> <!--- end: test_validate_ComplexData() --->
 
 </cfcomponent>

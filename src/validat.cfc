@@ -39,7 +39,7 @@ Release: 0.1.0
 	<!--- constructor --->
 
 	<cffunction name="init" access="public" output="false" returntype="validat"
-		hint="The default constructor for the validation engine, returning the initialized validator object instance">
+		hint="The default constructor for the Validat engine, returning the initialized validator object instance">
 
 		<cfargument name="factory" displayname="factory" type="any" required="true"
 			hint="I am an instance of an object factory, from which the necessary validator and transformer objects will be requested." />
@@ -57,7 +57,7 @@ Release: 0.1.0
 		<cfset variables.instance.factory = arguments.factory />
 
 		<!--- if a configuration file was provided, parse it --->
-		<cfif isDefined('arguments.pathToConfigXML') AND len(trim(arguments.pathToConfigXML)) >
+		<cfif isDefined("arguments.pathToConfigXML") AND len(trim(arguments.pathToConfigXML)) >
 			<cfset parseConfigXML(arguments.pathToConfigXML) />
 		</cfif>
 
@@ -71,8 +71,8 @@ Release: 0.1.0
 	<!--- 
 		function: 		validate
 
-		description:	Validates the provided data collection according to the specified data set and its associated data elements
-						and assertions before returning a collection of errors.
+		description:	Validates the provided data collection according to the specified data set and its 
+						associated data elements and assertions before returning a collection of errors.
 	--->
 	<cffunction name="validate" access="public" output="true" returntype="any"
 		hint="Validate the provided data collection according to the specified data set and its associated data elements and assertions">
@@ -113,8 +113,8 @@ Release: 0.1.0
 	<!--- 
 		function: 		addRule
 
-		description:	Programmatically adds a validation rule to the rules collection.  If a rule already exists with the same name,
-						that rule will be overwritten.
+		description:	Programmatically adds a validation rule to the rules collection.  If a rule already 
+						exists with the same name, that rule will be overwritten.
 	--->
 	<cffunction name="addRule" access="public" output="false" returntype="validat"
 		hint="Programmatically adds a validation rule to the rules collection, overwritting any existing rules with the same name">
@@ -149,8 +149,9 @@ Release: 0.1.0
 	<!--- 
 		function: 		addRuleXML
 
-		description:	Programmatically adds a new validation rule, along with any related arguments to the rules collection based 
-						upon an xml snippet.  If a rule already exists with the specified name, that rule will be overwritten.
+		description:	Programmatically adds a new validation rule, along with any related arguments to the 
+						rules collection based upon an xml snippet.  If a rule already exists with the 
+						specified name, that rule will be overwritten.
 	--->
 	<cffunction name="addRuleXML" access="public" output="false" returntype="validat"
 		hint="Programmatically adds a new validation rule, along with any related arguments to the rules collection based upon an xml snippet, overwritting any existing rules with the same name">
@@ -164,14 +165,14 @@ Release: 0.1.0
 		<cfset var msgCollection = structNew() />
 		
 		<!--- check if the ruleXML is in fact a valid validation rule xml snippet --->
-		<cfif NOT ( lcase( oXML.xmlRoot.xmlName ) EQ 'rule' AND structKeyExists( oXML.xmlRoot.xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlAttributes, "validator") ) >
+		<cfif NOT ( lcase( oXML.xmlRoot.xmlName ) EQ "rule" AND structKeyExists( oXML.xmlRoot.xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlAttributes, "validator") ) >
 			<cfthrow type="validat.invalidRule" message="validat: The xml snippet passed to the addRuleXML() method does not represent a valid validation rule." />
 		</cfif>
 
 		<!--- for every child node of the validation rule --->
 		<cfloop from="1" to="#arrayLen( oXML.xmlRoot.xmlChildren )#" index="argPtr">
 			<!--- if the child node is an argument --->
-			<cfif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'arg' >
+			<cfif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ "arg" >
 			
 				<!--- if the child node is a valid argument --->
 				<cfif NOT ( structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "value") ) >
@@ -181,7 +182,7 @@ Release: 0.1.0
 				<cfset structInsert( argCollection, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
 
 			<!--- else, if the child node is a message --->
-			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'message' >
+			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ "message" >
 			
 				<!--- if the child node is a valid argument --->
 				<cfif NOT ( structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "value") ) >
@@ -281,16 +282,17 @@ Release: 0.1.0
 	<!--- 
 		function: 		addDataSet
 
-		description:	Programmatically adds a new data set definiton to the data set collection.  If the overwrite argument
-						is true, any existing data sets with the specified name will be overwritten.  Otherwise, if a data set 
-						already exists with the specified name, nothing will happen, preserving the existing data set definition.  
+		description:	Programmatically adds a new data set definiton to the data set collection.  If the 
+						overwrite argument is true, any existing data sets with the specified name will be 
+						overwritten.  Otherwise, if a data set already exists with the specified name, 
+						nothing will happen, preserving the existing data set definition.  
 	--->
 	<cffunction name="addDataSet" access="public" output="false" returntype="validat"
-		hint="Programmatically adds a data set to the data set collection, overwritting any existing data sets with the same name">
+		hint="Programmatically adds a data set to the data set collection">
 
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set" />
 		<cfargument name="transformer" type="string" required="false" default="" hint="The bean name of the transformer object" />
-		<cfargument name="overwrite" type="boolean"  required="false" default="false" hint="Overwrite an existing data set?" />
+		<cfargument name="overwrite" type="boolean" required="false" default="false" hint="Overwrite an existing data set?" />
 
 		<!--- setup temporary variables --->
 		<cfset dataSetStr = structNew() />
@@ -318,37 +320,38 @@ Release: 0.1.0
 	<!--- 
 		function: 		addDataSetXML
 
-		description:	Programmatically adds a new data set definiton, along with any related data elements and assertions to the data set 
-						collection based upon an xml snippet. If the overwrite argument is true, any existing data sets with the specified 
-						name will be overwritten.  Otherwise, if a data set already exists with the specified name, nothing will happen, 
+		description:	Programmatically adds a new data set definiton, along with any related data elements
+						and assertions to the data set collection based upon an xml snippet. If the overwrite 
+						argument is true, any existing data sets with the specified name will be overwritten.
+						Otherwise, if a data set already exists with the specified name, nothing will happen, 
 						preserving the existing data set definition.  
 	--->
 	<cffunction name="addDataSetXML" access="public" output="false" returntype="validat"
-		hint="Programmatically adds a new data set definiton, along with any related data elements and assertions to the assections collection based upon an xml snippet, overwritting any existing data sets with the same name">
+		hint="Programmatically adds a new data set definiton, along with any related data elements and assertions to the assections collection based upon an xml snippet">
 
 		<cfargument name="dataSetXML" type="string" required="true" hint="The data set definition xml string" />
-		<cfargument name="overwrite" type="boolean"  required="false" default="false" hint="Overwrite an existing data set?" />
+		<cfargument name="overwrite" type="boolean" required="false" default="false" hint="Overwrite an existing data set?" />
 
 		<!--- setup temporary variables --->
 		<cfset var oXML = xmlParse(arguments.dataSetXML) />
 
 		<!--- check if the dataSetXML is in fact a valid data set xml snippet --->
-		<cfif NOT ( lcase(oXML.xmlRoot.xmlName) EQ 'dataSet' AND structKeyExists( oXML.xmlRoot.xmlAttributes, "name") ) >
+		<cfif NOT ( lcase(oXML.xmlRoot.xmlName) EQ "dataSet" AND structKeyExists( oXML.xmlRoot.xmlAttributes, "name") ) >
 			<cfthrow type="validat.invalidDataSet" message="validat: The xml snippet passed to the addDataSetXML() method does not represent a valid data set." />
 		</cfif>
 
 		<!--- pass the data set attributes to the addDataSet function for addition to the data set collection --->
 		<cfparam name="oXML.xmlRoot.xmlAttributes.transformer" default="" />
-		<cfset addDataSet( oXML.xmlRoot.xmlAttributes.name, oXML.xmlRoot.xmlAttributes.transformer ) />
+		<cfset addDataSet( oXML.xmlRoot.xmlAttributes.name, oXML.xmlRoot.xmlAttributes.transformer, arguments.overwrite ) />
 
 		<!--- for every child node of the data set --->
 		<cfloop from="1" to="#arrayLen( oXML.xmlRoot.xmlChildren )#" index="argPtr">
 			<!--- if the child node is an assertion --->
-			<cfif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'assert' >
+			<cfif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ "assert" >
 				<cfset addAssertXML( dataSetName = oXML.xmlRoot.xmlAttributes.name, assertXML = toString( oXML.xmlRoot.xmlChildren[argPtr] ) ) />
 
 			<!--- else, if the child node is a data element --->
-			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'dataElement' >
+			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ "dataElement" >
 				<cfset addDataElementXML( oXML.xmlRoot.xmlAttributes.name, toString( oXML.xmlRoot.xmlChildren[argPtr] ), arguments.overwrite ) />
 
 			<!--- else, throw an error - invalid node --->
@@ -439,13 +442,14 @@ Release: 0.1.0
 	<!--- 
 		function: 		addDataElement
 
-		description:	Programmatically adds a new data element definiton to the data set specified.  If the specified data
-						set does not exist, an error will be thrown.  If the overwrite argument is true, any existing data 
-						elements with the specified name will be overwritten.  Otherwise, if a data element already exists
-						with the specified name, nothing will happen, preserving the existing data element definition.  
+		description:	Programmatically adds a new data element definiton to the data set specified.  If the 
+						specified data set does not exist, an error will be thrown.  If the overwrite argument 
+						is true, any existing data elements with the specified name will be overwritten.  
+						Otherwise, if a data element already exists with the specified name, nothing will 
+						happen, preserving the existing data element definition.  
 	--->
 	<cffunction name="addDataElement" access="public" output="false" returntype="validat"
-		hint="Programmatically adds a data element to the specified data set, overwritting any existing data elements with the same name">
+		hint="Programmatically adds a data element to the specified data set">
 
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set to associate the data element with" />
 		<cfargument name="dataElementName" type="string" required="true" hint="The name of the data element" />
@@ -459,7 +463,7 @@ Release: 0.1.0
 
 		<!--- check if the specified data set exists --->
 		<cfif NOT dataSetExists( arguments.dataSetName ) >
-			<cfthrow type="validat.invalidDataElement" message="validat: The data set name specified ('#arguments.dataSetName#') does not exist." />
+			<cfthrow type="validat.invalidDataSet" message="validat: The data set name specified ('#arguments.dataSetName#') does not exist." />
 		</cfif>
 
 		<!--- if a data element does not exist with the given data element name OR overwrite is true --->
@@ -486,14 +490,15 @@ Release: 0.1.0
 	<!--- 
 		function: 		addDataElementXML
 
-		description:	Programmatically adds a new data element definiton, along with any related assertions to the data set 
-						specified based upon an xml snippet.  If the specified data set does not exist, an error will be thrown.
-						If the overwrite argument is true, any existing data elements with the specified name will be overwritten.
-						Otherwise, if a data element already exists with the specified name, nothing will happen, preserving the
+		description:	Programmatically adds a new data element definiton, along with any related assertions 
+						to the data set specified based upon an xml snippet.  If the specified data set does 
+						not exist, an error will be thrown. If the overwrite argument is true, any existing 
+						data elements with the specified name will be overwritten.  Otherwise, if a data 
+						element already exists with the specified name, nothing will happen, preserving the
 						existing data element definition.  
 	--->
 	<cffunction name="addDataElementXML" access="public" output="false" returntype="validat"
-		hint="Programmatically adds a new data element definiton, along with any related assertions to the specified data set based upon an xml snippet, overwritting any existing data elements with the same name">
+		hint="Programmatically adds a new data element definiton, along with any related assertions to the specified data set based upon an xml snippet">
 
 		<cfargument name="dataSetName" type="string" required="true" hint="The name of the data set to associate the data element with" />
 		<cfargument name="dataElementXML" type="string" required="true" hint="The data element definition xml string" />
@@ -503,7 +508,7 @@ Release: 0.1.0
 		<cfset var oXML = xmlParse(arguments.dataElementXML) />
 
 		<!--- check if the deXML is in fact a valid data element xml snippet --->
-		<cfif NOT ( lcase( oXML.xmlRoot.xmlName ) EQ 'dataElement' AND structKeyExists( oXML.xmlRoot.xmlAttributes, "name") ) >
+		<cfif NOT ( lcase( oXML.xmlRoot.xmlName ) EQ "dataElement" AND structKeyExists( oXML.xmlRoot.xmlAttributes, "name") ) >
 			<cfthrow type="validat.invalidDataElement" message="validat: The xml snippet passed to the addDataElementXML() method does not represent a valid data element." />
 		</cfif>
 
@@ -516,7 +521,8 @@ Release: 0.1.0
 		<!--- for every child node of the data element --->
 		<cfloop from="1" to="#arrayLen( oXML.xmlRoot.xmlChildren )#" index="argPtr">
 			<!--- if the child node is an assertion, pass the xml snippet to the addAssertXML method --->
-			<cfif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'assert' >
+			<cfif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ "assert" >
+			
 				<cfset addAssertXML( arguments.dataSetName, oXML.xmlRoot.xmlAttributes.name, toString( oXML.xmlRoot.xmlChildren[argPtr] ) ) />
 
 			<!--- else, throw an error - invalid node --->
@@ -533,8 +539,8 @@ Release: 0.1.0
 	<!--- 
 		function: 		getAllDataElements
 
-		description:	Retrieves all data element definitions associated with the data set with the specified name.  If the specified data
-						set does not exist, an error will be thrown.
+		description:	Retrieves all data element definitions associated with the data set with the specified 
+						name.  If the specified data set does not exist, an error will be thrown.
 	--->
 	<cffunction name="getAllDataElements" access="public" output="false" returntype="struct"
 		hint="Retrieves all data element definitions associated with the data set with the specified name">
@@ -553,8 +559,9 @@ Release: 0.1.0
 	<!--- 
 		function: 		getDataElement
 
-		description:	Retrieves the data element definition for the data set, data element combination specified.  If the specified data set and
-						data element combination does not exist, an error will be thrown.
+		description:	Retrieves the data element definition for the data set, data element combination 
+						specified.  If the specified data set and data element combination does not exist, an 
+						error will be thrown.
 	--->
 	<cffunction name="getDataElement" access="public" output="false" returntype="struct"
 		hint="Retrieves the data element definition for the data set, data element combination specified">
@@ -579,8 +586,9 @@ Release: 0.1.0
 	<!--- 
 		function: 		remDataElement
 
-		description:	Removes the data element definition for the data set, data element combination specified.  If the specified data set and
-						data element combination does not exist, an error will be thrown.
+		description:	Removes the data element definition for the data set, data element combination specified.
+						If the specified data set and data element combination does not exist, an error will be 
+						thrown.
 	--->
 	<cffunction name="remDataElement" access="public" output="false" returntype="validat"
 		hint="Removes the data element definition for the data set, data element combination specified">
@@ -630,10 +638,12 @@ Release: 0.1.0
 	<!--- 
 		function: 		addAssert
 
-		description:	Programmatically adds a new assertion to the data set or data set, data element combination specified.  If a 
-						data element assertion is being added and an assertion already exists with the specified rule, that assertion 
-						will be overwritten.  Data set assertions will not be overwritten and must be removed manually if so desired.
-						If the specified data set or data set, data element combination does not exist, an error will be thrown.
+		description:	Programmatically adds a new assertion to the data set or data set, data element 
+						combination specified.  If a data element assertion is being added and an assertion 
+						already exists with the specified rule, that assertion will be overwritten.  Data 
+						set assertions will not be overwritten and must be removed manually if so desired.
+						If the specified data set or data set, data element combination does not exist, an 
+						error will be thrown.
 	--->
 	<cffunction name="addAssert" access="public" output="false" returntype="validat"
 		hint="Programmatically adds a data element assertion to the specified data set or data set, data element combination">
@@ -647,7 +657,7 @@ Release: 0.1.0
 		<cfargument name="messages" type="struct" required="true" hint="A collection of error messages to be returned if the assertion fails" />
 
 		<!--- if a data element name was specified, call the addDEAssert method --->
-		<cfif isDefined('arguments.dataElementName') >
+		<cfif isDefined("arguments.dataElementName") >
 			<cfset addDEAssert( argumentCollection = arguments ) />
 	
 		<!--- otherwise, call the addDSAssert method --->
@@ -663,11 +673,12 @@ Release: 0.1.0
 	<!--- 
 		function: 		addAssertXML
 
-		description:	Programmatically adds a new data element assertion to the data set or data set, data element combination 
-						specified, based upon an xml snippet.  If a data element assertion is being added and an assertion already 
-						exists with the specified rule, that assertion will be overwritten.  Data set assertions will not be 
-						overwritten and must be removed manually if so desired.  If the specified data set or data set, data 
-						element combination does not exist, an error will be thrown.
+		description:	Programmatically adds a new data element assertion to the data set or data set, data 
+						element combination specified, based upon an xml snippet.  If a data element assertion 
+						is being added and an assertion already exists with the specified rule, that assertion 
+						will be overwritten.  Data set assertions will not be overwritten and must be removed 
+						manually if so desired.  If the specified data set or data set, data element combination
+						does not exist, an error will be thrown.
 	--->
 	<cffunction name="addAssertXML" access="public" output="false" returntype="validat"
 		hint="Programmatically adds a new data element definiton, along with any related assertions to the specified data set based upon an xml snippet">
@@ -681,17 +692,17 @@ Release: 0.1.0
 		<cfset var assertParameters = structNew() />
 
 		<!--- check if the assertXML is in fact a valid data element assertion xml snippet --->
-		<cfif NOT ( lcase( oXML.xmlRoot.xmlName ) EQ 'assert' AND structKeyExists( oXML.xmlRoot.xmlAttributes, "rule") ) >
+		<cfif NOT ( lcase( oXML.xmlRoot.xmlName ) EQ "assert" AND structKeyExists( oXML.xmlRoot.xmlAttributes, "rule") ) >
 			<cfthrow type="validat.invalidAssert" message="validat: The xml snippet passed to the addAssertXML() method does not represent a valid data element assertion." />
 		</cfif>
 
 		<!--- build a collection of assertion parameters based upon the xml snippet --->
 		<cfset assertParameters.dataSetName = arguments.dataSetName />
-		<cfif isDefined('arguments.dataElementName') >
+		<cfif isDefined("arguments.dataElementName") >
 			<cfset assertParameters.dataElementName = arguments.dataElementName />
 		</cfif>
 		<cfset assertParameters.ruleName = oXML.xmlRoot.xmlAttributes.rule />
-		<cfif structKeyExists( oXML.xmlRoot.xmlAttributes, 'continueOnFail') >
+		<cfif structKeyExists( oXML.xmlRoot.xmlAttributes, "continueOnFail") >
 			<cfset assertParameters.continueOnFail = oXML.xmlRoot.xmlAttributes.continueOnFail />
 		</cfif>
 		<cfset assertParameters.args = structNew() />
@@ -702,7 +713,7 @@ Release: 0.1.0
 		<cfloop from="1" to="#arrayLen( oXML.xmlRoot.xmlChildren )#" index="argPtr">
 
 			<!--- if the child node is an argument --->
-			<cfif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'arg' >
+			<cfif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ "arg" >
 				<!--- verify it is a valid argument --->
 				<cfif NOT ( structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "value") ) >
 					<cfthrow type="validat.invalidAssert" message="validat: The xml snippet passed to the addAssertXML() method contains an invalid argument." detail="Invalid Argument: #toString(oXML.xmlRoot.xmlChildren[argPtr])#" />
@@ -711,7 +722,7 @@ Release: 0.1.0
 				<cfset structInsert( assertParameters.args, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
 
 			<!--- else, if the child node is a dependency --->
-			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'depend' >
+			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ "depend" >
 				<!--- verify it is a valid dependency --->
 				<cfif NOT ( structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "value") ) >
 					<cfthrow type="validat.invalidDependency" message="validat: The xml snippet passed to the addAssertXML() method contains an invalid dependency." detail="Invalid Dependency: #toString(oXML.xmlRoot.xmlChildren[argPtr])#" />
@@ -720,7 +731,7 @@ Release: 0.1.0
 				<cfset structInsert( assertParameters.dependencies, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.name, oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes.value ) />
 
 			<!--- else, if the child node is a message --->
-			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ 'message' >
+			<cfelseif lcase( oXML.xmlRoot.xmlChildren[argPtr].xmlName ) EQ "message" >
 				<!--- verify it is a valid message --->
 				<cfif NOT ( structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "name") AND structKeyExists( oXML.xmlRoot.xmlChildren[argPtr].xmlAttributes, "value") ) >
 					<cfthrow type="validat.invalidMessage" message="validat: The xml snippet passed to the addAssertXML() method contains an invalid message." detail="Invalid Message: #toString(oXML.xmlRoot.xmlChildren[argPtr])#" />
@@ -745,8 +756,9 @@ Release: 0.1.0
 	<!--- 
 		function: 		getAllAsserts
 
-		description:	Retrieves all assertions associated with the data set or data set, data element combination specified.  If the 
-						specified data set or data set, data element combination does not exist, an error will be thrown.
+		description:	Retrieves all assertions associated with the data set or data set, data element 
+						combination specified.  If the specified data set or data set, data element 
+						combination does not exist, an error will be thrown.
 	--->
 	<cffunction name="getAllAsserts" access="public" output="false" returntype="array"
 		hint="Retrieves the all data element assertions associated with the data set, data element combination specified">
@@ -760,7 +772,7 @@ Release: 0.1.0
 		</cfif>
 	
 		<!--- if a data element was specified --->
-		<cfif isDefined('arguments.dataElementName') >
+		<cfif isDefined("arguments.dataElementName") >
 
 			<!--- check if the specified data element exists --->
 			<cfif NOT structKeyExists( variables.instance.dataSets[arguments.dataSetName].dataElements, arguments.dataElementName ) >
@@ -781,11 +793,12 @@ Release: 0.1.0
 	<!--- 
 		function: 		getAssert
 
-		description:	Retrieves the data element assertion associated with the data set or data set, data element combination, 
-						and assertion identifier (rule name or assert id) specified.  The assertion identifier will be compared
-						against the assert id first and if no match occurs, will be compared against the rule name.  If the
-						assert id matches multiple assertions, an error will be thrown.  If the specified data set, or data set,
-						data element combination, and assertion identifier does not exist, an error will be thrown.
+		description:	Retrieves the data element assertion associated with the data set or data set, data 
+						element combination, and assertion identifier (rule name or assert id) specified.  The 
+						assertion identifier will be compared against the assert id first and if no match 
+						occurs, will be compared against the rule name.  If the assert id matches multiple 
+						assertions, an error will be thrown.  If the specified data set, or data set, data 
+						element combination, and assertion identifier does not exist, an error will be thrown.
 	--->
 	<cffunction name="getAssert" access="public" output="false" returntype="struct"
 		hint="Retrieves the data element assertion for the data set, data element, and rule combination specified">
@@ -804,7 +817,7 @@ Release: 0.1.0
 		</cfif>
 	
 		<!--- if a data element was specified --->
-		<cfif isDefined('arguments.dataElementName') >
+		<cfif isDefined("arguments.dataElementName") >
 
 			<!--- check if the specified data element exists --->
 			<cfif NOT structKeyExists( variables.instance.dataSets[arguments.dataSetName].dataElements, arguments.dataElementName ) >
@@ -845,11 +858,12 @@ Release: 0.1.0
 	<!--- 
 		function: 		remAssert
 
-		description:	Removes the data element assertion associated with the data set or data set, data element combination,
-						and assertion identifier (rule name or assert id) specified.  The assertion identifier will be compared
-						against the assert id first and if no match occurs, will be compared against the rule name.  If the
-						assert id matches multiple assertions, an error will be thrown.  If the specified data set, or data set,
-						data element combination, and assertion identifier does not exist, an error will be thrown.
+		description:	Removes the data element assertion associated with the data set or data set, data element 
+						combination, and assertion identifier (rule name or assert id) specified.  The assertion 
+						identifier will be compared against the assert id first and if no match occurs, will be 
+						compared against the rule name.  If the assert id matches multiple assertions, an error 
+						will be thrown.  If the specified data set, or data set, data element combination, and 
+						assertion identifier does not exist, an error will be thrown.
 	--->
 	<cffunction name="remAssert" access="public" output="false" returntype="validat"
 		hint="Removes the data element assertion associated with the data set, data element, and rule combination specified">
@@ -868,7 +882,7 @@ Release: 0.1.0
 		</cfif>
 	
 		<!--- if a data element was specified --->
-		<cfif isDefined('arguments.dataElementName') >
+		<cfif isDefined("arguments.dataElementName") >
 
 			<!--- check if the specified data element exists --->
 			<cfif NOT structKeyExists( variables.instance.dataSets[arguments.dataSetName].dataElements, arguments.dataElementName ) >
@@ -919,9 +933,10 @@ Release: 0.1.0
 	<!--- 
 		function: 		addDEAssert
 
-		description:	Programmatically adds a new assertion to the data set, data element combination specified.  If an assertion 
-						already exists with the specified rule in the given data set, data element combination, that assertion will 
-						be overwritten.  If the specified data set, data element combination does not exist, an error will be thrown.
+		description:	Programmatically adds a new assertion to the data set, data element combination 
+						specified.  If an assertion already exists with the specified rule in the given data 
+						set, data element combination, that assertion will be overwritten.  If the specified 
+						data set, data element combination does not exist, an error will be thrown.
 	--->
 	<cffunction name="addDEAssert" access="private" output="false" returntype="void"
 		hint="Programmatically adds a data element assertion to the specified data set, data element combination, overwritting any existing assertions with the same rule">
@@ -1072,7 +1087,7 @@ Release: 0.1.0
 			<!--- check if there are getter functions --->
 			<cfset funcArr = getMetaData( arguments.dataCollection ).functions />
 			<cfloop from="1" to="#arrayLen( funcArr )#" index="funcPtr" >
-				<cfif findNoCase( 'get', funcArr[funcPtr].name ) EQ 1 >
+				<cfif findNoCase( "get", funcArr[funcPtr].name ) EQ 1 >
 					<cfset transformer = variables.beanTransformer />
 					<cfbreak />
 				</cfif>
@@ -1092,11 +1107,11 @@ Release: 0.1.0
 	<!--- 
 		function: 		parseConfigXML
 
-		description:	Accepts the path to a configuration xml file and parses the contents of that configuration file.
-						If the configuration xml file contains an include tag, the rules and assertions in the configuration
-						file will be processed, then the function will be recursivly called with the include path provided.
-						Any rules or assertions in an included file may overwrite any rules or assertions that have already
-						been loaded.
+		description:	Accepts the path to a configuration xml file and parses the contents of that 
+						configuration file.  If the configuration xml file contains an include tag, the rules 
+						and assertions in the configuration file will be processed, then the function will be 
+						recursivly called with the include path provided.  Any rules or assertions in an 
+						included file may overwrite any rules or assertions that have already been loaded.
 	--->
 	<cffunction name="parseConfigXML" access="private" output="false" returntype="void"
 		hint="Parses a configuration xml file">
@@ -1155,9 +1170,9 @@ Release: 0.1.0
 	<!--- 
 		function: 		validateDataElements
 
-		description:	Attempts to validate a collection of data based upon the data element assertions
-						for the specified data set name.  An validation errors will be collected in
-						an errorCollection and returned.
+		description:	Attempts to validate a collection of data based upon the data element assertions for
+						the specified data set name.  An validation errors will be collected in an 
+						errorCollection and returned.
 	--->
 	<cffunction name="validateDataElements" access="private" output="false" returntype="any"
 		hint="Attempts to validate a collection of data based upon the data element assertions for the specified data set name.">
@@ -1167,7 +1182,7 @@ Release: 0.1.0
 		<cfargument name="skipAsserts" type="string" required="false" default="" hint="An optional list of data element names and/or assertion identifiers for which to skip any validation for" />
 
 		<!--- setup temporary variables --->
-		<cfset var errorCollection = variables.instance.factory.getBean('errorCollection').init() />
+		<cfset var errorCollection = variables.instance.factory.getBean("errorCollection").init() />
 		<cfset var dataElements = "" />
 		<cfset var dataElement = "" />
 		<cfset var validate = false />
@@ -1296,12 +1311,12 @@ Release: 0.1.0
 							<cfset args = structNew() />
 						
 							<!--- insert any default arguments for the validation rule into the argument collection --->
-							<cfif structKeyExists( getRule( assertions[assertPtr].rule ), 'args' ) >
+							<cfif structKeyExists( getRule( assertions[assertPtr].rule ), "args" ) >
 								<cfset structAppend( args, getRule( assertions[assertPtr].rule ).args ) />
 							</cfif>
 						
 							<!--- insert (and overwrite) any arguments for the data element into the argument collection --->
-							<cfif structKeyExists( assertions[assertPtr], 'args' ) >
+							<cfif structKeyExists( assertions[assertPtr], "args" ) >
 								<cfset structAppend( args, assertions[assertPtr].args, true ) />
 							</cfif>
 						
@@ -1309,7 +1324,7 @@ Release: 0.1.0
 							<cfset dependencies = structNew() />
 							
 							<!--- if the assertioh specifies any dependencies, add them to the collection --->
-							<cfif structKeyExists( assertions[assertPtr], 'dependencies' ) >
+							<cfif structKeyExists( assertions[assertPtr], "dependencies" ) >
 							
 								<!--- for each dependency --->
 								<cfloop collection="#assertions[assertPtr].dependencies#" item="dependName">
@@ -1374,9 +1389,9 @@ Release: 0.1.0
 	<!--- 
 		function: 		validateDataSet
 
-		description:	Attempts to validate a collection of data based upon the data set assertions
-						for the specified data set name.  An validation errors will be collected in
-						an errorCollection and returned.
+		description:	Attempts to validate a collection of data based upon the data set assertions for the 
+						specified data set name.  An validation errors will be collected in an 
+						errorCollection and returned.
 	--->
 	<cffunction name="validateDataSet" access="private" output="false" returntype="any"
 		hint="Attempts to validate a collection of data based upon the data set assertions for the specified data set name.">
@@ -1386,7 +1401,7 @@ Release: 0.1.0
 		<cfargument name="skipAsserts" type="string" required="false" default="" hint="An optional list of assertion identifiers for which to skip any validation for" />
 
 		<!--- setup temporary variables --->
-		<cfset var errorCollection = variables.instance.factory.getBean('errorCollection').init() />
+		<cfset var errorCollection = variables.instance.factory.getBean("errorCollection").init() />
 		<cfset var assertions = "" />
 		<cfset var assertion = "" />
 		<cfset var assertPtr = 0 />
@@ -1417,12 +1432,12 @@ Release: 0.1.0
 					<cfset args = structNew() />
 				
 					<!--- insert any default arguments for the validation rule into the argument collection --->
-					<cfif structKeyExists( getRule[ assertions[assertPtr].rule ], 'args' ) >
+					<cfif structKeyExists( getRule[ assertions[assertPtr].rule ], "args" ) >
 						<cfset structAppend( argCollection, getRule[ assertions[assertPtr].rule ].args ) />
 					</cfif>
 				
 					<!--- insert (and overwrite) any arguments for the data element into the argument collection --->
-					<cfif structKeyExists( assertions[assertPtr], 'args' ) >
+					<cfif structKeyExists( assertions[assertPtr], "args" ) >
 						<cfset structAppend( argCollection, assertions[assertPtr].args, true ) />
 					</cfif>
 				
@@ -1430,7 +1445,7 @@ Release: 0.1.0
 					<cfset dependencies = structNew() />
 					
 					<!--- if the assertioh specifies any dependencies, add them to the collection --->
-					<cfif structKeyExists( assertions[assertPtr], 'dependencies' ) >
+					<cfif structKeyExists( assertions[assertPtr], "dependencies" ) >
 					
 						<!--- for each dependency --->
 						<cfloop collection="#assertions[assertPtr].dependencies#" item="dependName">

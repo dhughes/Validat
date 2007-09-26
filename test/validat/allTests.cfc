@@ -39,6 +39,9 @@ Release: 0.1.0
 		<cfset testSuite.addTestSuite( newObject( "test.validat.initialization" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validat.validate" ) ) />
 		<cfset testSuite.addTestSuite( newObject( "test.validat.rules" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validat.dataSets" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validat.dataElements" ) ) />
+		<cfset testSuite.addTestSuite( newObject( "test.validat.asserts" ) ) />
 		
 		<cfreturn testSuite/>
 	</cffunction> <!--- end: suite() --->

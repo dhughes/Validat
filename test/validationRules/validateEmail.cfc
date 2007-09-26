@@ -48,11 +48,11 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testValidate_Valid_Simple
+		function: 		test_validate_Valid_Simple
 
 		description:	I will test the validate function, passing in a simple valid email data string.
 	--->
-	<cffunction name="testValidate_Valid_Simple" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_Simple" access="public" returntype="void"
 		hint="I will test the validate function, passing in a simple valid email data string." >
 	
 		<!--- setup temporary variables --->
@@ -67,14 +67,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_Simple() --->
+	</cffunction> <!--- end: test_validate_Valid_Simple() --->
 
 	<!--- 
-		function: 		testValidate_Valid_SpecChars
+		function: 		test_validate_Valid_SpecChars
 
 		description:	I will test the validate function, passing in a valid email data string with special characters.
 	--->
-	<cffunction name="testValidate_Valid_SpecChars" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_SpecChars" access="public" returntype="void"
 		hint="I will test the validate function, passing in a simple valid email data string." >
 	
 		<!--- setup temporary variables --->
@@ -89,14 +89,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_SpecChars() --->
+	</cffunction> <!--- end: test_validate_Valid_SpecChars() --->
 
 	<!--- 
-		function: 		testValidate_Valid_AltDomain
+		function: 		test_validate_Valid_AltDomain
 
 		description:	I will test the validate function, passing in a valid email data string with "non typical" domain suffix.
 	--->
-	<cffunction name="testValidate_Valid_AltDomain" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_AltDomain" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid email data string with 'non typical' domain suffix" >
 	
 		<!--- setup temporary variables --->
@@ -111,14 +111,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_AltDomain() --->
+	</cffunction> <!--- end: test_validate_Valid_AltDomain() --->
 
 	<!--- 
-		function: 		testValidate_Invalid
+		function: 		test_validate_Invalid
 
 		description:	I will test the validate function, passing in an invalid email data string.
 	--->
-	<cffunction name="testValidate_Invalid" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid email data string." >
 	
 		<!--- setup temporary variables --->
@@ -133,14 +133,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid() --->
+	</cffunction> <!--- end: test_validate_Invalid() --->
 
 	<!--- 
-		function: 		testValidate_ComplexData
+		function: 		test_validate_ComplexData
 
 		description:	I will test the validate function, passing in a complex data structure which should result in an error.
 	--->
-	<cffunction name="testValidate_ComplexData" access="public" returntype="void"
+	<cffunction name="test_validate_ComplexData" access="public" returntype="void"
 		hint="I will test the validate function, passing in a complex data structure which should result in an error." >
 		
 		<!--- setup temporary variables --->
@@ -162,6 +162,6 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_ComplexData() --->
+	</cffunction> <!--- end: test_validate_ComplexData() --->
 
 </cfcomponent>

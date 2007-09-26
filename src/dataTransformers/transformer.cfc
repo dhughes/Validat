@@ -61,8 +61,4 @@ Release: 0.1.0
 		<cfreturn dataStruct />
 	</cffunction> <!--- end: getData() --->
 
-	<!--- ------------------------------------------------------------ --->
-	<!--- private methods --->
-
-
 </cfcomponent>

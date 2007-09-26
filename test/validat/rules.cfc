@@ -50,17 +50,28 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testAddRule_NewRule
+		function: 		test_addRule_NewRule
 
 		description:	I will test the addRule function, starting with an no configuration and attempting to
 						programmatically add a validation rule.
 	--->
-	<cffunction name="testAddRule_NewRule" access="public" returntype="void"
+	<cffunction name="test_addRule_NewRule" access="public" returntype="void"
 		hint="I will test the addRule function, starting with an no configuration and attempting to programmatically add a validation rule." >
 	
 		<!--- setup temporary variables --->
+		<cfset var metaData = "" />
 		<cfset var base = structNew() />
 		<cfset var result = structNew() />
+		
+		<!--- verify the addRule method exists --->
+		<cfset assertTrue( structKeyExists( variables.validat, "addRule"), "addRule method is not defined" ) />
+		
+		<!--- get the metadata for the addRule method --->
+		<cfset metaData = getMetaData( variables.validat.addRule ) />
+		
+		<!--- verify the addRule method signature --->
+		<cfset assertTrue( structKeyExists( metaData, "returnType" ) AND metaData.returnType EQ "validat", "Return type is not defined or is not 'validat'" ) />
+		<cfset assertTrue( structKeyExists( metaData, "access" ) AND metaData.access EQ "public", "Access is not defined or is not public" ) />
 
 		<!--- setup the base / expeted test result to compare against --->
 		<cfset base.dataSets = structNew() />
@@ -83,22 +94,34 @@ Release: 0.1.0
 		<cfset result = variables.validat.getInstance() />
 		
 		<!--- run the assertion --->
-		<cfset assertEqualsStruct( base, result ) />
-	</cffunction> <!--- end: testAddRule_NewRule() --->
+		<cfset assertEqualsStruct( base.dataSets, result.dataSets, "The operation affected the data set collection when it should not have" ) />
+		<cfset assertEqualsStruct( base.validationRules, result.validationRules, "The rule was not properly added to the validation rules structure" ) />
+	</cffunction> <!--- end: test_addRule_NewRule() --->
 
 	<!--- 
-		function: 		testAddRule_ExistingRule
+		function: 		test_addRule_ExistingRule
 
 		description:	I will test the addRule function, starting with an existing configuration and attempting to 
 						programmatically add a validation rule that matches an existing rule.
 	--->
-	<cffunction name="testAddRule_ExistingRule" access="public" returntype="void"
+	<cffunction name="test_addRule_ExistingRule" access="public" returntype="void"
 		hint="I will test the addRule function, starting with an existing configuration and attempting to programmatically add a validation rule that matches an existing rule." >
 	
 		<!--- setup temporary variables --->
-		<cfset var dataStr = structNew() />
+		<cfset var metaData = "" />
 		<cfset var base = structNew() />
+		<cfset var dataStr = structNew() />
 		<cfset var result = structNew() />
+		
+		<!--- verify the addRule method exists --->
+		<cfset assertTrue( structKeyExists( variables.validat, "addRule"), "addRule method is not defined" ) />
+		
+		<!--- get the metadata for the addRule method --->
+		<cfset metaData = getMetaData( variables.validat.addRule ) />
+		
+		<!--- verify the addRule method signature --->
+		<cfset assertTrue( structKeyExists( metaData, "returnType" ) AND metaData.returnType EQ "validat", "Return type is not defined or is not 'validat'" ) />
+		<cfset assertTrue( structKeyExists( metaData, "access" ) AND metaData.access EQ "public", "Access is not defined or is not public" ) />
 
 		<!--- setup the base / expeted test result to compare against --->
 		<cfset base.factory = variables.factory />
@@ -114,24 +137,103 @@ Release: 0.1.0
 		
 		<!--- get the instance structure to verify initialization --->
 		<cfset result = variables.validat.getInstance() />
-		
+
+		<!--- attempt to retrieve dynamic assertionID values and insert into base data structure for later comparison --->
+		<cfif isDefined( "result.dataSets.user.assertionIDList" )>
+			<cfloop list="#result.dataSets.user.assertionIDList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.assertionIDList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.assertionIDList = result.dataSets.user.assertionIDList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.assertionIDList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.firstName.assertionIdList" )>
+			<cfloop list="#result.dataSets.user.dataElements.firstName.assertionIdList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.dataElements.firstName.assertionIdList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.dataElements.firstName.assertionIdList = result.dataSets.user.dataElements.firstName.assertionIdList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.firstName.assertionIdList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.firstName.assertions" ) AND 
+			  isArray( result.dataSets.user.dataElements.firstName.assertions ) AND
+			  arrayLen( result.dataSets.user.dataElements.firstName.assertions ) EQ 1 AND
+			  structKeyExists ( result.dataSets.user.dataElements.firstName.assertions[1], 'assertId' ) >
+			<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", result.dataSets.user.dataElements.firstName.assertions[1].assertId ), "'result.dataSets.user.dataElements.firstName.assertions[1].assertId' is not a valid UUID" ) />
+			<cfset base.dataSets.user.dataElements.firstName.assertions[1].assertId = result.dataSets.user.dataElements.firstName.assertions[1].assertId />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.firstName' assertion definition is missing or not properly formated" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.middleName.assertionIdList" )>
+			<cfloop list="#result.dataSets.user.dataElements.middleName.assertionIdList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.dataElements.middleName.assertionIdList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.dataElements.middleName.assertionIdList = result.dataSets.user.dataElements.middleName.assertionIdList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.middleName.assertionIdList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.middleName.assertions" ) AND 
+			  isArray( result.dataSets.user.dataElements.middleName.assertions ) AND
+			  arrayLen( result.dataSets.user.dataElements.middleName.assertions ) EQ 1 AND
+			  structKeyExists ( result.dataSets.user.dataElements.middleName.assertions[1], 'assertId' ) >
+			<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", result.dataSets.user.dataElements.middleName.assertions[1].assertId ), "'result.dataSets.user.dataElements.middleName.assertions[1].assertId' is not a valid UUID" ) />
+			<cfset base.dataSets.user.dataElements.middleName.assertions[1].assertId = result.dataSets.user.dataElements.middleName.assertions[1].assertId />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.middleName' assertion definition is missing or not properly formated" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.lastName.assertionIdList" )>
+			<cfloop list="#result.dataSets.user.dataElements.lastName.assertionIdList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.dataElements.lastName.assertionIdList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.dataElements.lastName.assertionIdList = result.dataSets.user.dataElements.lastName.assertionIdList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.lastName.assertionIdList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.lastName.assertions" ) AND 
+			  isArray( result.dataSets.user.dataElements.lastName.assertions ) AND
+			  arrayLen( result.dataSets.user.dataElements.lastName.assertions ) EQ 1 AND
+			  structKeyExists ( result.dataSets.user.dataElements.lastName.assertions[1], 'assertId' ) >
+			<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", result.dataSets.user.dataElements.lastName.assertions[1].assertId ), "'result.dataSets.user.dataElements.lastName.assertions[1].assertId' is not a valid UUID" ) />
+			<cfset base.dataSets.user.dataElements.lastName.assertions[1].assertId = result.dataSets.user.dataElements.lastName.assertions[1].assertId />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.lastName' assertion definition is missing or not properly formated" ) />
+		</cfif>
+				
 		<!--- run the assertion --->
-		<cfset assertEqualsStruct( base, result ) />
-	</cffunction> <!--- end: testAddRule_ExistingRule() --->
+		<cfset assertEqualsStruct( base.dataSets, result.dataSets, "The operation affected the data set collection when it should not have" ) />
+		<cfset assertEqualsStruct( base.validationRules, result.validationRules, "The rule was not properly added to the validation rules structure" ) />
+	</cffunction> <!--- end: test_addRule_ExistingRule() --->
 
 	<!--- 
-		function: 		testAddRuleXML_NewRule
+		function: 		test_addRuleXML_NewRule
 
 		description:	I will test the addRule function, starting with an no configuration and attempting to
 						programmatically add a validation rule.
 	--->
-	<cffunction name="testAddRuleXML_NewRule" access="public" returntype="void"
+	<cffunction name="test_addRuleXML_NewRule" access="public" returntype="void"
 		hint="I will test the addRule function, starting with an no configuration and attempting to programmatically add a validation rule." >
 	
 		<!--- setup temporary variables --->
-		<cfset var data = "" />
+		<cfset var metaData = "" />
 		<cfset var base = structNew() />
+		<cfset var data = "" />
 		<cfset var result = structNew() />
+		
+		<!--- verify the addRuleXML method exists --->
+		<cfset assertTrue( structKeyExists( variables.validat, "addRuleXML"), "addRuleXML method is not defined" ) />
+		
+		<!--- get the metadata for the addRuleXML method --->
+		<cfset metaData = getMetaData( variables.validat.addRuleXML ) />
+		
+		<!--- verify the addRule method signature --->
+		<cfset assertTrue( structKeyExists( metaData, "returnType" ) AND metaData.returnType EQ "validat", "Return type is not defined or is not 'validat'" ) />
+		<cfset assertTrue( structKeyExists( metaData, "access" ) AND metaData.access EQ "public", "Access is not defined or is not public" ) />
 
 		<!--- setup the base / expeted test result to compare against --->
 		<cfset base.dataSets = structNew() />
@@ -160,22 +262,34 @@ Release: 0.1.0
 		<cfset result = variables.validat.getInstance() />
 		
 		<!--- run the assertion --->
-		<cfset assertEqualsStruct( base, result ) />
-	</cffunction> <!--- end: testAddRuleXML_NewRule() --->
+		<cfset assertEqualsStruct( base.dataSets, result.dataSets, "The operation affected the data set collection when it should not have" ) />
+		<cfset assertEqualsStruct( base.validationRules, result.validationRules, "The rule was not properly added to the validation rules structure" ) />
+	</cffunction> <!--- end: test_addRuleXML_NewRule() --->
 
 	<!--- 
-		function: 		testAddRuleXML_ExistingRule
+		function: 		test_addRuleXML_ExistingRule
 
 		description:	I will test the addRule function, starting with an existing configuration and attempting to 
 						programmatically add a validation rule that matches an existing rule.
 	--->
-	<cffunction name="testAddRuleXML_ExistingRule" access="public" returntype="void"
+	<cffunction name="test_addRuleXML_ExistingRule" access="public" returntype="void"
 		hint="I will test the addRule function, starting with an existing configuration and attempting to programmatically add a validation rule that matches an existing rule." >
 	
 		<!--- setup temporary variables --->
-		<cfset var data = "" />
+		<cfset var metaData = "" />
 		<cfset var base = structNew() />
+		<cfset var data = "" />
 		<cfset var result = structNew() />
+		
+		<!--- verify the addRuleXML method exists --->
+		<cfset assertTrue( structKeyExists( variables.validat, "addRuleXML"), "addRuleXML method is not defined" ) />
+		
+		<!--- get the metadata for the addRuleXML method --->
+		<cfset metaData = getMetaData( variables.validat.addRuleXML ) />
+		
+		<!--- verify the addRuleXML method signature --->
+		<cfset assertTrue( structKeyExists( metaData, "returnType" ) AND metaData.returnType EQ "validat", "Return type is not defined or is not 'validat'" ) />
+		<cfset assertTrue( structKeyExists( metaData, "access" ) AND metaData.access EQ "public", "Access is not defined or is not public" ) />
 
 		<!--- setup the base / expeted test result to compare against --->
 		<cfset base.factory = variables.factory />
@@ -201,22 +315,101 @@ Release: 0.1.0
 		
 		<!--- get the instance structure to verify initialization --->
 		<cfset result = variables.validat.getInstance() />
-		
+
+		<!--- attempt to retrieve dynamic assertionID values and insert into base data structure for later comparison --->
+		<cfif isDefined( "result.dataSets.user.assertionIDList" )>
+			<cfloop list="#result.dataSets.user.assertionIDList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.assertionIDList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.assertionIDList = result.dataSets.user.assertionIDList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.assertionIDList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.firstName.assertionIdList" )>
+			<cfloop list="#result.dataSets.user.dataElements.firstName.assertionIdList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.dataElements.firstName.assertionIdList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.dataElements.firstName.assertionIdList = result.dataSets.user.dataElements.firstName.assertionIdList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.firstName.assertionIdList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.firstName.assertions" ) AND 
+			  isArray( result.dataSets.user.dataElements.firstName.assertions ) AND
+			  arrayLen( result.dataSets.user.dataElements.firstName.assertions ) EQ 1 AND
+			  structKeyExists ( result.dataSets.user.dataElements.firstName.assertions[1], 'assertId' ) >
+			<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", result.dataSets.user.dataElements.firstName.assertions[1].assertId ), "'result.dataSets.user.dataElements.firstName.assertions[1].assertId' is not a valid UUID" ) />
+			<cfset base.dataSets.user.dataElements.firstName.assertions[1].assertId = result.dataSets.user.dataElements.firstName.assertions[1].assertId />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.firstName' assertion definition is missing or not properly formated" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.middleName.assertionIdList" )>
+			<cfloop list="#result.dataSets.user.dataElements.middleName.assertionIdList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.dataElements.middleName.assertionIdList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.dataElements.middleName.assertionIdList = result.dataSets.user.dataElements.middleName.assertionIdList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.middleName.assertionIdList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.middleName.assertions" ) AND 
+			  isArray( result.dataSets.user.dataElements.middleName.assertions ) AND
+			  arrayLen( result.dataSets.user.dataElements.middleName.assertions ) EQ 1 AND
+			  structKeyExists ( result.dataSets.user.dataElements.middleName.assertions[1], 'assertId' ) >
+			<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", result.dataSets.user.dataElements.middleName.assertions[1].assertId ), "'result.dataSets.user.dataElements.middleName.assertions[1].assertId' is not a valid UUID" ) />
+			<cfset base.dataSets.user.dataElements.middleName.assertions[1].assertId = result.dataSets.user.dataElements.middleName.assertions[1].assertId />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.middleName' assertion definition is missing or not properly formated" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.lastName.assertionIdList" )>
+			<cfloop list="#result.dataSets.user.dataElements.lastName.assertionIdList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.dataElements.lastName.assertionIdList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.dataElements.lastName.assertionIdList = result.dataSets.user.dataElements.lastName.assertionIdList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.lastName.assertionIdList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.lastName.assertions" ) AND 
+			  isArray( result.dataSets.user.dataElements.lastName.assertions ) AND
+			  arrayLen( result.dataSets.user.dataElements.lastName.assertions ) EQ 1 AND
+			  structKeyExists ( result.dataSets.user.dataElements.lastName.assertions[1], 'assertId' ) >
+			<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", result.dataSets.user.dataElements.lastName.assertions[1].assertId ), "'result.dataSets.user.dataElements.lastName.assertions[1].assertId' is not a valid UUID" ) />
+			<cfset base.dataSets.user.dataElements.lastName.assertions[1].assertId = result.dataSets.user.dataElements.lastName.assertions[1].assertId />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.lastName' assertion definition is missing or not properly formated" ) />
+		</cfif>
+				
 		<!--- run the assertion --->
-		<cfset assertEqualsStruct( base, result ) />
-	</cffunction> <!--- end: testAddRuleXML_ExistingRule() --->
+		<cfset assertEqualsStruct( base.dataSets, result.dataSets, "The operation affected the data set collection when it should not have" ) />
+		<cfset assertEqualsStruct( base.validationRules, result.validationRules, "The rule was not properly added to the validation rules structure" ) />
+	</cffunction> <!--- end: test_addRuleXML_ExistingRule() --->
 
 	<!--- 
-		function: 		testGetAllRules
+		function: 		test_getAllRules
 
 		description:	I will test the getAllRules function, utilizing an existing configuration.
 	--->
-	<cffunction name="testGetAllRules" access="public" returntype="void"
+	<cffunction name="test_getAllRules" access="public" returntype="void"
 		hint="I will test the getAllRules function, utilizing an existing configuration." >
 	
 		<!--- setup temporary variables --->
+		<cfset var metaData = "" />
 		<cfset var base = structNew() />
 		<cfset var result = structNew() />
+		
+		<!--- verify the getAllRules method exists --->
+		<cfset assertTrue( structKeyExists( variables.validat, "getAllRules"), "getAllRules method is not defined" ) />
+		
+		<!--- get the metadata for the getAllRules method --->
+		<cfset metaData = getMetaData( variables.validat.getAllRules ) />
+		
+		<!--- verify the getAllRules method signature --->
+		<cfset assertTrue( structKeyExists( metaData, "returnType" ) AND metaData.returnType EQ "struct", "Return type is not defined or is not 'struct'" ) />
+		<cfset assertTrue( structKeyExists( metaData, "access" ) AND metaData.access EQ "public", "Access is not defined or is not public" ) />
 
 		<!--- setup the base / expeted test result to compare against --->
 		<cfset base.alpha = structNew() />
@@ -247,20 +440,31 @@ Release: 0.1.0
 		<cfset result = variables.validat.getAllRules() />
 		
 		<!--- run the assertion --->
-		<cfset assertEqualsStruct( base, result ) />
-	</cffunction> <!--- end: testGetAllRules() --->
+		<cfset assertEqualsStruct( base, result, "The rules structure returned was not as expected" ) />
+	</cffunction> <!--- end: test_getAllRules() --->
 
 	<!--- 
-		function: 		testGetRule
+		function: 		test_getRule
 
 		description:	I will test the getRule function, utilizing an existing configuration.
 	--->
-	<cffunction name="testGetRule" access="public" returntype="void"
+	<cffunction name="test_getRule" access="public" returntype="void"
 		hint="I will test the getRule function, utilizing an existing configuration." >
 	
 		<!--- setup temporary variables --->
+		<cfset var metaData = "" />
 		<cfset var base = structNew() />
 		<cfset var result = structNew() />
+		
+		<!--- verify the getRule method exists --->
+		<cfset assertTrue( structKeyExists( variables.validat, "getRule"), "getRule method is not defined" ) />
+		
+		<!--- get the metadata for the getRule method --->
+		<cfset metaData = getMetaData( variables.validat.getRule ) />
+		
+		<!--- verify the getRule method signature --->
+		<cfset assertTrue( structKeyExists( metaData, "returnType" ) AND metaData.returnType EQ "struct", "Return type is not defined or is not 'struct'" ) />
+		<cfset assertTrue( structKeyExists( metaData, "access" ) AND metaData.access EQ "public", "Access is not defined or is not public" ) />
 
 		<!--- setup the base / expeted test result to compare against --->
 		<cfset base.args = structNew() />
@@ -278,19 +482,30 @@ Release: 0.1.0
 		<cfset result = variables.validat.getRule( 'length' ) />
 		
 		<!--- run the assertion --->
-		<cfset assertEqualsStruct( base, result ) />
-	</cffunction> <!--- end: testGetRule() --->
+		<cfset assertEqualsStruct( base, result, "The rules structure returned was not as expected" ) />
+	</cffunction> <!--- end: test_getRule() --->
 
 	<!--- 
-		function: 		testGetRule_InvalidRule
+		function: 		test_getRule_InvalidRule
 
 		description:	I will test the getRule function, requesting an invalid rule, utilizing an existing configuration.
 	--->
-	<cffunction name="testGetRule_InvalidRule" access="public" returntype="void"
+	<cffunction name="test_getRule_InvalidRule" access="public" returntype="void"
 		hint="I will test the getRule function, requesting an invalid rule, utilizing an existing configuration." >
 	
 		<!--- setup temporary variables --->
+		<cfset var metaData = "" />
 		<cfset var result = structNew() />
+		
+		<!--- verify the getRule method exists --->
+		<cfset assertTrue( structKeyExists( variables.validat, "getRule"), "getRule method is not defined" ) />
+		
+		<!--- get the metadata for the getRule method --->
+		<cfset metaData = getMetaData( variables.validat.getRule ) />
+		
+		<!--- verify the getRule method signature --->
+		<cfset assertTrue( structKeyExists( metaData, "returnType" ) AND metaData.returnType EQ "struct", "Return type is not defined or is not 'struct'" ) />
+		<cfset assertTrue( structKeyExists( metaData, "access" ) AND metaData.access EQ "public", "Access is not defined or is not public" ) />
 
 		<!--- call the init method, passing the factory reference and path to the simple configuration xml file --->
 		<cfset variables.validat.init( variables.factory, '/test/testData/validat-simple.xml' ) />
@@ -308,19 +523,30 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 		
-	</cffunction> <!--- end: testGetRule_InvalidRule() --->
+	</cffunction> <!--- end: test_getRule_InvalidRule() --->
 
 	<!--- 
-		function: 		testRemRule
+		function: 		test_remRule
 
 		description:	I will test the remRule function, utilizing an existing configuration.
 	--->
-	<cffunction name="testRemRule" access="public" returntype="void"
+	<cffunction name="test_remRule" access="public" returntype="void"
 		hint="I will test the remRule function, utilizing an existing configuration." >
 	
 		<!--- setup temporary variables --->
+		<cfset var metaData = "" />
 		<cfset var base = structNew() />
 		<cfset var result = structNew() />
+		
+		<!--- verify the remRule method exists --->
+		<cfset assertTrue( structKeyExists( variables.validat, "remRule"), "remRule method is not defined" ) />
+		
+		<!--- get the metadata for the remRule method --->
+		<cfset metaData = getMetaData( variables.validat.remRule ) />
+		
+		<!--- verify the remRule method signature --->
+		<cfset assertTrue( structKeyExists( metaData, "returnType" ) AND metaData.returnType EQ "validat", "Return type is not defined or is not 'validat'" ) />
+		<cfset assertTrue( structKeyExists( metaData, "access" ) AND metaData.access EQ "public", "Access is not defined or is not public" ) />
 
 		<!--- setup the base / expeted test result to compare against --->
 		<cfset base.factory = variables.factory />
@@ -335,21 +561,100 @@ Release: 0.1.0
 		
 		<!--- get the instance structure to verify initialization --->
 		<cfset result = variables.validat.getInstance() />
+
+		<!--- attempt to retrieve dynamic assertionID values and insert into base data structure for later comparison --->
+		<cfif isDefined( "result.dataSets.user.assertionIDList" )>
+			<cfloop list="#result.dataSets.user.assertionIDList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.assertionIDList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.assertionIDList = result.dataSets.user.assertionIDList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.assertionIDList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.firstName.assertionIdList" )>
+			<cfloop list="#result.dataSets.user.dataElements.firstName.assertionIdList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.dataElements.firstName.assertionIdList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.dataElements.firstName.assertionIdList = result.dataSets.user.dataElements.firstName.assertionIdList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.firstName.assertionIdList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.firstName.assertions" ) AND 
+			  isArray( result.dataSets.user.dataElements.firstName.assertions ) AND
+			  arrayLen( result.dataSets.user.dataElements.firstName.assertions ) EQ 1 AND
+			  structKeyExists ( result.dataSets.user.dataElements.firstName.assertions[1], 'assertId' ) >
+			<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", result.dataSets.user.dataElements.firstName.assertions[1].assertId ), "'result.dataSets.user.dataElements.firstName.assertions[1].assertId' is not a valid UUID" ) />
+			<cfset base.dataSets.user.dataElements.firstName.assertions[1].assertId = result.dataSets.user.dataElements.firstName.assertions[1].assertId />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.firstName' assertion definition is missing or not properly formated" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.middleName.assertionIdList" )>
+			<cfloop list="#result.dataSets.user.dataElements.middleName.assertionIdList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.dataElements.middleName.assertionIdList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.dataElements.middleName.assertionIdList = result.dataSets.user.dataElements.middleName.assertionIdList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.middleName.assertionIdList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.middleName.assertions" ) AND 
+			  isArray( result.dataSets.user.dataElements.middleName.assertions ) AND
+			  arrayLen( result.dataSets.user.dataElements.middleName.assertions ) EQ 1 AND
+			  structKeyExists ( result.dataSets.user.dataElements.middleName.assertions[1], 'assertId' ) >
+			<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", result.dataSets.user.dataElements.middleName.assertions[1].assertId ), "'result.dataSets.user.dataElements.middleName.assertions[1].assertId' is not a valid UUID" ) />
+			<cfset base.dataSets.user.dataElements.middleName.assertions[1].assertId = result.dataSets.user.dataElements.middleName.assertions[1].assertId />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.middleName' assertion definition is missing or not properly formated" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.lastName.assertionIdList" )>
+			<cfloop list="#result.dataSets.user.dataElements.lastName.assertionIdList#" index="assertId">
+				<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", assertId ), "'result.dataSets.user.dataElements.lastName.assertionIdList' contains an invalid value" ) />
+			</cfloop>
+			<cfset base.dataSets.user.dataElements.lastName.assertionIdList = result.dataSets.user.dataElements.lastName.assertionIdList />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.lastName.assertionIdList' is missing from the result data structure" ) />
+		</cfif>
+
+		<cfif isDefined( "result.dataSets.user.dataElements.lastName.assertions" ) AND 
+			  isArray( result.dataSets.user.dataElements.lastName.assertions ) AND
+			  arrayLen( result.dataSets.user.dataElements.lastName.assertions ) EQ 1 AND
+			  structKeyExists ( result.dataSets.user.dataElements.lastName.assertions[1], 'assertId' ) >
+			<cfset assertTrue( reFindNoCase( "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{16}$", result.dataSets.user.dataElements.lastName.assertions[1].assertId ), "'result.dataSets.user.dataElements.lastName.assertions[1].assertId' is not a valid UUID" ) />
+			<cfset base.dataSets.user.dataElements.lastName.assertions[1].assertId = result.dataSets.user.dataElements.lastName.assertions[1].assertId />
+		<cfelse>
+			<cfset assertTrue( 0, "'result.dataSets.user.dataElements.lastName' assertion definition is missing or not properly formated" ) />
+		</cfif>
 		
-		<!--- run the assertion --->
-		<cfset assertEqualsStruct( base, result ) />
-	</cffunction> <!--- end: testRemRule() --->
+		<!--- run the assertions --->
+		<cfset assertEqualsStruct( base.dataSets, result.dataSets, "The operation affected the data set collection when it should not have" ) />
+		<cfset assertEqualsStruct( base.validationRules, result.validationRules, "The rule was not properly removed from the validation rules structure" ) />
+	</cffunction> <!--- end: test_remRule() --->
 
 	<!--- 
-		function: 		testRemRule_InvalidRule
+		function: 		test_remRule_InvalidRule
 
 		description:	I will test the remRule function, providing an invalid rule name, utilizing an existing configuration.
 	--->
-	<cffunction name="testRemRule_InvalidRule" access="public" returntype="void"
+	<cffunction name="test_remRule_InvalidRule" access="public" returntype="void"
 		hint="I will test the remRule function, providing an invalid rule name, utilizing an existing configuration." >
 	
 		<!--- setup temporary variables --->
+		<cfset var metaData = "" />
 		<cfset var result = structNew() />
+		
+		<!--- verify the remRule method exists --->
+		<cfset assertTrue( structKeyExists( variables.validat, "remRule"), "remRule method is not defined" ) />
+		
+		<!--- get the metadata for the remRule method --->
+		<cfset metaData = getMetaData( variables.validat.remRule ) />
+		
+		<!--- verify the remRule method signature --->
+		<cfset assertTrue( structKeyExists( metaData, "returnType" ) AND metaData.returnType EQ "validat", "Return type is not defined or is not 'validat'" ) />
+		<cfset assertTrue( structKeyExists( metaData, "access" ) AND metaData.access EQ "public", "Access is not defined or is not public" ) />
 
 		<!--- call the init method, passing the factory reference and path to the simple configuration xml file --->
 		<cfset variables.validat.init( variables.factory, '/test/testData/validat-simple.xml' ) />
@@ -367,18 +672,29 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testRemRule_InvalidRule() --->
+	</cffunction> <!--- end: test_remRule_InvalidRule() --->
 
 	<!--- 
-		function: 		testRuleExists
+		function: 		test_ruleExists
 
 		description:	I will test the ruleExists function, utilizing an existing configuration.
 	--->
-	<cffunction name="testRuleExists" access="public" returntype="void"
+	<cffunction name="test_ruleExists" access="public" returntype="void"
 		hint="I will test the ruleExists function, utilizing an existing configuration." >
 	
 		<!--- setup temporary variables --->
-		<cfset var result = "" />
+		<cfset var metaData = "" />
+		<cfset var result = structNew() />
+		
+		<!--- verify the ruleExists method exists --->
+		<cfset assertTrue( structKeyExists( variables.validat, "ruleExists"), "ruleExists method is not defined" ) />
+		
+		<!--- get the metadata for the ruleExists method --->
+		<cfset metaData = getMetaData( variables.validat.ruleExists ) />
+		
+		<!--- verify the ruleExists method signature --->
+		<cfset assertTrue( structKeyExists( metaData, "returnType" ) AND metaData.returnType EQ "boolean", "Return type is not defined or is not 'boolean'" ) />
+		<cfset assertTrue( structKeyExists( metaData, "access" ) AND metaData.access EQ "public", "Access is not defined or is not public" ) />
 
 		<!--- call the init method, passing the factory reference and path to the simple configuration xml file --->
 		<cfset variables.validat.init( variables.factory, '/test/testData/validat-simple.xml' ) />
@@ -387,19 +703,30 @@ Release: 0.1.0
 		<cfset result = variables.validat.ruleExists( 'length' ) />
 		
 		<!--- run the assertion --->
-		<cfset assertEqualsBoolean( true, result ) />
-	</cffunction> <!--- end: testRuleExists() --->
+		<cfset assertEqualsBoolean( true, result, "A matching rule was not found when one should have been" ) />
+	</cffunction> <!--- end: test_ruleExists() --->
 
 	<!--- 
-		function: 		testRuleExists_InvalidRule
+		function: 		test_ruleExists_InvalidRule
 
 		description:	I will test the ruleExists function, providing an invalid rule name, utilizing an existing configuration.
 	--->
-	<cffunction name="testRuleExists_InvalidRule" access="public" returntype="void"
+	<cffunction name="test_ruleExists_InvalidRule" access="public" returntype="void"
 		hint="I will test the ruleExists function, providing an invalid rule name, utilizing an existing configuration." >
 	
 		<!--- setup temporary variables --->
-		<cfset var result = "" />
+		<cfset var metaData = "" />
+		<cfset var result = structNew() />
+		
+		<!--- verify the ruleExists method exists --->
+		<cfset assertTrue( structKeyExists( variables.validat, "ruleExists"), "ruleExists method is not defined" ) />
+		
+		<!--- get the metadata for the ruleExists method --->
+		<cfset metaData = getMetaData( variables.validat.ruleExists ) />
+		
+		<!--- verify the ruleExists method signature --->
+		<cfset assertTrue( structKeyExists( metaData, "returnType" ) AND metaData.returnType EQ "boolean", "Return type is not defined or is not 'boolean'" ) />
+		<cfset assertTrue( structKeyExists( metaData, "access" ) AND metaData.access EQ "public", "Access is not defined or is not public" ) />
 
 		<!--- call the init method, passing the factory reference and path to the simple configuration xml file --->
 		<cfset variables.validat.init( variables.factory, '/test/testData/validat-simple.xml' ) />
@@ -408,7 +735,7 @@ Release: 0.1.0
 		<cfset result = variables.validat.ruleExists( 'someNonExistentRuleName' ) />
 		
 		<!--- run the assertion --->
-		<cfset assertEqualsBoolean( false, result ) />
-	</cffunction> <!--- end: testRuleExists_InvalidRule() --->
+		<cfset assertEqualsBoolean( false, result, "A matching rule was found when one should not have been" ) />
+	</cffunction> <!--- end: test_ruleExists_InvalidRule() --->
 
 </cfcomponent>

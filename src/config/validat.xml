@@ -45,7 +45,6 @@
 	<bean id="validateSSN"			class="validat.validationRules.validateSSN"	/>
 	<bean id="validateState"		class="validat.validationRules.validateState" />
 	<bean id="validateValueInList"	class="validat.validationRules.validateValueInList" />
-	<bean id="validateZipCode"		class="validat.validationRules.validateZipCode"	/>
 
 	<!-- these are the base transformer objects that are included by default as part of validat -->
 	<bean id="transformStruct"		class="validat.dataTransformers.transformStruct" />

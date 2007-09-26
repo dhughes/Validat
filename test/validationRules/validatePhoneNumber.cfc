@@ -48,11 +48,11 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testValidate_Valid_NumbersOnly
+		function: 		test_validate_Valid_NumbersOnly
 
 		description:	I will test the validate function, passing in a valid US phone number data string including only numbers.
 	--->
-	<cffunction name="testValidate_Valid_NumbersOnly" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_NumbersOnly" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid US phone number data string including only numbers." >
 	
 		<!--- setup temporary variables --->
@@ -67,14 +67,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_NumbersOnly() --->
+	</cffunction> <!--- end: test_validate_Valid_NumbersOnly() --->
 
 	<!--- 
-		function: 		testValidate_Valid_WithSpaces
+		function: 		test_validate_Valid_WithSpaces
 
 		description:	I will test the validate function, passing in a valid US phone number data string with space seperators.
 	--->
-	<cffunction name="testValidate_Valid_WithSpaces" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_WithSpaces" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid US phone number data string with space seperators." >
 	
 		<!--- setup temporary variables --->
@@ -89,14 +89,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_WithSpaces() --->
+	</cffunction> <!--- end: test_validate_Valid_WithSpaces() --->
 
 	<!--- 
-		function: 		testValidate_Valid_WithDashes
+		function: 		test_validate_Valid_WithDashes
 
 		description:	I will test the validate function, passing in a valid US phone number data string with dash seperators.
 	--->
-	<cffunction name="testValidate_Valid_WithDashes" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_WithDashes" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid US phone number data string with dash seperators." >
 	
 		<!--- setup temporary variables --->
@@ -111,14 +111,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_WithDashes() --->
+	</cffunction> <!--- end: test_validate_Valid_WithDashes() --->
 
 	<!--- 
-		function: 		testValidate_Valid_WithParenAndDashes
+		function: 		test_validate_Valid_WithParenAndDashes
 
 		description:	I will test the validate function, passing in a valid US phone number data string with parenthesis and dash seperators.
 	--->
-	<cffunction name="testValidate_Valid_WithParenAndDashes" access="public" returntype="void"
+	<cffunction name="test_validate_Valid_WithParenAndDashes" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid US phone number data string with parenthesis and dash seperators." >
 	
 		<!--- setup temporary variables --->
@@ -133,14 +133,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid_WithParenAndDashes() --->
+	</cffunction> <!--- end: test_validate_Valid_WithParenAndDashes() --->
 
 	<!--- 
-		function: 		testValidate_Invalid
+		function: 		test_validate_Invalid
 
 		description:	I will test the validate function, passing in an invalid US phone number data string.
 	--->
-	<cffunction name="testValidate_Invalid_NonNumeric" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_NonNumeric" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid US phone number data string." >
 	
 		<!--- setup temporary variables --->
@@ -155,14 +155,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid() --->
+	</cffunction> <!--- end: test_validate_Invalid() --->
 
 	<!--- 
-		function: 		testValidate_ComplexData
+		function: 		test_validate_ComplexData
 
 		description:	I will test the validate function, passing in a complex data structure which should result in an error.
 	--->
-	<cffunction name="testValidate_ComplexData" access="public" returntype="void"
+	<cffunction name="test_validate_ComplexData" access="public" returntype="void"
 		hint="I will test the validate function, passing in a complex data structure which should result in an error." >
 		
 		<!--- setup temporary variables --->
@@ -184,6 +184,6 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_ComplexData() --->
+	</cffunction> <!--- end: test_validate_ComplexData() --->
 
 </cfcomponent>

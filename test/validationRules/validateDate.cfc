@@ -48,11 +48,11 @@ Release: 0.1.0
 	<!--- test methods --->
 
 	<!--- 
-		function: 		testValidate_Valid
+		function: 		test_validate_Valid
 
 		description:	I will test the validate function, passing in a valid date string.
 	--->
-	<cffunction name="testValidate_Valid" access="public" returntype="void"
+	<cffunction name="test_validate_Valid" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid date string." >
 	
 		<!--- setup temporary variables --->
@@ -71,14 +71,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid() --->
+	</cffunction> <!--- end: test_validate_Valid() --->
 
 	<!--- 
-		function: 		testValidate_Valid2
+		function: 		test_validate_Valid2
 
 		description:	I will test the validate function, passing in a valid date string.
 	--->
-	<cffunction name="testValidate_Valid2" access="public" returntype="void"
+	<cffunction name="test_validate_Valid2" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid date string." >
 	
 		<!--- setup temporary variables --->
@@ -97,14 +97,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'true', result ) />
 
-	</cffunction> <!--- end: testValidate_Valid2() --->
+	</cffunction> <!--- end: test_validate_Valid2() --->
 
 	<!--- 
-		function: 		testValidate_Invalid_BadDate
+		function: 		test_validate_Invalid_BadDate
 
 		description:	I will test the validate function, passing in an invalid date string.
 	--->
-	<cffunction name="testValidate_Invalid_BadDate" access="public" returntype="void"
+	<cffunction name="test_validate_Invalid_BadDate" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid date string." >
 	
 		<!--- setup temporary variables --->
@@ -123,14 +123,14 @@ Release: 0.1.0
 		<!--- run the assertion --->
 		<cfset assertEqualsString( 'invalid', result ) />
 
-	</cffunction> <!--- end: testValidate_Invalid_BadDate() --->
+	</cffunction> <!--- end: test_validate_Invalid_BadDate() --->
 
 	<!--- 
-		function: 		testValidate_MissingArg
+		function: 		test_validate_MissingArg
 
 		description:	I will test the validate function, passing in a valid data string, but no arguments collection.
 	--->
-	<cffunction name="testValidate_MissingArg" access="public" returntype="void"
+	<cffunction name="test_validate_MissingArg" access="public" returntype="void"
 		hint="I will test the validate function, passing in a valid data string, but no arguments collection." >
 		
 		<!--- setup temporary variables --->
@@ -152,14 +152,14 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_MissingArg() --->
+	</cffunction> <!--- end: test_validate_MissingArg() --->
 
 	<!--- 
-		function: 		testValidate_InvalidType
+		function: 		test_validate_InvalidType
 
 		description:	I will test the validate function, passing in an invalid data type which should result in an error.
 	--->
-	<cffunction name="testValidate_InvalidType" access="public" returntype="void"
+	<cffunction name="test_validate_InvalidType" access="public" returntype="void"
 		hint="I will test the validate function, passing in an invalid data type which should result in an error." >
 	
 		<!--- setup temporary variables --->
@@ -186,6 +186,6 @@ Release: 0.1.0
 
 		</cftry> <!--- end: catch the expected error --->
 
-	</cffunction> <!--- end: testValidate_InvalidType() --->
+	</cffunction> <!--- end: test_validate_InvalidType() --->
 
 </cfcomponent>
