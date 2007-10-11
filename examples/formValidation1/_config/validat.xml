@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+    validat.xml
+	
+    Description:
+        This is the configuration xml that is passed to the validat object upon instantiation and includes
+        definitions for all of the validation rules and data sets that the validation engine will handle.  This
+        configuration file may also be extended through the include tag, in which case the configuration included
+        in this file will be loaded first, then the configuration information in each include file will be loaded
+        (top to bottom priority) with any duplicate rules or data sets overriding a previous configuration.
+-->
+
+<validat>
+
+	<!-- validation rule definitions -->
+	<validationRules>
+
+		<rule name="alpha" validator="validateAlpha" />
+		<rule name="alphaNumeric" validator="validateAlphaNumeric" />
+		<rule name="length" validator="validateLength">
+			<arg name="min" value="0" />
+			<arg name="max" value="100" />
+		</rule>
+		
+	</validationRules>
+	
+	<!-- data set definitions -->
+	<dataSets>
+
+		<dataSet name="user">
+
+			<dataElement name="firstName" required="true" message="The first name field is required." >
+				<assert rule="length" >
+					<!-- optionally, additional arguments can be provided to the validator function -->
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="The first name can be no longer than 100 characters" />
+				</assert>
+			</dataElement>
+			<dataElement name="middleName" required="false" >
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="The middle name can be no longer than 100 characters" />
+				</assert>
+			</dataElement>
+			<dataElement name="lastName" required="true" message="The last name field is required." >
+				<assert rule="length" >
+					<arg name="min" value="1" />
+					<arg name="max" value="100" />
+					<message name="invalid" value="The last name can be no longer than 100 characters" />
+				</assert>
+			</dataElement>
+
+		</dataSet>
+
+	</dataSets>
+	
+</validat>		
