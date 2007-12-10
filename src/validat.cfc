@@ -1072,14 +1072,10 @@ Release: 0.1.0
 		<cfset var transformer = "" />
 		<cfset var funcArr = "" />
 		<cfset var funcPtr = "" />
-	
+
 		<!--- check the data set definition for a specified transformer --->
 		<cfif len( variables.instance.dataSets[arguments.dataSetName].transformer ) >
 			<cfset transformer = variables.instance.dataSets[arguments.dataSetName].transformer />
-	
-		<!--- check if the data collection is a structure --->
-		<cfelseif isStruct( arguments.dataCollection ) >
-			<cfset transformer = variables.structTransformer />
 	
 		<!--- check if the data collection is a standard bean object --->
 		<cfelseif isObject( arguments.dataCollection ) >
@@ -1092,6 +1088,10 @@ Release: 0.1.0
 					<cfbreak />
 				</cfif>
 			</cfloop> <!--- end: object function loop --->
+	
+		<!--- check if the data collection is a structure --->
+		<cfelseif isStruct( arguments.dataCollection ) >
+			<cfset transformer = variables.structTransformer />
 	
 		</cfif>
 
@@ -1406,7 +1406,7 @@ Release: 0.1.0
 		<cfset var assertion = "" />
 		<cfset var assertPtr = 0 />
 		<cfset var validator = "" />
-		<cfset var args = structNew() />
+		<cfset var argCollection = structNew() />
 		<cfset var dependencies = structNew() />
 		<cfset var dependName = "" />
 		<cfset var result = "" />
@@ -1419,21 +1419,21 @@ Release: 0.1.0
 
 				<!--- if the current assertion identifier is included in the list of rules to skip, stop processing --->
 				<cfif NOT listFindNoCase( arguments.skipAsserts, assertions[assertPtr].assertId ) >
-			
+		
 					<!--- locate the corresponding validation rule --->
-					<cfif NOT ruleExists( assertion ) >
+					<cfif NOT ruleExists( assertions[assertPtr].rule ) >
 						<cfthrow type="validat.invalidAssertion" message="validat: The validation rule specified for the assertion ('#assertions[assertPtr].rule#') does not exist." />
 					</cfif> <!--- end: the assertion does not match a validation rule --->
 	
 					<!--- get the validator object for the corresponding validation rule --->
-					<cfset validator = variables.instance.factory.getBean( getRule[ assertions[assertPtr]].validator ) />
+					<cfset validator = variables.instance.factory.getBean( getRule( assertions[assertPtr].rule ).validator ) />
 				
 					<!--- build an arguments collection to pass to the validator --->
-					<cfset args = structNew() />
+					<cfset argCollection = structNew() />
 				
 					<!--- insert any default arguments for the validation rule into the argument collection --->
-					<cfif structKeyExists( getRule[ assertions[assertPtr].rule ], "args" ) >
-						<cfset structAppend( argCollection, getRule[ assertions[assertPtr].rule ].args ) />
+					<cfif structKeyExists( getRule( assertions[assertPtr].rule ), "args" ) >
+						<cfset structAppend( argCollection, getRule( assertions[assertPtr].rule ).args ) />
 					</cfif>
 				
 					<!--- insert (and overwrite) any arguments for the data element into the argument collection --->
@@ -1456,13 +1456,13 @@ Release: 0.1.0
 							<cfelse>
 								<cfset dependencies[dependName] = "" />
 							</cfif>
-						
+
 						</cfloop> <!--- end for each dependency --->
 					
 					</cfif> <!--- end: if the assertioh specifies any dependencies ---> 
 				
 					<!--- validate the data value --->
-					<cfset result = validator.validate( "", args, dependencies ) />
+					<cfset result = validator.validate( "", argCollection, dependencies ) />
 				
 					<!--- if the assertion validation fails --->
 					<cfif result NEQ true >
@@ -1474,7 +1474,7 @@ Release: 0.1.0
 							<cfset errorCollection.addError( arguments.dataSetName, "", assertions[assertPtr].messages[result], assertions[assertPtr].assertId ) />
 						
 						<!--- attempt to locate the specified message in the default validation rule defintion --->
-						<cfelseif structKeyExists( getRule( assertion ).messages, result ) >
+						<cfelseif structKeyExists( getRule( assertions[assertPtr].rule ).messages, result ) >
 	
 							<!--- add an error to the error collection --->
 							<cfset errorCollection.addError( arguments.dataSetName, "", getRule( assertions[assertPtr].rule ).messages[result], assertions[assertPtr].assertId ) />
@@ -1486,7 +1486,7 @@ Release: 0.1.0
 						</cfif> <!--- end: attempt to locate the specified message --->
 	
 						<!--- check the assertion continue attribute --->
-						<cfif NOT ssertions[assertPtr].continueOnFail >
+						<cfif NOT assertions[assertPtr].continueOnFail >
 							<!--- stop validation checks on the current data value --->
 							<cfbreak />
 						</cfif> <!--- end: if assertion continue attribute is false --->
