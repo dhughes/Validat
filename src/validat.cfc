@@ -897,8 +897,8 @@ Release: 0.1.0
 			<!--- remove the assertion definition for the specified assertion, data element, data set combination --->
 			<cfset assertPos = listFindNoCase( variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList, arguments.assertId ) />
 			<cfset arrayDeleteAt(variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertions, assertPos ) />
-			<cfset listDeleteAt(variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIdList, assertPos ) />
-			<cfset listDeleteAt(variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList, assertPos ) />
+			<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIdList = listDeleteAt(variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionIdList, assertPos ) />
+			<cfset variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList = listDeleteAt(variables.instance.dataSets[arguments.dataSetName].dataElements[arguments.dataElementName].assertionRuleList, assertPos ) />
 
 		<cfelse>
 	
@@ -918,8 +918,8 @@ Release: 0.1.0
 	
 			<!--- remove the assertion definition for the specified assertion, data set combination --->
 			<cfset arrayDeleteAt(variables.instance.dataSets[arguments.dataSetName].assertions, assertPos ) />
-			<cfset listDeleteAt(variables.instance.dataSets[arguments.dataSetName].assertionIdList, assertPos ) />
-			<cfset listDeleteAt(variables.instance.dataSets[arguments.dataSetName].assertionRuleList, assertPos ) />
+			<cfset variables.instance.dataSets[arguments.dataSetName].assertionIdList = listDeleteAt(variables.instance.dataSets[arguments.dataSetName].assertionIdList, assertPos ) />
+			<cfset variables.instance.dataSets[arguments.dataSetName].assertionRuleList = listDeleteAt(variables.instance.dataSets[arguments.dataSetName].assertionRuleList, assertPos ) />
 
 		</cfif> <!--- end: if a data element was specified --->
 
