@@ -1,0 +1,35 @@
+<project name="Build Script" default="BuildPlugin">
+	
+	<target name="BuildPlugin">
+		<input message="Please enter SVN server username:" addproperty="SVNUSERNAME" />
+		<input message="Please enter SVN server password:" addproperty="SVNPASSWORD" />
+		
+		<property name="svnUrl" value="http://svn.alagad.com/Validat/trunk/"/>
+		<property name="buildDirectory" value="build" />
+		
+		<!-- delete build files -->
+		<delete dir="${buildDirectory}/distribute" failonerror="true" />
+		
+		<!-- create the build dir -->
+		<mkdir dir="${buildDirectory}/distribute"/>
+		
+		<!-- export from svn -->
+		<exec executable="svn">
+			<arg line="export ${svnUrl}/examples --force ${buildDirectory}/distribute/examples --username ${SVNUSERNAME} --password ${SVNPASSWORD}"/> 
+		</exec>
+		<exec executable="svn"> 
+			<arg line="export ${svnUrl}/src --force ${buildDirectory}/distribute/src --username ${SVNUSERNAME} --password ${SVNPASSWORD}"/> 
+		</exec>
+		<exec executable="svn"> 
+			<arg line="export ${svnUrl}/support --force ${buildDirectory}/distribute/support --username ${SVNUSERNAME} --password ${SVNPASSWORD}"/> 
+		</exec>
+		<exec executable="test"> 
+			<arg line="export ${svnUrl}/test --force ${buildDirectory}/distribute/test --username ${SVNUSERNAME} --password ${SVNPASSWORD}"/> 
+		</exec>
+		
+		<!-- zip up the plugin -->
+		<zip destfile="${buildDirectory}/Validat.zip"
+			basedir="${buildDirectory}/distribute" />	
+	</target>
+	
+</project>
