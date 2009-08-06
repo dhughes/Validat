@@ -49,5 +49,6 @@
 	<!-- these are the base transformer objects that are included by default as part of validat -->
 	<bean id="transformStruct"		class="validat.dataTransformers.transformStruct" />
 	<bean id="transformBean"		class="validat.dataTransformers.transformBean"	/>
-
+	<bean id="transformOrm"			class="validat.dataTransformers.transformOrm"	/>
+	
 </beans>

@@ -156,23 +156,27 @@ Release: 0.1.0
 		</cfif>
 		
 		<!--- check to see if mask was provided in the arguments collection --->
-		<cfif NOT structKeyExists( arguments.args, 'mask' ) >
+		<!--- <cfif NOT structKeyExists( arguments.args, 'mask' ) >
 			<cfthrow type="validat.missingArgs" message="validat: The validation rule 'validateDate' requires an argument named 'mask' that specifies the date string mask used to parse the date string." />
-		</cfif>
+		</cfif> --->
 		
-		<!--- initialize the sdf object with the mask --->
-		<cfset sdf.init( arguments.args.mask ) />
-		
-		<!--- attempt to parse the date string --->
-		<cftry>
-			<cfset parseDate = sdf.parse( arguments.data ) />
-			<cfcatch type="any">
+		<cfif StructKeyExists(arguments.args, "mask")>
+			<!--- initialize the sdf object with the mask --->
+			<cfset sdf.init( arguments.args.mask ) />
+			
+			<!--- attempt to parse the date string --->
+			<cftry>
+				<cfset parseDate = sdf.parse( arguments.data ) />
+				<cfcatch type="any">
+					<cfreturn "invalid" />
+				</cfcatch>
+			</cftry>
+			
+			<!--- if the date was parsed successfuly, attempt to compare it to the original date and make sure they are still equivalent --->
+			<cfif len(parseDate) AND sdf.format(parseDate) NEQ arguments.data >
 				<cfreturn "invalid" />
-			</cfcatch>
-		</cftry>
-		
-		<!--- if the date was parsed successfuly, attempt to compare it to the original date and make sure they are still equivalent --->
-		<cfif len(parseDate) AND sdf.format(parseDate) NEQ arguments.data >
+			</cfif>
+		<cfelseif NOT IsDate(arguments.data)>
 			<cfreturn "invalid" />
 		</cfif>
 		

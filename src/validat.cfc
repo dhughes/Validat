@@ -34,6 +34,8 @@ Release: 0.1.0
 	<cfset variables.structTransformer = "transformStruct" />
 	<!--- transformer bean id for the generic bean object transformer --->
 	<cfset variables.beanTransformer = "transformBean" />
+	
+	<cfset variables.ormTransformer = "transformOrm" />
 
 	<!--- ------------------------------------------------------------ --->
 	<!--- constructor --->
@@ -1071,24 +1073,36 @@ Release: 0.1.0
 		<!--- setup temporary variables --->
 		<cfset var transformer = "" />
 		<cfset var funcArr = "" />
+		<cfset var propArr = "" />
 		<cfset var funcPtr = "" />
-
+		<cfset var propPtr = "" />
+		<cfset var metadata = "" />
+		
 		<!--- check the data set definition for a specified transformer --->
 		<cfif len( variables.instance.dataSets[arguments.dataSetName].transformer ) >
 			<cfset transformer = variables.instance.dataSets[arguments.dataSetName].transformer />
 	
 		<!--- check if the data collection is a standard bean object --->
 		<cfelseif isObject( arguments.dataCollection ) >
-	
-			<!--- check if there are getter functions --->
-			<cfset funcArr = getMetaData( arguments.dataCollection ).functions />
-			<cfloop from="1" to="#arrayLen( funcArr )#" index="funcPtr" >
-				<cfif findNoCase( "get", funcArr[funcPtr].name ) EQ 1 >
-					<cfset transformer = variables.beanTransformer />
-					<cfbreak />
-				</cfif>
-			</cfloop> <!--- end: object function loop --->
-	
+			
+			<!--- as of CF9, a persistable CFC might have getters/setters, but those may be implicated based on properties.  
+			due to this, we're goin to handle persistent CFCs differently --->
+			
+			<cfset metadata = getMetaData( arguments.dataCollection ) />
+			
+			<cfif StructKeyExists(metadata, "persistent") AND metadata.persistent>
+				<cfset transformer = variables.ormTransformer />
+			<cfelse>
+				<!--- check if there are getter functions --->
+				<cfset funcArr = metadata.functions />
+				<cfloop from="1" to="#arrayLen( funcArr )#" index="funcPtr" >
+					<cfif findNoCase( "get", funcArr[funcPtr].name ) EQ 1 >
+						<cfset transformer = variables.beanTransformer />
+						<cfbreak />
+					</cfif>
+				</cfloop> <!--- end: object function loop --->
+			</cfif>
+			
 		<!--- check if the data collection is a structure --->
 		<cfelseif isStruct( arguments.dataCollection ) >
 			<cfset transformer = variables.structTransformer />
